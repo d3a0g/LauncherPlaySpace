@@ -1,8 +1,16 @@
 # Моды в PLAYSPACE
 
+Режимы для GeForce RTX 30: **Моды → DLSS / RTX → RTX 30 · FSR кадры**. Доступны DLSS 4.5 Super Resolution, выбор модели и альтернативная FSR Frame Generation через OptiScaler. [Инструкция и ограничения](RTX30.md).
+
 Раздел обнаруживает игры на текущем компьютере: установленные Steam- и Epic-игры плюс существующие локальные игры из библиотеки PLAYSPACE. Пути к играм не зашиты в приложение. Для Steam сохраняется каталог установки из манифеста, даже когда запуск выполняется через URI.
 
-Встроенный каталог использует публичный API Thunderstore. Подключены Windows/BepInEx-адаптеры для R.E.P.O., Lethal Company, Valheim, Risk of Rain 2, ROUNDS, ULTRAKILL, Inscryption, Content Warning, PEAK и Dyson Sphere Program. Для MECCHA CHAMELEON и Palworld используются отдельные Unreal/UE4SS-адаптеры. Другие обнаруженные игры видны, но установка для них недоступна. Minecraft, Skyrim, GTA и другие экосистемы требуют отдельных адаптеров.
+В локальной версии 1.0.5-preview доступны **69 игровых адаптеров: 36 Thunderstore, 28 ZIP и 5 Paradox**. Новые игры взяты из 500 рекомендаций «Открыть новое». Каталог Thunderstore загружается из публичного API, а не заменяется вымышленными карточками модов. Число доступных пакетов меняется; неподдерживаемые пакеты, модпаки и устаревшие версии могут отсеиваться.
+
+Добавлены каталоги для Subnautica, Sons Of The Forest, V Rising, Cities: Skylines II, Hollow Knight: Silksong, DREDGE, Nine Sols, The Planet Crafter, Trombone Champ, Deep Rock Galactic: Survivor, Enter the Gungeon, Human Fall Flat, Raft, SULFUR, Cuphead, Monster Train 2, Among Us, 9 Kings, White Knuckle, A Little to the Left, How to Fish, Graveyard Keeper 2 и Rhythm Doctor. Исходные 13 каталогов сохранены. Для MECCHA CHAMELEON и Palworld используются отдельные Unreal/UE4SS-адаптеры.
+
+Новые ZIP-адаптеры: Left 4 Dead 1/2, Team Fortress 2, Counter-Strike: Source, Half-Life 2 (VPK); Garry's Mod (распакованный аддон с addon.json); Don't Starve и Don't Starve Together (modinfo.lua); 7 Days to Die (ModInfo.xml); Bannerlord (SubModule.xml); Civilization V/VI (.modinfo); Total War: WARHAMMER III (.pack); Darkest Dungeon (project.xml). Эти адаптеры не выдают импорт ZIP за встроенный интернет-каталог. Для No Man's Sky и других неподключённых игр автоматическая установка не заявляется.
+
+Полный список, проверенные загрузчики и ограничения: [MOD-EXPANSION.md](MOD-EXPANSION.md).
 
 UE4SS-моды нужно запускать кнопкой «Играть» именно в PLAYSPACE. Лаунчер передаёт unreal-shimloader пути `--mod-dir`, `--pak-dir`, `--cfg-dir`, `--overlay-dir`; для Steam используется `steam.exe -applaunch` с отдельными аргументами. Файлы профиля расположены в `.playspace-mods/unreal`, файлы самого shimloader — рядом с Shipping-exe игры. MECCHA CHAMELEON поддерживает `mod/`, `Mods/<имя>/`, корневые `Scripts/`, community overlay и прямые PAK/UCAS/UTOC-патчи. Карты Steam Workshop этим каталогом не устанавливаются.
 

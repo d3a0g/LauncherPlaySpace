@@ -95,7 +95,7 @@ internal sealed class ModProfileStore
 }
 internal sealed class ModProfilesForm : StudioDialog
 {
-    private readonly ModernSelect profiles=new(){Dock=DockStyle.Fill};private readonly TextBox name=new(){Dock=DockStyle.Fill,PlaceholderText="Например: Кооператив"};private readonly FormattedDescription detail=new(){Dock=DockStyle.Fill};private readonly Label status=new(){Dock=DockStyle.Fill};private bool busy;
+    private readonly ModernSelect profiles=new(){Dock=DockStyle.Fill};private readonly TextBox name=new(){Dock=DockStyle.Fill,PlaceholderText="Например: Кооператив"};private readonly FormattedDescription detail=new(){Dock=DockStyle.Fill};private readonly SmoothLabel status=new(){Dock=DockStyle.Fill};private bool busy;
     internal ModProfilesForm(GameInfo game,string root)
     {
         var store=new ModProfileStore(root,()=>DlssManager.EnsureClosed(game));Text="PLAYSPACE / Профили модов · "+game.Name;Size=new Size(860,620);MinimumSize=new Size(760,560);

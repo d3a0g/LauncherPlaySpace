@@ -16,6 +16,7 @@ internal sealed class LauncherPreferences
     public int TextScalePercent { get; set; } = 100;
     public int PosterWidth { get; set; } = 160;
     public bool ReduceMotion { get; set; }
+    public bool OnboardingCompleted { get; set; }
     public LauncherPreferences Copy() => (LauncherPreferences)MemberwiseClone();
     public static LauncherPreferences Load(string folder)
     {
@@ -39,8 +40,8 @@ internal sealed class CloseChoiceDialog : StudioDialog
         Text="PLAYSPACE / Закрытие";Size=new Size(580,310);MinimumSize=Size;
         var layout=new TableLayoutPanel{Dock=DockStyle.Fill,Padding=new Padding(28),RowCount=4,ColumnCount=1};
         layout.RowStyles.Add(new RowStyle(SizeType.Absolute,42));layout.RowStyles.Add(new RowStyle(SizeType.Percent,100));layout.RowStyles.Add(new RowStyle(SizeType.Absolute,32));layout.RowStyles.Add(new RowStyle(SizeType.Absolute,48));ContentHost.Controls.Add(layout);
-        layout.Controls.Add(new Label{Text="Как закрыть PLAYSPACE?",Dock=DockStyle.Fill,Font=new Font("Segoe UI",17,FontStyle.Bold)},0,0);
-        layout.Controls.Add(new Label{Text="В трее лаунчер продолжит работать в фоне. Полный выход завершит работу приложения.",Dock=DockStyle.Fill,ForeColor=Color.FromArgb(165,176,202)},0,1);layout.Controls.Add(remember,0,2);
+        layout.Controls.Add(new SmoothLabel{Text="Как закрыть PLAYSPACE?",Dock=DockStyle.Fill,Font=new Font("Segoe UI",17,FontStyle.Bold)},0,0);
+        layout.Controls.Add(new SmoothLabel{Text="В трее лаунчер продолжит работать в фоне. Полный выход завершит работу приложения.",Dock=DockStyle.Fill,ForeColor=Color.FromArgb(165,176,202)},0,1);layout.Controls.Add(remember,0,2);
         var actions=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=2};actions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,50));actions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,50));layout.Controls.Add(actions,0,3);
         var tray=new ModernButton("Свернуть в трей",Color.FromArgb(115,94,244)){Dock=DockStyle.Fill};var exit=new ModernButton("Выйти полностью",Color.FromArgb(40,45,65)){Dock=DockStyle.Fill,Margin=new Padding(10,3,3,3)};actions.Controls.Add(tray,0,0);actions.Controls.Add(exit,1,0);
         tray.Click+=(s,e)=>{Choice=CloseBehavior.Tray;DialogResult=DialogResult.OK;};exit.Click+=(s,e)=>{Choice=CloseBehavior.Exit;DialogResult=DialogResult.OK;};

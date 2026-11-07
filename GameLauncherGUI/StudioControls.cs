@@ -9,7 +9,7 @@ internal class StudioDialog : Form
         if(keyData==Keys.Escape){Close();return true;}
         return base.ProcessCmdKey(ref msg,keyData);
     }
-    protected override void OnShown(EventArgs e){UiTypography.Apply(this);PresentationOptions.Apply(this);base.OnShown(e);}
+    protected override void OnShown(EventArgs e){UiTypography.Apply(this);PresentationOptions.Apply(this);UiLayout.Apply(this);UiLayout.Fit(this);base.OnShown(e);}
     protected Panel ContentHost { get; } = new() { Dock = DockStyle.Fill, BackColor = Color.FromArgb(14, 17, 27) };
     private readonly Label caption;
     public StudioDialog()
@@ -21,7 +21,7 @@ internal class StudioDialog : Form
         var bar = new Panel { Dock = DockStyle.Top, Height = 48, Width = ClientSize.Width };
         MouseEventHandler drag = (s, e) => { if (e.Button == MouseButtons.Left) { Form1.ReleaseCapture(); Form1.SendMessage(Handle, 0xA1, 2, 0); } };
         bar.MouseDown += drag;
-        caption = new Label { Text = "PLAYSPACE", AutoSize = true, Location = new Point(24, 15),
+        caption = new SmoothLabel { Text = "PLAYSPACE", AutoSize = true, Location = new Point(24, 15),
             Font = new Font("Segoe UI", 10, FontStyle.Bold), ForeColor = Color.FromArgb(171, 159, 212) };
         caption.MouseDown += drag;
         var close = new ModernButton("×", Color.FromArgb(27, 29, 44)) { Size = new Size(32, 30),
@@ -64,14 +64,19 @@ internal sealed class RoundedPanel : Panel
 internal sealed class StudioHeading : Control
 {
     private readonly string title, subtitle, tag;
+    internal int RequiredHeight=>(int)Math.Ceiling(92*PresentationOptions.TextScale);
     public StudioHeading(string title, string subtitle, string tag) { this.title = title; this.subtitle = subtitle; this.tag = tag; DoubleBuffered = true; }
     protected override void OnPaint(PaintEventArgs e)
     {
         using var small = new Font("Segoe UI", 8, FontStyle.Bold);
-        using var heading = new Font("Segoe UI", 23, FontStyle.Bold);
-        SmoothText.Draw(e.Graphics, tag, small, new Point(1, 0), Color.FromArgb(164, 143, 248));
-        SmoothText.Draw(e.Graphics, title, heading, new Rectangle(-3, 16, Width, 42), Color.FromArgb(242, 240, 253), TextFormatFlags.EndEllipsis);
-        SmoothText.Draw(e.Graphics, subtitle, Font, new Rectangle(1, 62, Width - 2, 25), Color.FromArgb(147, 159, 188), TextFormatFlags.EndEllipsis);
+        float size=23;while(size>17){using var measure=new Font("Segoe UI",size*PresentationOptions.TextScale,FontStyle.Bold);if(TextRenderer.MeasureText(title,measure).Width<Width-4)break;size-=.5f;}
+        using var heading = new Font("Segoe UI", size, FontStyle.Bold);
+        int tagHeight=(int)Math.Ceiling(small.GetHeight(e.Graphics)*PresentationOptions.TextScale)+4;
+        int headingHeight=(int)Math.Ceiling(heading.GetHeight(e.Graphics)*PresentationOptions.TextScale)+6;
+        int subTop=tagHeight+headingHeight+4;
+        SmoothText.Draw(e.Graphics, tag, small, new Rectangle(1,0,Math.Max(1,Width-2),tagHeight),VisualTheme.Blend(Color.White,VisualTheme.Accent,.6f),TextFormatFlags.EndEllipsis);
+        SmoothText.Draw(e.Graphics, title, heading, new Rectangle(0,tagHeight,Width,headingHeight), Color.FromArgb(242, 240, 253), TextFormatFlags.EndEllipsis);
+        SmoothText.Draw(e.Graphics, subtitle, Font, new Rectangle(1,subTop,Math.Max(1,Width-2),Math.Max(1,Height-subTop)), Color.FromArgb(147, 159, 188), TextFormatFlags.EndEllipsis);
     }
 }
 
@@ -95,7 +100,7 @@ internal sealed class ModCardList : ListBox
         var rect = new Rectangle(e.Bounds.X + 2, e.Bounds.Y + 4, e.Bounds.Width - 6, e.Bounds.Height - 8);
         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
         using var path = VisualTheme.Rounded(rect, 13);
-        using var fill = new SolidBrush(selected ? Color.FromArgb(43, 35, 70) : hover == e.Index ? Color.FromArgb(31, 36, 53) : Color.FromArgb(23, 28, 42));
+        using var fill = new SolidBrush(selected ? VisualTheme.Blend(Color.FromArgb(23,28,42),VisualTheme.Accent,.18f) : hover == e.Index ? Color.FromArgb(31, 36, 53) : Color.FromArgb(23, 28, 42));
         using var border = new Pen(selected ? VisualTheme.Accent : Color.FromArgb(41, 47, 66));
         e.Graphics.FillPath(fill, path); e.Graphics.DrawPath(border, path);
         var item = Items[e.Index];
@@ -125,7 +130,7 @@ internal sealed class ModernToggle : CheckBox
         e.Graphics.SmoothingMode=SmoothingMode.AntiAlias;
         int y=Math.Max(0,(Height-22)/2);
         using var track=VisualTheme.Rounded(new Rectangle(0,y,42,22),11);
-        using var fill=new SolidBrush(Enabled&&Checked?Color.FromArgb(115,94,244):Color.FromArgb(53,59,80));
+        using var fill=new SolidBrush(Enabled&&Checked?VisualTheme.Accent:Color.FromArgb(53,59,80));
         e.Graphics.FillPath(fill,track);
         using var knob=new SolidBrush(Enabled?Color.FromArgb(242,239,255):Color.FromArgb(124,130,152));
         e.Graphics.FillEllipse(knob,Checked?23:3,y+3,16,16);

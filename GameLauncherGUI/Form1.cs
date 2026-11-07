@@ -19,6 +19,7 @@ namespace GameLauncherGUI
         public string ExePath { get; set; }
         public string SteamAppId { get; set; }
         public string LaunchArguments { get; set; } = "";
+        public bool? CheckUbisoftBeforeLaunch { get; set; }
         public bool IsPinned { get; set; }
         public double PlayedSeconds { get; set; }
         public long? SteamPlaytimeMinutes { get; set; }
@@ -143,8 +144,11 @@ namespace GameLauncherGUI
             RefreshList();
             InitializeLibraryExtras();
             UiTypography.Apply(this);
+            Shown+=(s,e)=>{UiLayout.Apply(this);UiLayout.Fit(this);};
             if (libraryNotice != null) lblStatus.Text = libraryNotice;
             Shown += async (s, e) => await LoadGameIconsAsync(listBoxGames, visibleGames.ToArray(), iconLoadVersion);
+            Shown += async (s,e)=>await LoadDiskSizesAsync(iconLoadVersion);
+            Disposed += (s,e)=>{if(!diskSizingStopped){diskSizingStopped=true;diskCancellation.Cancel();diskCancellation.Dispose();}};
 
             // Обработчик изменения размера, чтобы крестик всегда оставался в углу
 
@@ -162,12 +166,12 @@ namespace GameLauncherGUI
                 Size = new Size(26, 26), Location = new Point(25, 15) };
             brandIcon.MouseDown += drag;
             titleBar.Controls.Add(brandIcon);
-            var brand = new Label { Text = "PLAYSPACE", Font = new Font("Segoe UI", 12, FontStyle.Bold),
+            var brand = new SmoothLabel { Text = "PLAYSPACE", Font = new Font("Segoe UI", 12, FontStyle.Bold),
                 ForeColor = textColor, AutoSize = true, Location = new Point(58, 17) };
             brand.MouseDown += drag;
             titleBar.Controls.Add(brand);
             var windowActions=new FlowLayoutPanel {Dock=DockStyle.Right,Width=150,Padding=new Padding(6,10,10,10),WrapContents=false,FlowDirection=FlowDirection.LeftToRight};
-            Label WindowAction(string text,string name)=>new(){Text=text,AccessibleName=name,Font=new Font("Segoe UI",15),ForeColor=Color.FromArgb(179,186,210),Size=new Size(40,34),Margin=new Padding(1,0,1,0),Cursor=Cursors.Hand,TextAlign=ContentAlignment.MiddleCenter,BackColor=bgColor};
+            SmoothLabel WindowAction(string text,string name)=>new(){Text=text,AccessibleName=name,Font=new Font("Segoe UI",15),ForeColor=Color.FromArgb(179,186,210),Size=new Size(40,34),Margin=new Padding(1,0,1,0),Cursor=Cursors.Hand,TextAlign=ContentAlignment.MiddleCenter,BackColor=bgColor};
             var minimize=WindowAction("−","Свернуть");var maximize=WindowAction("□","Развернуть");btnClose=WindowAction("×","Закрыть");
             minimize.Click+=(s,e)=>WindowState=FormWindowState.Minimized;maximize.Click+=(s,e)=>WindowState=WindowState==FormWindowState.Maximized?FormWindowState.Normal:FormWindowState.Maximized;btnClose.Click+=(s,e)=>Close();
             foreach(var button in new[]{minimize,maximize,btnClose}){button.MouseEnter+=(s,e)=>button.BackColor=Color.FromArgb(39,43,62);button.MouseLeave+=(s,e)=>button.BackColor=bgColor;windowActions.Controls.Add(button);}
@@ -176,16 +180,17 @@ namespace GameLauncherGUI
 
             var shell = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1,
                 Padding = new Padding(20, 8, 20, 18), BackColor = bgColor };
-            shell.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 210));
+            shell.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 220));
             shell.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             shell.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            var sidebar = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 13,
+            var sidebar = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 14,
                 BackColor = bgColor, Padding = new Padding(4, 10, 20, 0), Margin = Padding.Empty };
-            foreach (float height in new[] { 34F, 52F, 52F, 28F, 48F, 48F, 48F, 48F, 52F, 52F }) sidebar.RowStyles.Add(new RowStyle(SizeType.Absolute, height));
+            foreach (float height in new[] { 24F,42F,42F,42F,42F,30F,42F,42F,42F,42F }) sidebar.RowStyles.Add(new RowStyle(SizeType.Absolute, height));
             sidebar.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            sidebar.RowStyles.Add(new RowStyle(SizeType.Absolute, 66));
-            sidebar.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
-            sidebar.Controls.Add(new Label { Text = "ТВОЁ ПРОСТРАНСТВО", Dock = DockStyle.Fill,
+            sidebar.RowStyles.Add(new RowStyle(SizeType.Absolute,44));
+            sidebar.RowStyles.Add(new RowStyle(SizeType.Absolute,52));
+            sidebar.RowStyles.Add(new RowStyle(SizeType.Absolute, 28));
+            sidebar.Controls.Add(new SmoothLabel { Text = "БИБЛИОТЕКА", Dock = DockStyle.Fill,
                 Font = new Font("Segoe UI", 8, FontStyle.Bold), ForeColor = Color.FromArgb(113, 120, 149) }, 0, 0);
             btnLibrary = new ModernButton("Мои игры", Color.FromArgb(31, 35, 51)) { Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 8) };
             btnLibrary.Click += (s, e) => ShowLibrary(false);
@@ -193,27 +198,27 @@ namespace GameLauncherGUI
             btnRecent = new ModernButton("Недавно играл", Color.FromArgb(31, 35, 51)) { Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 8) };
             btnRecent.Click += (s, e) => ShowRecentLibrary();
             sidebar.Controls.Add(btnRecent, 0, 2);
-            sidebar.Controls.Add(new Label { Text = "КОЛЛЕКЦИЯ", Dock = DockStyle.Fill, Font = new Font("Segoe UI", 8, FontStyle.Bold),
-                ForeColor = Color.FromArgb(113, 120, 149), TextAlign = ContentAlignment.BottomLeft }, 0, 3);
+            sidebar.Controls.Add(new SmoothLabel { Text = "ИНСТРУМЕНТЫ", Dock = DockStyle.Fill, Font = new Font("Segoe UI", 8, FontStyle.Bold),
+                ForeColor = Color.FromArgb(113, 120, 149), TextAlign = ContentAlignment.BottomLeft }, 0, 5);
             btnScan = new ModernButton("Найти игры", Color.FromArgb(35, 40, 63)) { Dock = DockStyle.Fill, Margin = new Padding(8, 4, 0, 6) };
             btnScan.Click += (s, e) => AutoScanGamesAsync();
             btnPinned = new ModernButton("Любимые игры", Color.FromArgb(31, 35, 51)) { Dock = DockStyle.Fill, Margin = new Padding(0, 8, 0, 4), Font = new Font("Segoe UI", 9, FontStyle.Bold) };
             btnPinned.Click += (s, e) => ShowLibrary(true);
-            sidebar.Controls.Add(btnPinned, 0, 4);
+            sidebar.Controls.Add(btnPinned, 0, 3);
             btnAddManual = new ModernButton("+  Добавить игру", accentColor) { Dock = DockStyle.Fill, Margin = new Padding(8, 4, 0, 6) };
-            btnAddManual.Click += (s, e) => AddGameManually();
-            var performance = new ModernButton("⚡ Производительность", Color.FromArgb(35, 40, 63)) {
+            var addMenu=new ContextMenuStrip{BackColor=panelColor,ForeColor=textColor,ShowImageMargin=false,Renderer=new ToolStripProfessionalRenderer(new GameMenuColors()),Font=new Font("Segoe UI",10)};addMenu.Items.Add("Найти установленные игры",null,(s,e)=>AutoScanGamesAsync());addMenu.Items.Add("Добавить EXE вручную…",null,(s,e)=>AddGameManually());btnAddManual.Text="Добавить ▾";btnAddManual.Click+=(s,e)=>addMenu.Show(btnAddManual,new Point(0,btnAddManual.Height));Disposed+=(s,e)=>addMenu.Dispose();
+            var performance = new ModernButton("Графика и FPS", Color.FromArgb(35, 40, 63)) {
                 Dock = DockStyle.Fill, Margin = new Padding(0, 4, 0, 8), Font = new Font("Segoe UI", 9, FontStyle.Bold) };
             performance.Click += (s, e) => OpenPerformance(SelectedGame);
-            sidebar.Controls.Add(performance, 0, 5);
-            var mods = new ModernButton("◇  Моды", Color.FromArgb(35, 40, 63)) {
+            sidebar.Controls.Add(performance, 0, 6);
+            var mods = new ModernButton("Моды", Color.FromArgb(35, 40, 63)) {
                 Dock = DockStyle.Fill, Margin = new Padding(0, 4, 0, 8) };
             mods.Click += (s, e) => OpenMods();
-            sidebar.Controls.Add(mods, 0, 6);
+            sidebar.Controls.Add(mods, 0, 7);
             btnSurprise = new ModernButton("Открыть новое", Color.FromArgb(49, 38, 77)) {
                 Dock = DockStyle.Fill, Margin = new Padding(0, 4, 0, 8) };
             btnSurprise.Click += (s, e) => OpenRecommendations();
-            sidebar.Controls.Add(btnSurprise, 0, 7);
+            sidebar.Controls.Add(btnSurprise, 0, 4);
             supportIcon = VisualTheme.CreateTelegramIcon();
             var support = new ModernButton("Поддержка\nНаписать боту", Color.FromArgb(26, 43, 65)) {
                 Dock = DockStyle.Fill, Margin = new Padding(0, 8, 0, 0), Image = supportIcon,
@@ -226,31 +231,33 @@ namespace GameLauncherGUI
                 catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException or IOException)
                 { lblStatus.Text = "Не удалось открыть Telegram. Напиши @PlaySpaceSupport_bot вручную."; }
             };
-            var network=new ModernButton("◎  Сеть / WARP",Color.FromArgb(28,44,55)){Dock=DockStyle.Fill,Margin=new Padding(0,4,0,8),AccessibleName="Сеть и подключение WARP"};
+            var network=new ModernButton("Сеть / WARP",Color.FromArgb(28,44,55)){Dock=DockStyle.Fill,Margin=new Padding(0,4,0,8),AccessibleName="Сеть и подключение WARP"};
             var workspaceButton=new ModernButton("Моё пространство",Color.FromArgb(39,37,64)){Dock=DockStyle.Fill,Margin=new Padding(0,4,0,8),AccessibleName="Моё пространство · загрузки, коллекции и оформление"};workspaceButton.Click+=(s,e)=>OpenWorkspace();sidebar.Controls.Add(workspaceButton,0,8);
-            network.Click+=(s,e)=>{using var dialog=new NetworkForm(appDataFolder);dialog.ShowDialog(this);};sidebar.Controls.Add(network,0,9);
-            sidebar.Controls.Add(support, 0, 11);
-            var settings = new ModernButton("⚙  Настройки", Color.FromArgb(31,35,51)) { Dock = DockStyle.Top, Height = 44, Margin = new Padding(0,8,0,0) }; settings.Click += (s,e) => OpenSettings(); sidebar.Controls.Add(settings,0,10);
-            sidebar.Controls.Add(new Label { Text = "●  ВСЁ В ОДНОМ МЕСТЕ", Dock = DockStyle.Fill,
-                ForeColor = Color.FromArgb(113, 218, 193), Font = new Font("Segoe UI", 8, FontStyle.Bold), TextAlign = ContentAlignment.BottomLeft }, 0, 12);
+            network.Click+=(s,e)=>OpenNetwork();sidebar.Controls.Add(network,0,9);
+            sidebar.Controls.Add(support, 0, 12);
+            var settings = new ModernButton("Настройки", Color.FromArgb(31,35,51)) { Dock = DockStyle.Fill, Margin = new Padding(0,4,0,8) }; settings.Click += (s,e) => OpenSettings(); sidebar.Controls.Add(settings,0,11);
+            foreach(var item in new[]{(performance,"performance"),(mods,"mods"),(workspaceButton,"workspace"),(network,"network"),(settings,"settings")}){var image=NavigationSticker.Create(item.Item2);navigationStickers.Add(image);item.Item1.Image=image;item.Item1.Font=new Font("Segoe UI",9,FontStyle.Bold);}
+            sidebar.Controls.Add(new SmoothLabel { Text = "Ctrl+K · поиск и действия", Dock = DockStyle.Fill,
+                ForeColor = Color.FromArgb(113, 218, 193), Font = new Font("Segoe UI", 8, FontStyle.Bold), TextAlign = ContentAlignment.BottomLeft }, 0, 13);
+            foreach(var nav in sidebar.Controls.OfType<ModernButton>()){nav.IsNavigation=true;nav.Margin=new Padding(0,2,0,2);nav.Font=new Font("Segoe UI",10); }
             shell.Controls.Add(sidebar, 0, 0);
 
             var content = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 5, Margin = Padding.Empty };
             content.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             content.RowStyles.Add(new RowStyle(SizeType.Absolute, 122));
-            content.RowStyles.Add(new RowStyle(SizeType.Absolute, 86));
+            content.RowStyles.Add(new RowStyle(SizeType.Absolute, 100));
             content.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             content.RowStyles.Add(new RowStyle(SizeType.Absolute, 68));
             content.RowStyles.Add(new RowStyle(SizeType.Absolute, 34));
             hero = new LibraryHero { Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 8) };
             hero.PlayRequested += (s, e) => LaunchSelectedGame();
             content.Controls.Add(hero, 0, 0);
-            libraryCount = new Label { Text = "МОЯ БИБЛИОТЕКА", Dock = DockStyle.Fill, ForeColor = Color.FromArgb(161, 168, 193),
+            libraryCount = new SmoothLabel { Text = "МОЯ БИБЛИОТЕКА", Dock = DockStyle.Fill, ForeColor = Color.FromArgb(161, 168, 193),
                 Font = new Font("Segoe UI", 9, FontStyle.Bold), TextAlign = ContentAlignment.MiddleLeft };
             var libraryHeader = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 2, Margin = Padding.Empty };
             libraryHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            libraryHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 190));
-            libraryHeader.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
+            libraryHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 210));
+            libraryHeader.RowStyles.Add(new RowStyle(SizeType.Absolute, 44));
             libraryHeader.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             sortGames = new ModernSelect {
                 BackColor = panelColor, ForeColor = textColor, Dock = DockStyle.Fill, Margin = new Padding(0, 4, 0, 4), Font = new Font("Segoe UI", 9) };
@@ -260,7 +267,7 @@ namespace GameLauncherGUI
             var tools = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 3, RowCount = 1, Margin = Padding.Empty };
             tools.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             tools.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            tools.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 130));
+            tools.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 0));
             tools.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 156));
             searchGames=new TextBox {PlaceholderText="Найти игру · Ctrl+F"};
             btnClearSearch=new ModernButton("×",panelColor){Enabled=false};
@@ -269,10 +276,11 @@ namespace GameLauncherGUI
             tools.Controls.Add(searchPanel, 0, 0);
             tools.Controls.Add(btnScan, 1, 0);
             tools.Controls.Add(btnAddManual, 2, 0);
-            var headingTools = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false };
-            var viewToggle = new ModernButton("▦ / ☰", panelColor) { Width = 72, Height = 30 };
+            var headingTools = new TableLayoutPanel { Dock = DockStyle.Fill,ColumnCount=3,RowCount=1,Margin=Padding.Empty };
+            headingTools.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,76));headingTools.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,100));headingTools.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,180));headingTools.RowStyles.Add(new RowStyle(SizeType.Percent,100));
+            var viewToggle = new ModernButton("▦ / ☰", panelColor) { Dock=DockStyle.Fill,Margin=new Padding(0,4,8,4),AccessibleName="Переключить список и постеры" };
             viewToggle.Click += (s,e) => { int selected = listBoxGames.SelectedIndex; listBoxGames.PosterView = !listBoxGames.PosterView; listBoxGames.ResetView(); listBoxGames.SelectItem(selected); };
-            headingTools.Controls.Add(viewToggle); libraryCount.AutoSize = true; headingTools.Controls.Add(libraryCount); headingTools.Controls.Add(collectionFilter);
+            headingTools.Controls.Add(viewToggle,0,0);libraryCount.AutoSize=false;libraryCount.AutoEllipsis=true;libraryCount.Margin=new Padding(4,0,8,0);headingTools.Controls.Add(libraryCount,1,0);collectionFilter.Dock=DockStyle.Fill;collectionFilter.Margin=new Padding(0,4,8,4);headingTools.Controls.Add(collectionFilter,2,0);
             libraryHeader.Controls.Add(headingTools, 0, 0);
             libraryHeader.Controls.Add(sortGames, 1, 0);
             libraryHeader.Controls.Add(tools, 0, 1);
@@ -284,7 +292,7 @@ namespace GameLauncherGUI
             listBoxGames.ShowPinButtons = true;
             listBoxGames.ShowProfileButtons = true;
             listBoxGames.PinToggleRequested += TogglePinnedGame;
-            listBoxGames.ProfileRequested += index => { if (index >= 0 && index < visibleGames.Count) OpenPerformance(visibleGames[index]); };
+            listBoxGames.ProfileRequested += index => { if (index >= 0 && index < visibleGames.Count) OpenGameActions(visibleGames[index]); };
             listBoxGames.SelectionChanged += (s, e) => UpdateGameActions();
             InitializeGameMenu();
             content.Controls.Add(listBoxGames, 0, 2);
@@ -305,11 +313,13 @@ namespace GameLauncherGUI
             actions.Controls.Add(btnPin, 1, 0);
             actions.Controls.Add(btnDeleteChecked, 2, 0);
             actions.Controls.Add(btnClearAll, 3, 0);
+            actions.ColumnStyles[0].Width=50;actions.ColumnStyles[1].Width=30;actions.ColumnStyles[2].Width=20;actions.ColumnStyles[3].Width=0;actions.Controls.Remove(btnDeleteChecked);actions.Controls.Remove(btnClearAll);btnDeleteChecked.Visible=false;btnClearAll.Visible=false;Controls.Add(btnDeleteChecked);Controls.Add(btnClearAll);
+            var more=new ModernButton("Ещё ▾",panelColor){Dock=DockStyle.Fill,Margin=new Padding(0,12,0,4)};var moreMenu=new ContextMenuStrip{BackColor=panelColor,ForeColor=textColor,ShowImageMargin=false,Renderer=new ToolStripProfessionalRenderer(new GameMenuColors()),Font=new Font("Segoe UI",10)};moreMenu.Items.Add("Убрать выбранные из библиотеки",null,(s,e)=>DeleteCheckedGames());moreMenu.Items.Add("Очистить библиотеку…",null,(s,e)=>ClearAllGames());more.Click+=(s,e)=>moreMenu.Show(more,new Point(0,more.Height));Disposed+=(s,e)=>moreMenu.Dispose();actions.Controls.Add(more,2,0);
             content.Controls.Add(actions, 0, 3);
             var footer = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty };
             footer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             footer.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100));
-            lblStatus = new Label { Dock = DockStyle.Fill, ForeColor = Color.FromArgb(133, 143, 171), Font = new Font("Segoe UI", 9),
+            lblStatus = new SmoothLabel { Dock = DockStyle.Fill, ForeColor = Color.FromArgb(133, 143, 171), Font = new Font("Segoe UI", 9),
                 TextAlign = ContentAlignment.MiddleLeft, AutoEllipsis = true };
             scanProgress = new ProgressBar { Dock = DockStyle.Fill, Style = ProgressBarStyle.Marquee, MarqueeAnimationSpeed = 24,
                 Visible = false, Margin = new Padding(0, 12, 0, 10) };
@@ -399,6 +409,7 @@ namespace GameLauncherGUI
 
         private void SaveData()
         {
+            if(recoveryApplied)return;
             GameLibraryStore.Save(dataFile, myGames);
         }
 
@@ -424,12 +435,7 @@ namespace GameLauncherGUI
             sortGames.Enabled = !recentOnly;
             foreach (var game in visibleGames)
             {
-                string source = !string.IsNullOrEmpty(game.SteamAppId) ? "Steam" :
-                    game.Name.Equals("VALORANT", StringComparison.OrdinalIgnoreCase) ? "Riot Games" : "Локальная игра";
-                if (game.Performance != null) source += $"   ·   Цель {game.Performance.Copy().TargetFps} FPS";
-                source += " · " + game.PlaytimeLabel;
-                if (game.AchievementSummary != null) source += " · " + game.AchievementSummary;
-                if (game.LastLaunchUtc.HasValue) source += $"   ·   Запуск {game.LastLaunchUtc.Value.ToLocalTime():dd.MM HH:mm}";
+                string source = CardSubtitle(game);
                 listBoxGames.Items.Add(new CustomListItem(game.Name, checkedGames.Contains(game), source) {
                     IsPinned = game.IsPinned, IconImage = oldIcons.GetValueOrDefault(game) ?? iconCache.Peek(game) });
             }
@@ -447,6 +453,7 @@ namespace GameLauncherGUI
             listBoxGames.SelectItem(selected == null ? -1 : visibleGames.IndexOf(selected));
             UpdateGameActions();
             if (IsHandleCreated) _ = LoadGameIconsAsync(listBoxGames, visibleGames.ToArray(), version);
+            if (IsHandleCreated&&!IsDisposed) _ = LoadDiskSizesAsync(version);
         }
 
         private GameInfo? SelectedGame => listBoxGames.SelectedIndex >= 0 && listBoxGames.SelectedIndex < visibleGames.Count
@@ -488,11 +495,17 @@ namespace GameLauncherGUI
             foreach (var item in new[] { launch, pin, profile, folder, copy }) item.Padding = new Padding(10, 7, 10, 7);
             gameMenu.Items.AddRange(new ToolStripItem[] { launch, pin, profile, new ToolStripSeparator(), folder, copy });
             gameMenu.Items.Insert(1,new ToolStripMenuItem("Управление игрой · копии и запуск…",null,(s,e)=>{if(SelectedGame is GameInfo game)OpenGameCare(game);}));
+            gameMenu.Items.Insert(2,new ToolStripMenuItem("Моды и наборы этой игры…",null,(s,e)=>{if(SelectedGame is GameInfo game)OpenModsFor(game);}));
+            gameMenu.Items.Insert(3,new ToolStripMenuItem("Проверить готовность к запуску…",null,(s,e)=>{if(SelectedGame is GameInfo game)CheckGameReady(game);}));
+            var ubisoftCheck = new ToolStripMenuItem("Ubisoft Connect · проверять вход перед запуском") { CheckOnClick = true };
+            gameMenu.Items.Add(ubisoftCheck);
+            ubisoftCheck.Click += (s,e) => { if(SelectedGame is GameInfo game){game.CheckUbisoftBeforeLaunch=ubisoftCheck.Checked;SaveData();} };
             gameMenu.Opening += (s, e) =>
             {
                 var game = SelectedGame;
                 if (game == null) { e.Cancel = true; return; }
                 launch.Enabled = !launchingGame;
+                ubisoftCheck.Checked = UbisoftLaunch.NeedsCheck(game);
                 pin.Text = game.IsPinned ? "★  Открепить" : "☆  Закрепить";
                 folder.Enabled = ResolveGameFolder(game) != null;
             };
@@ -547,6 +560,7 @@ namespace GameLauncherGUI
 
         private void OpenMods()
         {
+            if(LauncherSession.SafeMode){lblStatus.Text="Моды недоступны в безопасном режиме.";return;}
             var library = myGames.ToArray();
             using var dialog = new ModsForm(() => Task.Run(() => FindSteamGames().Concat(FindEpicGames())
                 .Concat(library.Where(g => File.Exists(g.ExePath))).ToList()));
@@ -607,10 +621,7 @@ namespace GameLauncherGUI
 
         private void UpdateSpotlight(GameInfo? game)
         {
-            string detail = game == null ? "Все твои миры — в одной библиотеке" :
-                !string.IsNullOrEmpty(game.SteamAppId) ? "Steam" : game.Name.Equals("VALORANT", StringComparison.OrdinalIgnoreCase) ? "Riot Games" : "Локальная игра";
-            if (game != null) detail += " · " + game.PlaytimeLabel + (game.AchievementSummary == null ? "" : " · " + game.AchievementSummary);
-            if (game?.Performance != null) detail += $"   ·   Цель {game.Performance.Copy().TargetFps} FPS";
+            string detail = game == null ? "Все твои миры — в одной библиотеке" : GameCardText.Summary(game,SizeLabel(game));
             if (game?.IsPinned == true) detail += "   ·   ★ Закреплено";
             hero.SetPresentation(game?.Name ?? "Время играть.", detail, game == null ? null :
                 listBoxGames.Items.ElementAtOrDefault(listBoxGames.SelectedIndex)?.IconImage ?? iconCache.Peek(game), game != null);
@@ -643,6 +654,7 @@ namespace GameLauncherGUI
 
         private async Task LoadGameIconsAsync(CustomCheckListBox list, GameInfo[] games, int? version = null)
         {
+            if(LauncherSession.SafeMode)return;
             var items = list.Items.ToArray();
             for (int i = 0; i < Math.Min(games.Length, items.Length); i++)
             {
@@ -664,10 +676,13 @@ namespace GameLauncherGUI
             }
         }
 
+        private bool resourcesDisposed;
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
+            bool release=disposing&&!resourcesDisposed;
+            if (release)
             {
+                resourcesDisposed=true;
                 ++iconLoadVersion;
                 DisposeLibraryExtras();
                 iconCache.Dispose();
@@ -676,7 +691,7 @@ namespace GameLauncherGUI
                 artworkCancellation?.Dispose();
             }
             base.Dispose(disposing);
-            if (disposing)
+            if (release)
             {
                 appIcon?.Dispose();
                 brandImage?.Dispose();
@@ -716,21 +731,33 @@ namespace GameLauncherGUI
 
         private async void LaunchGame(GameInfo game)
         {
+            if(recoveryApplied)return;
             if (launchingGame) return;
             launchingGame = true;
             btnLaunch.Enabled = false;
+            StartupSplash? launchProgress = null;
             
             try
             {
+                LauncherSession.Record(appDataFolder,"Проверка перед запуском игры");
                 var readiness=await Task.Run(()=>GameReadiness.Inspect(game,()=>IsGameRunning(game),appDataFolder));
                 if(IsDisposed)return;
                 var blockers=readiness.Where(item=>item.Blocking).ToArray();if(blockers.Length>0){MessageBox.Show(this,string.Join("\n\n",blockers.Select(item=>item.Name+": "+item.Detail)),"Перед запуском нужно исправить",MessageBoxButtons.OK,MessageBoxIcon.Information);return;}
-                string[] customArguments=GameReadiness.Arguments(game.LaunchArguments);
-                if(game.Care?.BackupBeforeLaunch==true){lblStatus.Text="Создаём резервную копию перед запуском…";await Task.Run(()=>new GameBackupStore(game.Care,appDataFolder,()=>IsGameRunning(game)).Create("Перед запуском"));Workspace.For(appDataFolder).History.Add(game,"Копии","Создана резервная копия перед запуском");if(IsDisposed)return;}
-                string[] modArguments = UnrealModLayout.LaunchArguments(game).Concat(GamePerformanceController.Prepare(game)).Concat(customArguments).ToArray();
+                string[] customArguments=LauncherSession.SafeMode?Array.Empty<string>():GameReadiness.Arguments(game.LaunchArguments);
+                if(!LauncherSession.SafeMode&&UbisoftLaunch.NeedsCheck(game))
+                {
+                    using var login=new UbisoftLaunchForm(game.Name);
+                    if(login.ShowDialog(this)!=DialogResult.OK)return;
+                }
+                if(!LauncherSession.SafeMode&&game.Care?.BackupBeforeLaunch==true){lblStatus.Text="Создаём резервную копию перед запуском…";await Task.Run(()=>new GameBackupStore(game.Care,appDataFolder,()=>IsGameRunning(game)).Create("Перед запуском"));Workspace.For(appDataFolder).History.Add(game,"Копии","Создана резервная копия перед запуском");if(IsDisposed)return;}
+                string[] modArguments = LauncherSession.SafeMode?Array.Empty<string>():UnrealModLayout.LaunchArguments(game).Concat(GamePerformanceController.Prepare(game)).Concat(customArguments).ToArray();
                 if (!string.IsNullOrEmpty(game.SteamAppId))
                 {
                     lblStatus.Text = "Проверка клиента Steam...";
+                    launchProgress = new StartupSplash("Подготавливаем запуск") { ShowInTaskbar=false, StartPosition=FormStartPosition.Manual };
+                    launchProgress.Location = new Point(Left+(Width-launchProgress.Width)/2,Top+(Height-launchProgress.Height)/2);
+                    launchProgress.Report("Проверяем Steam · "+game.Name);
+                    launchProgress.Show(this);
 
                     if (!IsSteamRunning())
                     {
@@ -741,6 +768,7 @@ namespace GameLauncherGUI
                             Process.Start(new ProcessStartInfo { FileName = "steam://open/console", UseShellExecute = true });
 
                         lblStatus.Text = "Ожидание загрузки Steam...";
+                        launchProgress.Report("Ожидание загрузки Steam…");
                         await Task.Delay(25000);
                         if (IsDisposed) return;
                     }
@@ -750,7 +778,8 @@ namespace GameLauncherGUI
                         if (IsDisposed) return;
                     }
 
-                    string? strategyExecutable = StrategyModsManager.DirectExecutable(game);
+                    string? strategyExecutable = LauncherSession.SafeMode?null:StrategyModsManager.DirectExecutable(game);
+                    launchProgress.Close();launchProgress.Dispose();launchProgress=null;
                     if (strategyExecutable != null)
                     {
                         var strategyStart=new ProcessStartInfo { FileName = strategyExecutable,WorkingDirectory = Path.GetDirectoryName(strategyExecutable),UseShellExecute = true };
@@ -765,7 +794,7 @@ namespace GameLauncherGUI
                 }
                 else
                 {
-                    string executable = StrategyModsManager.DirectExecutable(game) ?? game.ExePath;
+                    string executable = (LauncherSession.SafeMode?null:StrategyModsManager.DirectExecutable(game)) ?? game.ExePath;
                     ProcessStartInfo startInfo = new ProcessStartInfo
                     {
                         FileName = executable,
@@ -781,10 +810,12 @@ namespace GameLauncherGUI
             }
             catch (Exception ex)
             {
+                LauncherSession.Record(appDataFolder,"Ошибка запуска игры",ex);
                 MessageBox.Show($"Ошибка при запуске:\n{ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
+                launchProgress?.Close();launchProgress?.Dispose();
                 launchingGame = false;
                 if (!IsDisposed) UpdateGameActions();
             }
@@ -855,8 +886,11 @@ namespace GameLauncherGUI
             }
         }
 
-        private async void AutoScanGamesAsync()
+        private async void AutoScanGamesAsync()=>await ScanGamesAsync();
+        private async Task ScanGamesAsync()
         {
+            if(!btnScan.Enabled||recoveryApplied)return;
+            LauncherSession.Record(appDataFolder,"Начат поиск установленных игр");
             btnScan.Enabled = false;
             scanProgress.Visible = true;
             btnScan.Text = "Поиск…";

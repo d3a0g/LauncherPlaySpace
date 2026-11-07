@@ -12,7 +12,12 @@ public partial class Form1
         new("Режим контроллера / большой экран","Библиотека",()=>{using var form=new ControllerLibraryForm(myGames,Workspace.For(appDataFolder).Collections,LoadPosterAsync);form.ShowDialog(this);if(form.LaunchRequested is GameInfo game)LaunchGame(game);}),
         new("Вид, доступность и офлайн-режим","Настройки",()=>{using var form=new AppearanceForm(appDataFolder,ApplyWorkspaceSettings);form.ShowDialog(this);}),
         new("Моды и наборы","Раздел",OpenMods),new("Рекомендации","Раздел",OpenRecommendations),new("Настройки Steam и приложения","Настройки",OpenSettings),
-        new("Сеть / WARP и диагностика","Раздел",()=>{using var form=new NetworkForm(appDataFolder);form.ShowDialog(this);})
+        new("Сеть / WARP и диагностика","Раздел",OpenNetwork),
+        new("Первый запуск · мастер настройки","Помощь",()=>OpenHealth("first-run")),
+        new("Копии и перенос настроек","Настройки",()=>OpenHealth("backup")),
+        new("Место на диске и очистка","Обслуживание",()=>OpenHealth("storage")),
+        new("Отчёт об ошибке","Поддержка",()=>OpenHealth("report")),
+        new("Безопасный режим","Восстановление",()=>OpenHealth("safe-mode"))
     };
     private void OpenWorkspace(){using var form=new WorkspaceForm(WorkspaceCommands());form.ShowDialog(this);}
     private static string ModProfileLabel(GameInfo game)

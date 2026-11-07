@@ -12,19 +12,19 @@ internal sealed class ModsForm : StudioDialog
     private readonly Func<Task<List<GameInfo>>> discover;
     private readonly ModCatalog service = new();
     private readonly Dictionary<string, List<ModPackage>> cache = new();
-    private readonly ComboBox gamePicker = new() { Dock = DockStyle.Fill, DropDownStyle = ComboBoxStyle.DropDownList,
+    private readonly ThemedComboBox gamePicker = new() { Dock = DockStyle.Fill, DropDownStyle = ComboBoxStyle.DropDownList,
         FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(30, 35, 51), ForeColor = Color.White };
     private readonly TextBox search = new() { Dock = DockStyle.Fill, PlaceholderText = "Название или автор мода…",
         BackColor = Color.FromArgb(30, 35, 51), ForeColor = Color.White, BorderStyle = BorderStyle.FixedSingle };
     private readonly ModCardList packages = new() { Dock = DockStyle.Fill, BackColor = Color.FromArgb(23, 28, 42),
         ForeColor = Color.FromArgb(231, 231, 247), BorderStyle = BorderStyle.None, IntegralHeight = false, HorizontalScrollbar = false };
-    private readonly Label modTitle = new() { Text = "Выбери мод", Dock = DockStyle.Fill, Font = new Font("Segoe UI", 19, FontStyle.Bold),
+    private readonly SmoothLabel modTitle = new() { Text = "Выбери мод", Dock = DockStyle.Fill, Font = new Font("Segoe UI", 19, FontStyle.Bold),
         ForeColor = Color.FromArgb(241, 237, 255), AutoEllipsis = true };
-    private readonly Label modBadge = new() { Text = "ДЕТАЛИ ПАКЕТА", Dock = DockStyle.Fill,
+    private readonly SmoothLabel modBadge = new() { Text = "ДЕТАЛИ ПАКЕТА", Dock = DockStyle.Fill,
         Font = new Font("Segoe UI", 8, FontStyle.Bold), ForeColor = Color.FromArgb(170, 148, 247) };
     private readonly TextBox details = new() { Dock = DockStyle.Fill, ReadOnly = true, Multiline = true, ScrollBars = ScrollBars.Vertical,
         BackColor = Color.FromArgb(23, 28, 42), ForeColor = Color.FromArgb(196, 201, 223), BorderStyle = BorderStyle.None };
-    private readonly Label status = new() { Dock = DockStyle.Fill, ForeColor = Color.FromArgb(160, 169, 199), AutoEllipsis = true };
+    private readonly SmoothLabel status = new() { Dock = DockStyle.Fill, ForeColor = Color.FromArgb(160, 169, 199), AutoEllipsis = true };
     private readonly ModernButton catalogTab = new("Каталог", Color.FromArgb(38, 33, 65));
     private readonly ModernButton installedTab = new("Установленные", Color.FromArgb(38, 33, 65));
     private readonly ModernButton action = new("Установить", Color.FromArgb(115, 94, 244));
@@ -35,16 +35,18 @@ internal sealed class ModsForm : StudioDialog
     private ModGameAdapter? adapter;
     private ModInstaller? installer;
     private string? gameRoot;
-    private bool busy, installing, installedOnly;
+    private bool busy, installing, installedOnly, disposed;
     private Control toolbarArea = null!, bodyArea = null!;
     private readonly Panel strategyHost = new() { Dock = DockStyle.Fill, Margin = Padding.Empty, Visible = false };
     private Panel modesHost = null!;
     private StrategyModsPanel? strategyView;
     private NativeModsPanel? nativeView;
-    private readonly Label sourceHint = new() { Dock = DockStyle.Fill, Font = new Font("Segoe UI",8), ForeColor = Color.FromArgb(113,128,157), AutoEllipsis = true };
+    private readonly SmoothLabel sourceHint = new() { Dock = DockStyle.Fill, Font = new Font("Segoe UI",8), ForeColor = Color.FromArgb(113,128,157), AutoEllipsis = true };
 
-    public ModsForm(Func<Task<List<GameInfo>>> discover)
+    private readonly GameInfo? initialGame;
+    public ModsForm(Func<Task<List<GameInfo>>> discover,GameInfo? initialGame=null)
     {
+        this.initialGame=initialGame;
         this.discover = discover;
         Text = "PLAYSPACE · Моды";
         BackColor = Color.FromArgb(14, 17, 27); ForeColor = Color.FromArgb(236, 236, 248);
@@ -58,11 +60,11 @@ internal sealed class ModsForm : StudioDialog
         layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
         layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 58));
         layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 24));
-        layout.Controls.Add(new StudioHeading("Сделай игру своей.", "Новые механики, возможности и любимые моды — в одном месте.", "PLAYSPACE / МАСТЕРСКАЯ") { Dock = DockStyle.Fill }, 0, 0);
+        layout.Controls.Add(new StudioHeading("Сделай игру своей.", $"Адаптеров игр: {ModGameAdapter.All.Length+NativeModAdapter.All.Length+StrategyGameAdapter.All.Length} · Thunderstore: {ModGameAdapter.All.Length} · ZIP: {NativeModAdapter.All.Length} · Paradox: {StrategyGameAdapter.All.Length}", "PLAYSPACE / МАСТЕРСКАЯ") { Dock = DockStyle.Fill }, 0, 0);
         var gameRow = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty };
         gameRow.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
         gameRow.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 155)); gameRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-        gameRow.Controls.Add(new Label { Text = "ИГРА НА ЭТОМ ПК", Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft,
+        gameRow.Controls.Add(new SmoothLabel { Text = "ИГРА НА ЭТОМ ПК", Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft,
             Font = new Font("Segoe UI", 8, FontStyle.Bold), ForeColor = Color.FromArgb(143, 152, 183) }, 0, 0);
         gameRow.ColumnCount=3;gameRow.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,142));
         gameRow.ColumnCount=5;gameRow.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,132));gameRow.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,118));
@@ -130,7 +132,7 @@ internal sealed class ModsForm : StudioDialog
             if (IsDisposed) return;
             foreach (var game in games.GroupBy(g => !string.IsNullOrEmpty(g.SteamAppId) ? "steam:" + g.SteamAppId : g.ExePath, StringComparer.OrdinalIgnoreCase)
                 .Select(g => g.First()).OrderByDescending(g => ModGameAdapter.For(g) != null || StrategyGameAdapter.For(g) != null).ThenBy(g => g.Name)) gamePicker.Items.Add(new GameChoice(game));
-            if (gamePicker.Items.Count > 0) gamePicker.SelectedIndex = 0;
+            if (gamePicker.Items.Count > 0) {int match=initialGame==null?-1:gamePicker.Items.Cast<GameChoice>().ToList().FindIndex(c=>c.Game.ExePath==initialGame.ExePath||!string.IsNullOrEmpty(initialGame.SteamAppId)&&c.Game.SteamAppId==initialGame.SteamAppId);gamePicker.SelectedIndex=match<0?0:match;}
             else status.Text = "Установленные игры не найдены. Добавь игру в библиотеку или установи её через игровой клиент.";
         }
         catch (Exception ex) { if (!IsDisposed) status.Text = "Ошибка поиска игр: " + ex.Message; }
@@ -220,7 +222,9 @@ internal sealed class ModsForm : StudioDialog
                 "\r\n\r\nЗависимости:\r\n" + string.Join("\r\n", package.Latest?.Dependencies ?? Array.Empty<string>()) +
                 (exists ? "\r\n\r\nУже установлен. Для смены версии сначала удали пакет и зависящие от него моды." : "\r\n\r\nПеред установкой будет показан полный список пакетов.");
             action.Text = exists ? "Уже установлен" : "Установить мод и зависимости";
-            action.Enabled = !busy && !exists && installer != null;
+            var compatibility=ModCompatibility.Evaluate(package,catalog,adapter,state,(gamePicker.SelectedItem as GameChoice)?.Game,gameRoot);
+            details.Text+="\r\n\r\nСОВМЕСТИМОСТЬ\r\n"+compatibility.Detail;
+            action.Enabled = !busy && !exists && installer != null && compatibility.CanInstall;
         }
         else if (packages.SelectedItem is InstalledMod installed)
         {
@@ -245,6 +249,8 @@ internal sealed class ModsForm : StudioDialog
             List<ModSelection>? plan = null; string? uninstall = null;
             if (packages.SelectedItem is ModPackage package)
             {
+                var compatibility=ModCompatibility.Evaluate(package,catalog,adapter,state,(gamePicker.SelectedItem as GameChoice)?.Game,gameRoot);
+                if(!compatibility.CanInstall){status.Text=compatibility.Detail;return;}
                 plan = ModInstaller.Resolve(package, catalog, adapter, state);
                 if (plan.Count == 0) return;
                 string list = string.Join("\n", plan.Select(p => p.FullId));
@@ -271,7 +277,7 @@ internal sealed class ModsForm : StudioDialog
     }
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { cancellation.Cancel(); cancellation.Dispose(); service.Dispose(); strategyHost.Dispose(); }
+        if (disposing&&!disposed) { disposed=true;cancellation.Cancel(); cancellation.Dispose(); service.Dispose(); strategyHost.Dispose(); }
         base.Dispose(disposing);
     }
 }

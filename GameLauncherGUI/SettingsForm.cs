@@ -29,7 +29,7 @@ public partial class Form1
             foreach(var game in myGames){game.AchievementSummary=null;if(game.SteamPlaytimeUser!=steamUser)SteamPlaytime.Clear(game);}SaveData();RefreshList();
         },preferences.CloseBehavior,behavior=>{
             var next=preferences.Copy();next.CloseBehavior=behavior;next.Save(appDataFolder);preferences=next;
-        },preferences.NotificationsEnabled,SetNotifications,FeedUrl,SaveFeed,async()=>{await CheckUpdates(true);return lblStatus.Text;},preferences.HideWhilePlaying,preferences.RestoreAfterPlaying,SaveGameMode);
+        },preferences.NotificationsEnabled,SetNotifications,FeedUrl,SaveFeed,async()=>{await CheckUpdates(true);return lblStatus.Text;},preferences.HideWhilePlaying,preferences.RestoreAfterPlaying,SaveGameMode,healthAction:OpenHealth,appearanceChanged:ApplyWorkspaceSettings);
         form.ShowDialog(this);
     }
     private async Task SyncLibraryAchievements(Action<string>? status=null)
@@ -63,59 +63,3 @@ public partial class Form1
     }
 }
 
-internal sealed class SettingsForm : StudioDialog
-{
-    public SettingsForm(string currentUser,string currentKey,Func<string,string,bool,Action<string>,Task> connect,Action disconnect,CloseBehavior closeBehavior=CloseBehavior.Ask,Action<CloseBehavior>? saveCloseBehavior=null,bool notificationsEnabled=true,Action<bool>? saveNotifications=null,string updateFeed="",Action<string>? saveUpdateFeed=null,Func<Task<string>>? checkUpdates=null,bool hideWhilePlaying=false,bool restoreAfterPlaying=true,Action<bool,bool>? saveGameMode=null,Func<bool,string>? createShortcut=null)
-    {
-        Text="PLAYSPACE / Настройки";Size=new Size(780,590);MinimumSize=new Size(640,500);
-        var tabs=new TableLayoutPanel {Dock=DockStyle.Fill,RowCount=2,ColumnCount=1};tabs.RowStyles.Add(new RowStyle(SizeType.Absolute,48));tabs.RowStyles.Add(new RowStyle(SizeType.Percent,100));var section=new ModernButton("Профиль Steam",Color.FromArgb(49,38,77)){Width=200,Height=38,IsActive=true};tabs.Controls.Add(section,0,0);var page=new Panel {Dock=DockStyle.Fill,BackColor=Color.FromArgb(14,17,27),ForeColor=Color.White};tabs.Controls.Add(page,0,1);ContentHost.Controls.Add(tabs);
-        var generalPage=new Panel{Dock=DockStyle.Fill,Visible=false,BackColor=Color.FromArgb(14,17,27)};
-        var header=new FlowLayoutPanel{Dock=DockStyle.Fill,WrapContents=false};tabs.Controls.Remove(section);header.Controls.Add(section);
-        var generalButton=new ModernButton("Приложение",Color.FromArgb(31,35,51)){Width=180,Height=38};header.Controls.Add(generalButton);tabs.Controls.Add(header,0,0);
-        void ShowSection(bool general){tabs.Controls.Remove(page);tabs.Controls.Remove(generalPage);var active=general?generalPage:page;tabs.Controls.Add(active,0,1);active.Show();section.IsActive=!general;generalButton.IsActive=general;}
-        section.Click+=(s,e)=>ShowSection(false);generalButton.Click+=(s,e)=>ShowSection(true);
-        var generalLayout=new FlowLayoutPanel{Dock=DockStyle.Fill,FlowDirection=FlowDirection.TopDown,WrapContents=false,Padding=new Padding(28),AutoScroll=true};generalPage.Controls.Add(generalLayout);
-        generalLayout.Controls.Add(new Label{Text="Ярлыки и закрепление",Font=new Font("Segoe UI",16,FontStyle.Bold),Width=580,Height=42});
-        generalLayout.Controls.Add(new Label{Text="Если EXE запускается, а старый ярлык заблокирован Windows: создайте новый локальный ярлык, удалите старое закрепление и закрепите запущенный лаунчер снова. Сначала разместите EXE в постоянной папке.",Width=560,Height=80});
-        var shortcuts=new FlowLayoutPanel{Width=580,Height=48,WrapContents=false};var desktopShortcut=new ModernButton("Ярлык на рабочем столе",VisualTheme.Accent){Width=270,Height=38};var startShortcut=new ModernButton("Ярлык в меню «Пуск»",Color.FromArgb(35,40,63)){Width=260,Height=38};shortcuts.Controls.Add(desktopShortcut);shortcuts.Controls.Add(startShortcut);generalLayout.Controls.Add(shortcuts);var shortcutStatus=new Label{Width=560,Height=62};generalLayout.Controls.Add(shortcutStatus);
-        void CreateShortcut(bool desktop){try{string path=(createShortcut??LauncherShortcuts.CreateForCurrentProcess)(desktop);shortcutStatus.Text="Создан новый ярлык: "+path+". Старое закрепление на панели задач замените вручную.";}catch(Exception ex)when(ex is IOException or UnauthorizedAccessException or ArgumentException or System.Runtime.InteropServices.COMException){shortcutStatus.Text=ex.Message;}}
-        desktopShortcut.Click+=(s,e)=>CreateShortcut(true);startShortcut.Click+=(s,e)=>CreateShortcut(false);
-        generalLayout.Controls.Add(new Label{Text="Закрытие приложения",Font=new Font("Segoe UI",18,FontStyle.Bold),Width=620,Height=54});
-        generalLayout.Controls.Add(new Label{Text="Что делать при нажатии на крестик? Выбор можно изменить в любое время.",Width=580,Height=55});
-        var closeChoice=new ModernSelect{Width=460,Height=42};closeChoice.Items.AddRange(new object[]{"Каждый раз спрашивать","Всегда сворачивать в трей","Всегда выходить полностью"});closeChoice.SelectedIndex=(int)closeBehavior;generalLayout.Controls.Add(closeChoice);
-        var closeStatus=new Label{Width=580,Height=48};generalLayout.Controls.Add(closeStatus);
-        closeChoice.SelectedIndexChanged+=(s,e)=>{try{saveCloseBehavior?.Invoke((CloseBehavior)closeChoice.SelectedIndex);closeStatus.Text="Настройка сохранена.";}catch(Exception ex)when(ex is IOException or UnauthorizedAccessException){closeStatus.Text="Не удалось сохранить настройку.";}};
-        var notifications=new CheckBox{Text="Уведомлять о новых версиях PLAYSPACE",Checked=notificationsEnabled,Width=580,Height=36};generalLayout.Controls.Add(notifications);
-        notifications.CheckedChanged+=(s,e)=>saveNotifications?.Invoke(notifications.Checked);
-        generalLayout.Controls.Add(new Label{Text="Режим игры",Font=new Font("Segoe UI",12,FontStyle.Bold),Width=580,Height=32});
-        var hideGame=new ModernToggle{Text="Сворачивать лаунчер в трей после запуска игры",Checked=hideWhilePlaying,Width=580,Height=38};var restoreGame=new ModernToggle{Text="Возвращать лаунчер после завершения игры",Checked=restoreAfterPlaying,Width=580,Height=38};generalLayout.Controls.Add(hideGame);generalLayout.Controls.Add(restoreGame);
-        var modeStatus=new Label{Text="Возврат работает, пока лаунчер запущен. Для точного отслеживания выберите основной процесс игры в её контекстном меню.",Width=560,Height=52};generalLayout.Controls.Add(modeStatus);
-        void SaveMode(){try{saveGameMode?.Invoke(hideGame.Checked,restoreGame.Checked);modeStatus.Text="Режим игры сохранён.";}catch(Exception ex)when(ex is IOException or UnauthorizedAccessException){modeStatus.Text="Не удалось сохранить режим игры.";}}hideGame.CheckedChanged+=(s,e)=>SaveMode();restoreGame.CheckedChanged+=(s,e)=>SaveMode();
-        generalLayout.Controls.Add(new Label{Text="Обновления · версия "+UpdateService.DisplayVersion,Width=580,Height=32,Font=new Font("Segoe UI",12,FontStyle.Bold)});
-        var feed=new TextBox{Text=updateFeed,PlaceholderText="HTTPS-ссылка на latest.json",Width=560,BackColor=Color.FromArgb(30,35,51),ForeColor=Color.White};generalLayout.Controls.Add(feed);
-        var updateActions=new FlowLayoutPanel{Width=580,Height=48,WrapContents=false};
-        var saveFeed=new ModernButton("Сохранить канал",Color.FromArgb(35,40,63)){Width=225,Height=38};var check=new ModernButton("Проверить обновления",Color.FromArgb(115,94,244)){Width=290,Height=38};updateActions.Controls.Add(saveFeed);updateActions.Controls.Add(check);generalLayout.Controls.Add(updateActions);
-        var updateStatus=new Label{Text="Проверка при запуске и каждый час, включая работу в трее. Отключение уведомлений убирает автоматические окна и уведомления Windows.",Width=560,Height=80};generalLayout.Controls.Add(updateStatus);
-        saveFeed.Click+=(s,e)=>{try{saveUpdateFeed?.Invoke(feed.Text.Trim());updateStatus.Text="Канал обновлений сохранён.";}catch(Exception ex)when(ex is IOException or UnauthorizedAccessException or InvalidDataException or ArgumentException){updateStatus.Text="Не удалось сохранить канал. Нужна HTTPS-ссылка на JSON.";}};
-        check.Click+=async(s,e)=>{check.Enabled=false;try{if(checkUpdates!=null){string message=await checkUpdates();if(!IsDisposed)updateStatus.Text=message;}}finally{if(!IsDisposed)check.Enabled=true;}};
-        Disposed+=(s,e)=>{if(!page.IsDisposed)page.Dispose();if(!generalPage.IsDisposed)generalPage.Dispose();};
-        var layout=new FlowLayoutPanel {Dock=DockStyle.Fill,FlowDirection=FlowDirection.TopDown,WrapContents=false,Padding=new Padding(28),AutoScroll=true};page.Controls.Add(layout);
-        layout.Controls.Add(new Label {Text="Статистика Steam",Font=new Font("Segoe UI",18,FontStyle.Bold),Width=640,Height=48});
-        layout.Controls.Add(new Label {Text="Подключи свой Steam-профиль один раз. Общее время Steam и достижения появятся у всех доступных игр. Открой доступ к игровой статистике и наигранному времени.",Width=600,Height=58});
-        layout.Controls.Add(new Label {Text="SteamID64",AutoSize=true});
-        var user=new TextBox {BackColor=Color.FromArgb(30,35,51),ForeColor=Color.White,Text=currentUser,PlaceholderText="SteamID64 — 17 цифр",Width=560};var key=new TextBox {BackColor=Color.FromArgb(30,35,51),ForeColor=Color.White,Text=currentKey,PlaceholderText="Steam Web API key",UseSystemPasswordChar=true,Width=560};layout.Controls.Add(user);layout.Controls.Add(new Label {Text="Web API key",AutoSize=true});layout.Controls.Add(key);
-        var remember=new CheckBox {Text="Запомнить в защищённом хранилище Windows",Checked=true,Width=580,Height=36};layout.Controls.Add(remember);
-        var link=new LinkLabel {Text="Получить API-ключ на официальном сайте Steam ↗",Width=580,Height=32,LinkColor=Color.FromArgb(166,153,255)};
-        link.LinkClicked+=(s,e)=>System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("https://steamcommunity.com/dev/apikey") {UseShellExecute=true});layout.Controls.Add(link);
-        var apply=new ModernButton("Сохранить и обновить все игры",Color.FromArgb(115,94,244)) {Width=360,Height=44};var remove=new ModernButton("Отключить профиль",Color.FromArgb(40,45,65)) {Width=240,Height=40};layout.Controls.Add(apply);layout.Controls.Add(remove);
-        var status=new Label {Width=600,Height=70,Text="Ключ не сохраняется в библиотеке игр и не передаётся сторонним сервисам."};layout.Controls.Add(status);
-        apply.Click+=async(s,e)=> {
-            if(user.Text.Trim().Length!=17||!user.Text.Trim().All(char.IsAsciiDigit)||key.Text.Trim().Length!=32||!key.Text.Trim().All(Uri.IsHexDigit)) {status.Text="Проверь SteamID64 и API-ключ.";return;}
-            apply.Enabled=remove.Enabled=false;
-            try {await connect(user.Text.Trim(),key.Text.Trim(),remember.Checked,text=>{if(!IsDisposed)status.Text=text;});}
-            catch(Exception ex) when(ex is IOException or System.ComponentModel.Win32Exception) {if(!IsDisposed)status.Text="Не удалось сохранить настройки профиля.";}
-            finally {if(!IsDisposed)apply.Enabled=remove.Enabled=true;}
-        };
-        remove.Click+=(s,e)=>{try{disconnect();user.Clear();key.Clear();status.Text="Профиль отключён.";}catch(System.ComponentModel.Win32Exception){status.Text="Не удалось удалить сохранённый профиль.";}};
-    }
-}

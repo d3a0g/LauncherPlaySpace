@@ -10,6 +10,8 @@ internal sealed class Configuration
     public long OwnerChatId{get;set;}
     public string PairingCode{get;set;}="";
     public string? ProxyUrl{get;set;}
+    public List<SupportOperator> Operators{get;set;}=new();
+    public List<OperatorInvite> OperatorInvites{get;set;}=new();
 }
 internal sealed partial class Bot
 {

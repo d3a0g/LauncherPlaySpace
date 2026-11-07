@@ -40,20 +40,21 @@ internal sealed class RecommendationFavorites
 internal sealed class RecommendationsForm : StudioDialog
 {
     private readonly CustomCheckListBox grid=new() {Dock=DockStyle.Fill,PosterView=true,ShowPinButtons=true,ShowCheckBoxes=false};
-    private readonly ComboBox category=new() {DropDownStyle=ComboBoxStyle.DropDownList,FlatStyle=FlatStyle.Flat,BackColor=Color.FromArgb(30,35,51),ForeColor=Color.White,Dock=DockStyle.Fill};
+    private readonly ThemedComboBox category=new() {DropDownStyle=ComboBoxStyle.DropDownList,FlatStyle=FlatStyle.Flat,BackColor=Color.FromArgb(30,35,51),ForeColor=Color.White,Dock=DockStyle.Fill};
     private readonly TextBox search=new() {Dock=DockStyle.Fill,BackColor=Color.FromArgb(30,35,51),ForeColor=Color.White,PlaceholderText="Поиск игры"};
-    private readonly Label status=new() {Dock=DockStyle.Fill,ForeColor=Color.FromArgb(170,180,205)};
-    private readonly Label title=new() {Dock=DockStyle.Fill,Font=new Font("Segoe UI",17,FontStyle.Bold)};
+    private readonly SmoothLabel status=new() {Dock=DockStyle.Fill,ForeColor=Color.FromArgb(170,180,205)};
+    private readonly SmoothLabel title=new() {Dock=DockStyle.Fill,Font=new Font("Segoe UI",17,FontStyle.Bold)};
     private readonly FormattedDescription description=new() {Dock=DockStyle.Fill};
         private readonly Panel cataloguePage=new(){Dock=DockStyle.Fill};
     private readonly Panel gamePage=new(){Dock=DockStyle.Fill,Visible=false};
     private readonly CategoryRail categoryRail=new(){Dock=DockStyle.Fill};
     private readonly PictureBox banner=new(){Dock=DockStyle.Fill,SizeMode=PictureBoxSizeMode.Zoom,BackColor=Color.FromArgb(18,22,34)};
     private readonly List<Bitmap> screenshots=new();
-    private readonly Label shotCount=new(){Dock=DockStyle.Fill,TextAlign=ContentAlignment.MiddleCenter,ForeColor=Color.FromArgb(171,180,205)};
+    private readonly SmoothLabel shotCount=new(){Dock=DockStyle.Fill,TextAlign=ContentAlignment.MiddleCenter,ForeColor=Color.FromArgb(171,180,205)};
     private readonly ModernButton previousShot=new("←",Color.FromArgb(35,40,63)){Dock=DockStyle.Fill};
     private readonly ModernButton nextShot=new("→",Color.FromArgb(35,40,63)){Dock=DockStyle.Fill};
     private int shotIndex;
+    private readonly ModernButton retryDetails=new("Повторить ↻",Color.FromArgb(35,40,63)){Dock=DockStyle.Fill};
     private readonly ModernButton store=new("Перейти к игре в Steam ↗",Color.FromArgb(115,94,244)) {Dock=DockStyle.Fill,Enabled=false};
     private readonly ModernButton pin=new("☆ Закрепить",Color.FromArgb(40,45,65)) {Dock=DockStyle.Fill,Enabled=false};
     private readonly RecommendationFavorites favorites;
@@ -63,9 +64,10 @@ internal sealed class RecommendationsForm : StudioDialog
     private RecommendedGame? selected;
     private CancellationTokenSource? detailCancellation;
     private int viewVersion;
+    private bool disposed;
     private static readonly HttpClient sharedHttp=new() {Timeout=TimeSpan.FromSeconds(12)};
     private readonly HttpClient http;
-    private bool Offline=>LauncherPreferences.Load(Path.GetDirectoryName(cache)!).OfflineMode;
+    private bool Offline=>LauncherSession.SafeMode||LauncherPreferences.Load(Path.GetDirectoryName(cache)!).OfflineMode;
     public RecommendationsForm(string folder,Func<GameInfo,Task<Bitmap?>> loadPoster,HttpClient? storeClient=null,string? initialGameId=null)
     {
         http=storeClient??sharedHttp;this.loadPoster=loadPoster;favorites=new(folder);cache=Path.Combine(folder,"store-details");
@@ -74,7 +76,7 @@ internal sealed class RecommendationsForm : StudioDialog
         var layout=new TableLayoutPanel {Dock=DockStyle.Fill,ColumnCount=1,RowCount=3,Padding=new Padding(20)};
         layout.RowStyles.Add(new RowStyle(SizeType.Absolute,70));layout.RowStyles.Add(new RowStyle(SizeType.Percent,100));layout.RowStyles.Add(new RowStyle(SizeType.Absolute,30));cataloguePage.Controls.Add(layout);
         var filters=new TableLayoutPanel {Dock=DockStyle.Fill,ColumnCount=2,RowCount=1};filters.RowStyles.Add(new RowStyle(SizeType.Percent,100));filters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,65));filters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,35));
-        filters.Controls.Add(new Label{Text="Найди свой следующий мир",Dock=DockStyle.Fill,Font=new Font("Segoe UI",18,FontStyle.Bold),AutoEllipsis=true,TextAlign=ContentAlignment.MiddleLeft},0,0);
+        filters.Controls.Add(new SmoothLabel{Text="Найди свой следующий мир",Dock=DockStyle.Fill,Font=new Font("Segoe UI",18,FontStyle.Bold),AutoEllipsis=true,TextAlign=ContentAlignment.MiddleLeft},0,0);
         var searchBox=new ModernSearchField(search){Dock=DockStyle.Fill,Margin=new Padding(0,10,0,12)};filters.Controls.Add(searchBox,1,0);layout.Controls.Add(filters,0,0);
         category.Items.AddRange(new object[]{"Все игры","★ Закреплённые"});category.Items.AddRange(RecommendedGame.All.SelectMany(g=>g.Categories).Distinct().Cast<object>().ToArray());category.SelectedIndex=0;
         var body=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=2,RowCount=1};body.RowStyles.Add(new RowStyle(SizeType.Percent,100));body.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,192));body.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,100));body.Controls.Add(categoryRail,0,0);body.Controls.Add(grid,1,0);layout.Controls.Add(body,0,1);layout.Controls.Add(status,0,2);
@@ -83,6 +85,7 @@ internal sealed class RecommendationsForm : StudioDialog
         detailLayout.RowStyles.Add(new RowStyle(SizeType.Absolute,48));detailLayout.RowStyles.Add(new RowStyle(SizeType.Percent,58));detailLayout.RowStyles.Add(new RowStyle(SizeType.Absolute,36));detailLayout.RowStyles.Add(new RowStyle(SizeType.Absolute,60));detailLayout.RowStyles.Add(new RowStyle(SizeType.Percent,42));gamePage.Controls.Add(detailLayout);
         var heading=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=2};heading.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,155));heading.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,100));
         var back=new ModernButton("←  К подборке",Color.FromArgb(31,35,51)){Dock=DockStyle.Fill,Margin=new Padding(0,0,16,8)};back.Click+=(s,e)=>BackToCatalogue();heading.Controls.Add(back,0,0);heading.Controls.Add(title,1,0);detailLayout.Controls.Add(heading,0,0);
+        heading.ColumnCount=3;heading.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,150));heading.Controls.Add(retryDetails,2,0);retryDetails.Click+=async(s,e)=>await SelectGame();
         detailLayout.Controls.Add(banner,0,1);
         var carousel=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=3};carousel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,60));carousel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,100));carousel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,60));carousel.Controls.Add(previousShot,0,0);carousel.Controls.Add(shotCount,1,0);carousel.Controls.Add(nextShot,2,0);detailLayout.Controls.Add(carousel,0,2);
         previousShot.Click+=(s,e)=>ShowShot(shotIndex-1);nextShot.Click+=(s,e)=>ShowShot(shotIndex+1);
@@ -124,7 +127,7 @@ internal sealed class RecommendationsForm : StudioDialog
     private async Task SelectGame()
     {
         selected=visible.ElementAtOrDefault(grid.SelectedIndex);detailCancellation?.Cancel();detailCancellation?.Dispose();detailCancellation=new();var token=detailCancellation.Token;
-        var game=selected;if(game!=null){cataloguePage.Hide();gamePage.Show();gamePage.BringToFront();}ClearShots();store.Enabled=pin.Enabled=game!=null;UpdatePin();if(game==null)return;title.Text=game.Name;description.Text="Загрузка описания Steam…";
+        var game=selected;if(game!=null){cataloguePage.Hide();gamePage.Show();gamePage.BringToFront();}ClearShots();store.Enabled=pin.Enabled=game!=null;UpdatePin();if(game==null)return;title.Text=game.Name;description.Text=Offline?"Читаем сохранённое описание…":"Загрузка описания Steam…";retryDetails.Enabled=false;shotCount.Text=Offline?"Офлайн · читаем кеш":"Загружаем данные Steam…";
         try {
             JObject? data=null;string file=Path.Combine(cache,game.Id+".json");
             if(Offline){if(File.Exists(file))data=JObject.Parse(await File.ReadAllTextAsync(file,token));}
@@ -132,7 +135,7 @@ internal sealed class RecommendationsForm : StudioDialog
                 if(data!=null){Directory.CreateDirectory(cache);await File.WriteAllTextAsync(file,data.ToString(),token);}}
             catch(Exception ex) when(ex is HttpRequestException or TaskCanceledException or IOException or UnauthorizedAccessException) {if(!token.IsCancellationRequested&&File.Exists(file))data=JObject.Parse(await File.ReadAllTextAsync(file,token));}
             token.ThrowIfCancellationRequested();if(IsDisposed)return;
-            if(data==null){description.Text=Offline?"Офлайн-режим: описание этой игры ещё не сохранено. Откройте её при наличии подключения, чтобы сохранить данные.":"Steam не предоставил описание. Можно открыть официальную страницу игры.";return;}
+            if(data==null){description.Text=Offline?"Офлайн-режим: описание этой игры ещё не сохранено. Откройте её при наличии подключения, чтобы сохранить данные.":"Нет данных Steam или соединение недоступно. Нажмите «Повторить» либо откройте магазин.";shotCount.Text=Offline?"Офлайн · кеша нет":"Данные недоступны · можно повторить";return;}
             description.Text=GameDescription.Format(data);
             foreach(var shot in (data["screenshots"] as JArray??new JArray()).Take(12)) {
                 string? url=shot.Value<string>("path_full")??shot.Value<string>("path_thumbnail");if(!Uri.TryCreate(url,UriKind.Absolute,out var uri)||uri.Scheme!="https"||!uri.Host.EndsWith(".steamstatic.com",StringComparison.OrdinalIgnoreCase))continue;
@@ -153,6 +156,7 @@ internal sealed class RecommendationsForm : StudioDialog
                 shotCount.Text="Скриншоты недоступны. Можно открыть страницу Steam.";
         } catch(OperationCanceledException) { }
         catch(Exception ex) when(ex is IOException or JsonException or ArgumentException) {if(!IsDisposed&&!token.IsCancellationRequested)description.Text="Не удалось загрузить данные Steam. Переход в магазин доступен.";}
+        finally{if(!IsDisposed&&!token.IsCancellationRequested)retryDetails.Enabled=true;}
     }
     protected override bool ProcessCmdKey(ref Message msg,Keys keyData)
     {
@@ -166,7 +170,7 @@ internal sealed class RecommendationsForm : StudioDialog
     private void ShowShot(int index){if(screenshots.Count==0)return;shotIndex=(index%screenshots.Count+screenshots.Count)%screenshots.Count;banner.Image=screenshots[shotIndex];UpdateShotControls();}
     private void UpdateShotControls(){previousShot.Enabled=nextShot.Enabled=screenshots.Count>1;shotCount.Text=screenshots.Count==0?(Offline?"Офлайн · сохранённых скриншотов нет":"Скриншоты появятся после загрузки из Steam"):$"{shotIndex+1} / {screenshots.Count}  ·  "+(Offline?"Офлайн-кеш Steam":"Скриншоты Steam");}
     private void ClearShots(){banner.Image=null;foreach(var image in screenshots)image.Dispose();screenshots.Clear();shotIndex=0;UpdateShotControls();}
-    protected override void Dispose(bool disposing){if(disposing){viewVersion++;detailCancellation?.Cancel();detailCancellation?.Dispose();ClearShots();}base.Dispose(disposing);}
+    protected override void Dispose(bool disposing){if(disposing&&!disposed){disposed=true;viewVersion++;detailCancellation?.Cancel();detailCancellation?.Dispose();ClearShots();}base.Dispose(disposing);}
 }
 public partial class Form1
 {

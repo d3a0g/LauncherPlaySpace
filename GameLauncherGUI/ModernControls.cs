@@ -105,7 +105,7 @@ internal sealed class LibraryHero : Control
         var g = e.Graphics;
         g.SmoothingMode = SmoothingMode.AntiAlias;
         using var path = VisualTheme.Rounded(new Rectangle(0, 0, Width - 1, Height - 1), 20);
-        using var gradient = new LinearGradientBrush(ClientRectangle, Color.FromArgb(43, 34, 78), Color.FromArgb(23, 35, 54), 15);
+        using var gradient = new LinearGradientBrush(ClientRectangle, VisualTheme.Blend(Color.FromArgb(23,28,42),VisualTheme.Accent,.20f), Color.FromArgb(20,28,42), 15);
         g.FillPath(gradient, path);
         var state = g.Save();
         g.SetClip(path);
@@ -156,7 +156,7 @@ internal sealed class LibraryHero : Control
         {
             if (icon != null) g.DrawImage(icon, new Rectangle(Width - 85, 16, 42, 42));
             using var buttonPath = VisualTheme.Rounded(PlayBounds, 9);
-            using var buttonFill = new SolidBrush(Color.FromArgb(215, 110, 86, 228));
+            using var buttonFill = new SolidBrush(VisualTheme.Accent);
             g.FillPath(buttonFill, buttonPath);
             SmoothText.Draw(g, "▶  Играть", subtitle, PlayBounds, Color.White,
                 TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
@@ -171,10 +171,15 @@ internal sealed class LibraryHero : Control
 }
 public sealed class ModernButton : Button
 {
+    [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+    public bool IsNavigation {get;set;}
+    [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+    public bool IsSectionNavigation {get;set;}
     private bool active;
     [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
     public bool IsActive { get => active; set { active = value; Invalidate(); } }
     private readonly Color baseColor;
+    private readonly bool primary;
     private readonly System.Windows.Forms.Timer animation = new() { Interval = 16 };
     private bool hovered;
     private bool pressed;
@@ -186,6 +191,7 @@ public sealed class ModernButton : Button
     {
         Text = text;
         baseColor = color;
+        primary=color.ToArgb()==VisualTheme.Accent.ToArgb()||(color.R>75&&color.B>170&&color.B>color.R*1.3&&color.G<160);
         BackColor = color;
         ForeColor = Color.FromArgb(242, 242, 252);
         Font = new Font("Segoe UI", 10, FontStyle.Bold);
@@ -223,12 +229,13 @@ public sealed class ModernButton : Button
         g.SmoothingMode = SmoothingMode.AntiAlias;
         var bounds = new Rectangle(1, pressed ? 2 : 1, Width - 3, Height - 3);
         using var path = VisualTheme.Rounded(bounds, 12);
-        bool accentButton=baseColor.R>75&&baseColor.B>170&&baseColor.B>baseColor.R*1.3&&baseColor.G<160;
-        Color fill = Enabled ? VisualTheme.Blend(IsActive ? VisualTheme.Blend(Color.FromArgb(23,28,42),VisualTheme.Accent,.28f) : accentButton?VisualTheme.Accent:baseColor, VisualTheme.Accent, hover * .22f) : Color.FromArgb(34, 37, 51);
+        Color neutral=baseColor.R>70&&baseColor.R>baseColor.B*1.25?baseColor:Color.FromArgb(31,36,53);
+        Color fill = Enabled ? VisualTheme.Blend(IsActive ? VisualTheme.Blend(Color.FromArgb(23,28,42),VisualTheme.Accent,.28f) : primary?VisualTheme.Accent:neutral, VisualTheme.Accent, hover * .18f) : Color.FromArgb(34, 37, 51);
         using var gradient = new LinearGradientBrush(bounds, ControlPaint.Light(fill, .07f), fill, 90);
-        g.FillPath(gradient, path);
-        using var border = new Pen(Color.FromArgb((int)((IsActive ? 115 : 36) + hover * 75), 195, 182, 255));
-        g.DrawPath(border, path);
+        if(IsSectionNavigation||!IsNavigation||IsActive||hover>.01f)g.FillPath(gradient, path);
+        using var border = new Pen(VisualTheme.Blend(Color.FromArgb(49,56,76),VisualTheme.Accent,IsActive?.65f:hover*.55f));
+        if(IsSectionNavigation||!IsNavigation)g.DrawPath(border, path);
+        if(IsSectionNavigation&&IsActive){using var marker=new Pen(VisualTheme.Accent,3);g.DrawLine(marker,5,12,5,Height-12);}
         if (ripple < 1)
         {
             var state = g.Save();
@@ -239,6 +246,7 @@ public sealed class ModernButton : Button
             g.Restore(state);
         }
         var textBounds = bounds;
+        if(IsSectionNavigation){textBounds.X+=14;textBounds.Width=Math.Max(1,textBounds.Width-24);}
         if (Image != null)
         {
             int size = Math.Min(28, Math.Max(1, Height - 16));
@@ -247,7 +255,7 @@ public sealed class ModernButton : Button
             textBounds.Width = Math.Max(1, textBounds.Width - 51);
         }
         SmoothText.Draw(g, Text, Font, textBounds, Enabled ? ForeColor : Color.FromArgb(122, 129, 154),
-            TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
+            (IsNavigation?TextFormatFlags.Left:TextFormatFlags.HorizontalCenter) | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
         if (Focused && ShowFocusCues)
         {
             using var focus = new Pen(Color.FromArgb(200, 191, 255)) { DashStyle = DashStyle.Dot };
@@ -526,7 +534,7 @@ public sealed class CustomCheckListBox : Panel
             bool selected = i == SelectedIndex;
             float highlight = i == hoveredIndex ? hover : 0;
             using var card = VisualTheme.Rounded(rect, 13);
-            Color fill = selected ? Color.FromArgb(40, 35, 66) : VisualTheme.Blend(Color.FromArgb(23, 28, 42), Color.FromArgb(39, 44, 65), highlight);
+            Color fill = selected ? VisualTheme.Blend(Color.FromArgb(23,28,42),VisualTheme.Accent,.18f) : VisualTheme.Blend(Color.FromArgb(23, 28, 42), Color.FromArgb(39, 44, 65), highlight);
             using var background = new SolidBrush(fill);
             g.FillPath(background, card);
             using var border = new Pen(selected ? VisualTheme.Accent : VisualTheme.Blend(Color.FromArgb(37, 43, 61), Color.FromArgb(99, 88, 143), highlight));

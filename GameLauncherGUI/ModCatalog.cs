@@ -4,10 +4,10 @@ using Newtonsoft.Json;
 
 namespace GameLauncherGUI;
 
-internal sealed record ModGameAdapter(string SteamId, string Name, string Community, string Executable, string Loader, string? UnrealProject = null)
+internal sealed record ModGameAdapter(string SteamId, string Name, string Community, string Executable, string Loader, string? UnrealProject = null,string? DataFolder=null)
 {
     public bool IsUnreal => UnrealProject != null;
-    public static readonly ModGameAdapter[] All = {
+    public static readonly ModGameAdapter[] All = new ModGameAdapter[]{
         new("3241660", "R.E.P.O.", "repo", "REPO.exe", "BepInEx-BepInExPack"),
         new("1966720", "Lethal Company", "lethal-company", "Lethal Company.exe", "BepInEx-BepInExPack"),
         new("892970", "Valheim", "valheim", "valheim.exe", "denikson-BepInExPack_Valheim"),
@@ -21,7 +21,7 @@ internal sealed record ModGameAdapter(string SteamId, string Name, string Commun
         new("1366540", "Dyson Sphere Program", "dyson-sphere-program", "DSPGAME.exe", "xiaoye97-BepInEx"),
         new("1623730", "Palworld", "palworld", "Palworld.exe", "Thunderstore-unreal_shimloader", "Pal"),
         new("493520", "GTFO", "gtfo", "GTFO.exe", "BepInEx-BepInExPack_GTFO")
-    };
+    }.Concat(AdditionalModAdapters.Load()).DistinctBy(a=>a.SteamId).ToArray();
     public static ModGameAdapter? For(GameInfo game) => All.FirstOrDefault(a => a.SteamId == game.SteamAppId ||
         (string.IsNullOrEmpty(game.SteamAppId) && Path.GetFileName(game.ExePath).Equals(a.Executable, StringComparison.OrdinalIgnoreCase)));
 
@@ -29,7 +29,7 @@ internal sealed record ModGameAdapter(string SteamId, string Name, string Commun
     {
         bool Valid(string folder) => File.Exists(Path.Combine(folder, Executable)) && (IsUnreal
             ? File.Exists(Path.Combine(folder, UnrealProject!, "Binaries", "Win64", Path.GetFileNameWithoutExtension(Executable) + "-Win64-Shipping.exe"))
-            : Directory.EnumerateDirectories(folder, "*_Data").Any());
+            : DataFolder!=null?Directory.Exists(Path.Combine(folder,DataFolder)):Directory.EnumerateDirectories(folder, "*_Data").Any());
         if (!string.IsNullOrEmpty(game.InstallDirectory) && Valid(game.InstallDirectory)) return Path.GetFullPath(game.InstallDirectory);
         if (!File.Exists(game.ExePath)) return null;
         var folder = Directory.GetParent(game.ExePath);
@@ -55,6 +55,8 @@ internal sealed class ModPackage
 
 internal sealed class ModVersion
 {
+    // Optional explicit metadata. Missing data must never be interpreted as universal compatibility.
+    [JsonProperty("playspace_game_versions")] public string[] SupportedGameVersions { get; set; } = Array.Empty<string>();
     [JsonProperty("version_number")] public string Version { get; set; } = "";
     [JsonProperty("description")] public string Description { get; set; } = "";
     [JsonProperty("download_url")] public string DownloadUrl { get; set; } = "";

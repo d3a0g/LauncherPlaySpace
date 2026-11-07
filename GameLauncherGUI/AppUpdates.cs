@@ -72,9 +72,9 @@ internal sealed class UpdateAvailableForm : StudioDialog
     {
         Text="PLAYSPACE / Доступно обновление";Size=new Size(760,650);MinimumSize=new Size(580,480);
         var layout=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=1,RowCount=5,Padding=new Padding(28)};layout.RowStyles.Add(new RowStyle(SizeType.Absolute,50));layout.RowStyles.Add(new RowStyle(SizeType.Absolute,36));layout.RowStyles.Add(new RowStyle(SizeType.Absolute,32));layout.RowStyles.Add(new RowStyle(SizeType.Percent,100));layout.RowStyles.Add(new RowStyle(SizeType.Absolute,56));ContentHost.Controls.Add(layout);
-        layout.Controls.Add(new Label{Text="Новая версия PLAYSPACE",Font=new Font("Segoe UI",19,FontStyle.Bold),Dock=DockStyle.Fill},0,0);
-        layout.Controls.Add(new Label{Text=$"Версия {UpdateService.DisplayVersion} → {release.Version}",Dock=DockStyle.Fill,ForeColor=Color.FromArgb(171,160,223)},0,1);
-        layout.Controls.Add(new Label{Text="Что изменилось",Font=new Font("Segoe UI",11,FontStyle.Bold),Dock=DockStyle.Fill},0,2);
+        layout.Controls.Add(new SmoothLabel{Text="Новая версия PLAYSPACE",Font=new Font("Segoe UI",19,FontStyle.Bold),Dock=DockStyle.Fill},0,0);
+        layout.Controls.Add(new SmoothLabel{Text=$"Версия {UpdateService.DisplayVersion} → {release.Version}",Dock=DockStyle.Fill,ForeColor=Color.FromArgb(171,160,223)},0,1);
+        layout.Controls.Add(new SmoothLabel{Text="Что изменилось",Font=new Font("Segoe UI",11,FontStyle.Bold),Dock=DockStyle.Fill},0,2);
         var card=new RoundedPanel{Dock=DockStyle.Fill,Margin=new Padding(0,0,0,12),Padding=new Padding(16)};
         card.Controls.Add(new FormattedDescription{Text=FormatNotes(release.Notes),Dock=DockStyle.Fill,AccessibleName="Список изменений обновления"});layout.Controls.Add(card,0,3);
         var download=new ModernButton("Открыть загрузку обновления ↗",Color.FromArgb(115,94,244)){Dock=DockStyle.Fill,Margin=new Padding(0,8,0,0)};layout.Controls.Add(download,0,4);

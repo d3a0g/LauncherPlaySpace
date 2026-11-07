@@ -16,9 +16,9 @@ internal sealed class NetworkForm : StudioDialog
     private readonly ModernButton check=new("Проверить туннель",Color.FromArgb(35,40,63)){Dock=DockStyle.Fill};
     private readonly ModernButton diagnostics=new("Диагностика и отчёт",Color.FromArgb(35,40,63)){Dock=DockStyle.Fill};
     private readonly ModernToggle consent=new(){Dock=DockStyle.Fill,Text="Принимаю условия Cloudflare и подключение через WARP",AccessibleName="Согласие на установку и использование Cloudflare WARP"};
-    private readonly Label state=new(){Dock=DockStyle.Fill,Font=new Font("Segoe UI",18,FontStyle.Bold),Text="Проверяем компонент…"};
-    private readonly Label detail=new(){Dock=DockStyle.Fill,ForeColor=Color.FromArgb(165,177,202)};
-    private readonly Label activity=new(){Dock=DockStyle.Fill,ForeColor=Color.FromArgb(188,174,239),AutoEllipsis=true};
+    private readonly SmoothLabel state=new(){Dock=DockStyle.Fill,Font=new Font("Segoe UI",18,FontStyle.Bold),Text="Проверяем компонент…"};
+    private readonly SmoothLabel detail=new(){Dock=DockStyle.Fill,ForeColor=Color.FromArgb(165,177,202)};
+    private readonly SmoothLabel activity=new(){Dock=DockStyle.Fill,ForeColor=Color.FromArgb(188,174,239),AutoEllipsis=true};
     private WarpState current=WarpState.Unknown;private bool busy,disposed,reboot;
     internal NetworkForm(string dataFolder,IWarpClient? client=null,Func<IProgress<string>,CancellationToken,Task<bool>>? installer=null,Func<CancellationToken,Task<bool>>? trace=null)
     {

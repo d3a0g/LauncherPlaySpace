@@ -25,7 +25,7 @@ internal static class PreferencesChecks
         if(ui){
             IEnumerable<Control> Descendants(Control parent){foreach(Control child in parent.Controls){yield return child;foreach(var descendant in Descendants(child))yield return descendant;}}
             using(var settings=new SettingsForm("","",(_,_,_,_)=>Task.CompletedTask,()=>{},CloseBehavior.Exit,behavior=>new LauncherPreferences{CloseBehavior=behavior}.Save(folder))){
-                settings.Show();Application.DoEvents();Descendants(settings).OfType<ModernButton>().Single(button=>button.Text=="Приложение").PerformClick();
+                settings.Show();Application.DoEvents();Descendants(settings).OfType<ModernButton>().Single(button=>button.Text=="Запуск и трей").PerformClick();
                 var choice=Descendants(settings).OfType<ModernSelect>().Single();choice.SelectedIndex=0;
                 if(LauncherPreferences.Load(folder).CloseBehavior!=CloseBehavior.Ask)throw new Exception("Settings couldn't reset saved close choice");
                 Directory.CreateDirectory("artifacts");using var preview=new Bitmap(settings.Width,settings.Height);settings.DrawToBitmap(preview,settings.ClientRectangle);preview.Save("artifacts/application-settings.png");

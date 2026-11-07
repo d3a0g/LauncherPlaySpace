@@ -160,10 +160,11 @@ internal sealed class ModInstaller
                 if (name.EndsWith(".sh", StringComparison.OrdinalIgnoreCase) || name.EndsWith(".bat", StringComparison.OrdinalIgnoreCase) ||
                     name.EndsWith(".md", StringComparison.OrdinalIgnoreCase) || name.StartsWith("doorstop_libs/", StringComparison.OrdinalIgnoreCase) ||
                     name.EndsWith(".so", StringComparison.OrdinalIgnoreCase) || name.EndsWith(".dylib", StringComparison.OrdinalIgnoreCase) ||
-                    new[] { "changelog.txt", "readme.txt", "license.txt", "credits.txt" }.Contains(name, StringComparer.OrdinalIgnoreCase)) continue;
+                    new[] { "changelog.txt", "readme.txt", "license.txt", "credits.txt", "steam_appid.txt" }.Contains(name, StringComparer.OrdinalIgnoreCase)) continue;
                 if (!(name.StartsWith("BepInEx/", StringComparison.OrdinalIgnoreCase) ||
                     name.Equals("winhttp.dll", StringComparison.OrdinalIgnoreCase) || name.Equals("doorstop_config.ini", StringComparison.OrdinalIgnoreCase) ||
-                    (adapter.Community == "inscryption" && name.Equals("version.dll", StringComparison.OrdinalIgnoreCase)) ||
+                    name.Equals("version.dll", StringComparison.OrdinalIgnoreCase) ||
+                    (name.StartsWith("dotnet/",StringComparison.OrdinalIgnoreCase)&&(new[]{".dll",".json",".txt",".version",".pdb"}.Contains(Path.GetExtension(name),StringComparer.OrdinalIgnoreCase)||name.Equals("dotnet/dotnet.exe",StringComparison.OrdinalIgnoreCase)||name.Equals("dotnet/.version",StringComparison.OrdinalIgnoreCase)||Path.GetFileName(name).Equals("LICENSE",StringComparison.OrdinalIgnoreCase))) ||
                     (adapter.Community == "rounds" && name.StartsWith("corlibs/", StringComparison.OrdinalIgnoreCase)) ||
                     name.Equals(".doorstop_version", StringComparison.OrdinalIgnoreCase)))
                     throw new InvalidDataException("Неподдерживаемый файл загрузчика: " + name);
@@ -185,7 +186,7 @@ internal sealed class ModInstaller
                 if (new[] { ".exe", ".bat", ".cmd", ".ps1", ".sh" }.Contains(Path.GetExtension(destination), StringComparer.OrdinalIgnoreCase))
                     throw new InvalidDataException("Пакет требует выполнения установщика: " + leaf);
             }
-            if (entry.Length > 64L * 1024 * 1024 || (total += entry.Length) > 128L * 1024 * 1024)
+            if (entry.Length > 64L * 1024 * 1024 || (total += entry.Length) > (loader?256L:128L) * 1024 * 1024)
                 throw new InvalidDataException("Распакованный пакет превышает лимит размера.");
             using var source = entry.Open();
             using var output = new MemoryStream();
@@ -295,17 +296,24 @@ internal sealed class ModInstaller
         {
             string path = SafePath(root, relative);
             if (!state.Files.TryGetValue(relative, out var managed) || !managed.Created || !File.Exists(path)) continue;
-            if (FileHash(path) != managed.Hash)
+            string currentHash=FileHash(path);
+            if (currentHash != managed.Hash)
             {
+                if(id==OptiScalerManager.PackageId&&new[]{"OptiScaler.ini","fakenvapi.ini"}.Contains(relative,StringComparer.OrdinalIgnoreCase)){
+                    string saved=SafePath(stateRoot,"preserved/"+journal.Id+"-"+Path.GetFileName(relative));
+                    Directory.CreateDirectory(Path.GetDirectoryName(saved)!);File.Copy(path,saved,false);
+                }
+                else {
                 if (relative.Replace('\\', '/').StartsWith("BepInEx/config/", StringComparison.OrdinalIgnoreCase) ||
                     relative.Replace('\\', '/').StartsWith(".playspace-mods/unreal/cfg/", StringComparison.OrdinalIgnoreCase)) continue;
                 throw new IOException("Файл изменён после установки; сохрани его и удали вручную: " + relative);
+                }
             }
             string backup = "undo/" + journal.Id + "-" + journal.Changes.Count + ".bin";
             string backupPath = SafePath(stateRoot, backup);
             Directory.CreateDirectory(Path.GetDirectoryName(backupPath)!);
             File.Copy(path, backupPath);
-            journal.Changes.Add(new ModChange { Path = relative, Hash = managed.Hash, Backup = backup });
+            journal.Changes.Add(new ModChange { Path = relative, Hash = currentHash, Backup = backup });
         }
         WriteJson(JournalFile, journal);
         try

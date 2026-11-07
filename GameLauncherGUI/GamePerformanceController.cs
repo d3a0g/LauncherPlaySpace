@@ -4,27 +4,30 @@ using System.Text.RegularExpressions;
 
 namespace GameLauncherGUI;
 
-internal enum PerformanceBackend { None, Unity, Unreal, Source2 }
+internal enum PerformanceBackend { None, Unity, Unreal, Source2, Cyberpunk }
 
 internal static class GamePerformanceController
 {
     public static PerformanceBackend Backend(GameInfo game)
     {
+        if(game.SteamAppId=="1091500"||Path.GetFileName(game.ExePath).Equals("Cyberpunk2077.exe",StringComparison.OrdinalIgnoreCase))return PerformanceBackend.Cyberpunk;
         if (game.SteamAppId == "730") return PerformanceBackend.Source2;
         var adapter = ModGameAdapter.For(game);
         if (adapter != null) return adapter.IsUnreal ? PerformanceBackend.Unreal : PerformanceBackend.Unity;
         string? folder = Path.GetDirectoryName(game.ExePath);
         if (folder != null && File.Exists(Path.Combine(folder, "UnityPlayer.dll"))) return PerformanceBackend.Unity;
+        if(Path.GetFileNameWithoutExtension(game.ExePath).EndsWith("-Win64-Shipping",StringComparison.OrdinalIgnoreCase)||Directory.Exists(Path.Combine(game.InstallDirectory??folder??"", "Engine")))return PerformanceBackend.Unreal;
         return PerformanceBackend.None;
     }
 
     public static string? Config(GameInfo game, PerformanceProfile profile)
     {
+        if(Backend(game)==PerformanceBackend.Cyberpunk){string candidate=profile.ConfigFile??Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"CD Projekt Red","Cyberpunk 2077","UserSettings.json");return File.Exists(candidate)&&Path.GetFileName(candidate).Equals("UserSettings.json",StringComparison.OrdinalIgnoreCase)?Path.GetFullPath(candidate):null;}
         if (Backend(game) != PerformanceBackend.Unreal) return null;
         if (!string.IsNullOrWhiteSpace(profile.ConfigFile) && Path.GetFileName(profile.ConfigFile).Equals("GameUserSettings.ini", StringComparison.OrdinalIgnoreCase) &&
             File.Exists(profile.ConfigFile)) return Path.GetFullPath(profile.ConfigFile);
-        var adapter = ModGameAdapter.For(game)!;
-        var projects = new[] { adapter.UnrealProject!, Path.GetFileNameWithoutExtension(adapter.Executable) }.Distinct();
+        var adapter = ModGameAdapter.For(game);
+        var projects = new[] { adapter?.UnrealProject, Path.GetFileNameWithoutExtension(adapter?.Executable??game.ExePath).Replace("-Win64-Shipping","",StringComparison.OrdinalIgnoreCase),Path.GetFileName(game.InstallDirectory?.TrimEnd(Path.DirectorySeparatorChar)) }.Where(p=>!string.IsNullOrWhiteSpace(p)&&p.IndexOfAny(Path.GetInvalidFileNameChars())<0).Select(p=>p!).Distinct();
         var paths = projects.SelectMany(project => new[] { "Windows", "WindowsNoEditor" }.Select(platform =>
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), project, "Saved", "Config", platform, "GameUserSettings.ini")))
             .Where(File.Exists).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
@@ -32,6 +35,7 @@ internal static class GamePerformanceController
     }
 
     public static string Support(GameInfo game, PerformanceProfile profile) => Backend(game) switch {
+        PerformanceBackend.Cyberpunk=>"Настройки из UserSettings.json: доступны только существующие параметры и значения файла. Перед запуском создаётся резервная копия. Выбранные технологии требуют поддержки GPU и игры.",
         PerformanceBackend.Unreal when Config(game, profile) != null => "Разрешение · режим экрана · FPS · VSync · качество · масштаб рендера. Конфиг сохраняется с резервной копией.",
         PerformanceBackend.Unreal => "Разрешение и режим экрана — при запуске. Для FPS, VSync и качества выбери существующий GameUserSettings.ini или запусти игру один раз.",
         PerformanceBackend.Unity => "Применяются разрешение и режим экрана через параметры Unity. FPS, VSync и качество пока настраиваются в самой игре.",
@@ -54,7 +58,7 @@ internal static class GamePerformanceController
             PerformanceBackend.Unreal => new[] { "-ResX=" + w, "-ResY=" + h, profile.WindowMode == "Оконный" ? "-windowed" : "-fullscreen" },
             PerformanceBackend.Source2 => new[] { "-w", w, "-h", h, profile.WindowMode == "Полноэкранный" ? "-fullscreen" : "-windowed" }
                 .Concat(profile.WindowMode == "Безрамочный" ? new[] { "-noborder" } : Array.Empty<string>())
-                .Concat(new[] { "+fps_max", profile.TargetFps.ToString(CultureInfo.InvariantCulture) }).ToArray(),
+                .Concat(new[] { "+fps_max", profile.UnlimitedFps?"0":profile.TargetFps.ToString(CultureInfo.InvariantCulture) }).ToArray(),
             _ => Array.Empty<string>()
         };
     }
@@ -74,7 +78,9 @@ internal static class GamePerformanceController
         }
         Size screen = Screen.PrimaryScreen?.Bounds.Size ?? new Size(1920, 1080);
         string? path = Config(game, profile);
-        if (path != null) ApplyConfig(path, profile, screen);
+        if(Backend(game)==PerformanceBackend.Cyberpunk&&path==null)throw new InvalidOperationException("Подключи существующий UserSettings.json этой игры.");
+        if(Backend(game)==PerformanceBackend.Cyberpunk){var gpu=RtxCompatibility.Detect(PcSnapshot.Read().Gpu);if(profile.NativeOptions.Any(p=>p.Key.EndsWith("|DLSSFrameGen")&&p.Value=="true")&&!gpu.NativeFrameGeneration)throw new InvalidOperationException("NVIDIA Frame Generation не поддерживается определённой видеокартой. Для RTX 30 используй отдельный режим FSR/OptiScaler.");if(profile.NativeOptions.Any(p=>p.Key.EndsWith("|DLSS")&&p.Value!="Off")&&!gpu.SuperResolution)throw new InvalidOperationException("Для DLSS нужна совместимая GeForce RTX.");}
+        if (path != null){DlssManager.EnsureClosed(game);if(Backend(game)==PerformanceBackend.Cyberpunk)CyberpunkGraphics.Apply(path,profile.NativeOptions);else ApplyConfig(path, profile, screen);}
         return BuildArguments(game, profile, screen);
     }
 
@@ -104,19 +110,31 @@ internal static class GamePerformanceController
         foreach (string key in new[] { "ResolutionSizeX", "LastUserConfirmedResolutionSizeX" }) Set(section, key, width);
         foreach (string key in new[] { "ResolutionSizeY", "LastUserConfirmedResolutionSizeY" }) Set(section, key, height);
         Set(section, "FullscreenMode", mode); Set(section, "LastConfirmedFullscreenMode", mode);
-        Set(section, "FrameRateLimit", profile.TargetFps.ToString(CultureInfo.InvariantCulture));
+        Set(section, "FrameRateLimit", profile.UnlimitedFps?"0":profile.TargetFps.ToString(CultureInfo.InvariantCulture));
         Set(section, "bUseVSync", profile.VSync ? "True" : "False");
         Set(section, "bUseDynamicResolution", "False");
         int level = profile.Quality == "Низкие" ? 0 : profile.Quality == "Средние" ? 1 : 2;
         foreach (string key in new[] { "ViewDistanceQuality", "AntiAliasingQuality", "ShadowQuality", "GlobalIlluminationQuality", "ReflectionQuality",
             "PostProcessQuality", "TextureQuality", "EffectsQuality", "FoliageQuality", "ShadingQuality" })
-            Set("[ScalabilityGroups]", "sg." + key, level.ToString(CultureInfo.InvariantCulture));
+            Set("[ScalabilityGroups]", "sg." + key, (profile.DetailLevels.TryGetValue(key,out int custom)?custom:level).ToString(CultureInfo.InvariantCulture));
         Set("[ScalabilityGroups]", "sg.ResolutionQuality", profile.RenderScale.ToString(CultureInfo.InvariantCulture));
         return string.Join("\r\n", lines);
     }
 
+    internal static PerformanceProfile ReadConfig(string path)
+    {
+        ManagedPaths.NoLinks(path);if(new FileInfo(path).Length>4*1024*1024)throw new IOException("Конфигурация слишком большая.");var text=File.ReadAllText(path);var profile=new PerformanceProfile{ConfigFile=path};EditIni(text,profile,new(1920,1080));string section="";var values=new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase);
+        foreach(string line in text.Replace("\r\n","\n").Split('\n')){string clean=line.Trim();if(clean.StartsWith('[')){section=clean;continue;}int separator=clean.IndexOf('=');if(separator<1||clean.StartsWith(';'))continue;if(section.Contains("GameUserSettings",StringComparison.OrdinalIgnoreCase)||section.Equals("[ScalabilityGroups]",StringComparison.OrdinalIgnoreCase))values[clean[..separator].Trim()]=clean[(separator+1)..].Trim();}
+        int Number(string key,int fallback)=>values.TryGetValue(key,out string? value)&&double.TryParse(value,NumberStyles.Float,CultureInfo.InvariantCulture,out double parsed)&&double.IsFinite(parsed)&&parsed is >=int.MinValue and <=int.MaxValue?(int)Math.Round(parsed):fallback;
+        profile.ResolutionWidth=Number("ResolutionSizeX",0);profile.ResolutionHeight=Number("ResolutionSizeY",0);profile.TargetFps=Number("FrameRateLimit",60);profile.RenderScale=Number("sg.ResolutionQuality",100);profile.VSync=values.TryGetValue("bUseVSync",out string? sync)&&sync.Equals("True",StringComparison.OrdinalIgnoreCase);profile.WindowMode=Number("FullscreenMode",1) switch{0=>"Полноэкранный",2=>"Оконный",_=>"Безрамочный"};
+        profile.UnlimitedFps=Number("FrameRateLimit",60)==0;
+        if(profile.UnlimitedFps)profile.TargetFps=60;
+        foreach(var parameter in GraphicsParameters.Unreal){int level=Number("sg."+parameter.Key,-1);if(level is >=0 and <=3)profile.DetailLevels[parameter.Key]=level;}return profile.Copy();
+    }
+
     internal static void ApplyConfig(string path, PerformanceProfile profile, Size screen)
     {
+        ManagedPaths.NoLinks(path);ManagedPaths.NoLinks(path+".playspace-backup");
         if (!Path.GetFileName(path).Equals("GameUserSettings.ini", StringComparison.OrdinalIgnoreCase)) throw new InvalidDataException("Неверное имя конфигурации.");
         if ((File.GetAttributes(path) & FileAttributes.ReparsePoint) != 0) throw new IOException("Файл-ссылка не поддерживается.");
         string updated = EditIni(File.ReadAllText(path), profile, screen);
@@ -125,6 +143,8 @@ internal static class GamePerformanceController
     }
     public static void RestoreConfig(string path)
     {
+        if(Path.GetFileName(path).Equals("UserSettings.json",StringComparison.OrdinalIgnoreCase)){CyberpunkGraphics.Restore(path);return;}
+        ManagedPaths.NoLinks(path);ManagedPaths.NoLinks(path+".playspace-backup");
         if (!File.Exists(path + ".playspace-backup")) throw new FileNotFoundException("Резервная копия не найдена.");
         if (!Path.GetFileName(path).Equals("GameUserSettings.ini", StringComparison.OrdinalIgnoreCase)) throw new InvalidDataException("Неверное имя конфигурации.");
         if ((File.GetAttributes(path) & FileAttributes.ReparsePoint) != 0) throw new IOException("Файл-ссылка не поддерживается.");

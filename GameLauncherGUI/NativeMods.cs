@@ -6,7 +6,7 @@ namespace GameLauncherGUI;
 
 internal sealed record NativeModAdapter(string SteamId,string Name,string Layout,string Folder,string? UserBase=null,string? RequiredFile=null)
 {
-    public static readonly NativeModAdapter[] All={
+    public static readonly NativeModAdapter[] All=new NativeModAdapter[]{
         new("413150","Stardew Valley / SMAPI","smapi","Mods",null,"StardewModdingAPI.exe"),
         new("294100","RimWorld","rimworld","Mods"),new("268500","XCOM 2","xcom","XComGame/Mods"),
         new("427520","Factorio","factorio","Factorio/mods","appdata"),
@@ -17,7 +17,7 @@ internal sealed record NativeModAdapter(string SteamId,string Name,string Layout
         new("489830","Skyrim Special Edition / Data","data","Data"),new("72850","Skyrim / Data","data","Data"),
         new("377160","Fallout 4 / Data","data","Data"),new("22380","Fallout: New Vegas / Data","data","Data"),
         new("22370","Fallout 3 GOTY / Data","data","Data"),new("22330","Oblivion / Data","data","Data")
-    };
+    }.Concat(ExtraNativeMods.All).ToArray();
     public static NativeModAdapter? For(GameInfo game)=>All.FirstOrDefault(a=>a.SteamId==game.SteamAppId);
     public string Root(GameInfo game,string? userOverride=null)
     {
@@ -26,7 +26,7 @@ internal sealed record NativeModAdapter(string SteamId,string Name,string Layout
         if(RequiredFile!=null&&!File.Exists(Path.Combine(root,RequiredFile)))throw new IOException("Сначала установи загрузчик: "+RequiredFile);
         return ModInstaller.SafePath(root,Folder);
     }
-    public string Hint=>Layout switch{"smapi"=>"Требуется установленный SMAPI. ZIP одного мода с manifest.json; запускай через StardewModdingAPI.exe.","rimworld"=>"ZIP одного мода с About/About.xml. Активируй мод и порядок в меню RimWorld.","factorio"=>"ZIP с info.json сохраняется как штатный архив Factorio. Зависимости/активация настраиваются в игре.","xcom"=>"ZIP с .XComMod. Активируй мод в игровом менеджере XCOM 2.","archive"=>"Только архивные .archive-моды. REDmod, RED4ext и скриптовые установщики не поддерживаются этим импортом.","pak"=>"Только .pak. Активация и зависимости — в менеджере модов игры. Не каждый PAK совместим с текущей версией.","data"=>"Импорт файлов Data без перезаписи оригиналов. Плагины активируются отдельно в менеджере игры. SKSE/F4SE и DLL-загрузчики не устанавливаются.",_=>"ZIP модов в папку Mods. Порядок, зависимости и совместимость проверяются в игре."};
+    public string Hint=>ExtraNativeMods.Hint(Layout)??(Layout switch{"smapi"=>"Требуется установленный SMAPI. ZIP одного мода с manifest.json; запускай через StardewModdingAPI.exe.","rimworld"=>"ZIP одного мода с About/About.xml. Активируй мод и порядок в меню RimWorld.","factorio"=>"ZIP с info.json сохраняется как штатный архив Factorio. Зависимости/активация настраиваются в игре.","xcom"=>"ZIP с .XComMod. Активируй мод в игровом менеджере XCOM 2.","archive"=>"Только архивные .archive-моды. REDmod, RED4ext и скриптовые установщики не поддерживаются этим импортом.","pak"=>"Только .pak. Активация и зависимости — в менеджере модов игры. Не каждый PAK совместим с текущей версией.","data"=>"Импорт файлов Data без перезаписи оригиналов. Плагины активируются отдельно в менеджере игры. SKSE/F4SE и DLL-загрузчики не устанавливаются.",_=>"ZIP модов в папку Mods. Порядок, зависимости и совместимость проверяются в игре."});
 }
 internal static class NativeModImport
 {
@@ -42,6 +42,7 @@ internal static class NativeModImport
                 using var reader=new StreamReader(info.Open());if(info.Length>1024*1024)throw new InvalidDataException("info.json слишком большой.");var metadata=JObject.Parse(reader.ReadToEnd());string id=metadata.Value<string>("name")??"",version=metadata.Value<string>("version")??"";
                 if(!Regex.IsMatch(id,@"^[A-Za-z0-9_-]+$")||!Regex.IsMatch(version,@"^\d+\.\d+\.\d+$"))throw new InvalidDataException("Неверные name/version Factorio.");if(!info.FullName.Equals(id+"_"+version+"/info.json",StringComparison.Ordinal))throw new InvalidDataException("Factorio ZIP должен содержать папку name_version с info.json.");name=metadata.Value<string>("title")??id;sources[id+"_"+version+".zip"]=zipFile;
             } else {
+                if(ExtraNativeMods.Structure(adapter.Layout,files) is var structure&&structure.HasValue){prefix=structure.Value.Prefix;nativeFolder=structure.Value.Folder;}
                 if(adapter.Layout is "smapi" or "rimworld" or "xcom") {
                     string marker=adapter.Layout=="smapi"?"manifest.json":adapter.Layout=="rimworld"?"About/About.xml":".XComMod";
                     var matches=files.Where(e=>e.FullName.EndsWith(marker,StringComparison.OrdinalIgnoreCase)).ToArray();if(matches.Length!=1)throw new InvalidDataException("Ожидается один мод с "+marker);
@@ -50,7 +51,8 @@ internal static class NativeModImport
                     if(adapter.Layout=="smapi"){if(matches[0].Length>1024*1024)throw new InvalidDataException("manifest.json слишком большой.");using var reader=new StreamReader(matches[0].Open());var metadata=JObject.Parse(reader.ReadToEnd());if(string.IsNullOrEmpty(metadata.Value<string>("UniqueID")))throw new InvalidDataException("Нет SMAPI UniqueID.");name=metadata.Value<string>("Name")??name;}
                 }
                 foreach(var entry in files){token.ThrowIfCancellationRequested();string path=entry.FullName.Replace('\\','/');if(prefix.Length>0&&!path.StartsWith(prefix,StringComparison.OrdinalIgnoreCase))continue;if(prefix.Length>0)path=path[prefix.Length..];if(string.IsNullOrEmpty(path))continue;
-                    if(adapter.Layout=="archive"){if(!path.EndsWith(".archive",StringComparison.OrdinalIgnoreCase))continue;path=Path.GetFileName(path);}
+                    if(adapter.Layout is "vpk" or "pack"){if(!ExtraNativeMods.IsArchiveFile(adapter.Layout,entry,files))continue;path=Path.GetFileName(path);}
+                    else if(adapter.Layout=="archive"){if(!path.EndsWith(".archive",StringComparison.OrdinalIgnoreCase))continue;path=Path.GetFileName(path);}
                     else if(adapter.Layout=="pak"){if(!path.EndsWith(".pak",StringComparison.OrdinalIgnoreCase))continue;path=Path.GetFileName(path);}
                     else if(adapter.Layout=="data"){if(path.StartsWith("Data/",StringComparison.OrdinalIgnoreCase))path=path[5..];if(!new[]{".esp",".esm",".esl",".bsa",".ba2",".dds",".nif",".hkx",".pex",".psc",".json",".ini",".txt",".wav",".fuz",".lip",".xml"}.Contains(Path.GetExtension(path),StringComparer.OrdinalIgnoreCase))throw new InvalidDataException("Неподдерживаемый файл Data: "+path);}
                     else if(adapter.Layout=="witcher"){var parts=path.Split('/');int start=Array.FindIndex(parts,part=>part.StartsWith("mod",StringComparison.OrdinalIgnoreCase));if(start<0)continue;path=string.Join("/",parts.Skip(start));if(!path.Contains("/content/",StringComparison.OrdinalIgnoreCase))continue;}
@@ -71,11 +73,11 @@ internal static class NativeModImport
 }
 internal sealed class NativeModsPanel : UserControl
 {
-    private readonly Label status=new(){Dock=DockStyle.Fill};private readonly ListBox installed=new(){Dock=DockStyle.Fill,BackColor=Color.FromArgb(23,28,42),ForeColor=Color.White,BorderStyle=BorderStyle.None};private readonly CancellationTokenSource cancellation=new();private bool busy;private bool disposed;public event Action<bool>? BusyChanged;
+    private readonly SmoothLabel status=new(){Dock=DockStyle.Fill};private readonly ListBox installed=new(){Dock=DockStyle.Fill,BackColor=Color.FromArgb(23,28,42),ForeColor=Color.White,BorderStyle=BorderStyle.None};private readonly CancellationTokenSource cancellation=new();private bool busy;private bool disposed;public event Action<bool>? BusyChanged;
     public NativeModsPanel(NativeModAdapter adapter,GameInfo game)
     {
         Dock=DockStyle.Fill;var layout=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=1,RowCount=4,Padding=new Padding(12)};layout.RowStyles.Add(new RowStyle(SizeType.Absolute,110));layout.RowStyles.Add(new RowStyle(SizeType.Absolute,50));layout.RowStyles.Add(new RowStyle(SizeType.Percent,100));layout.RowStyles.Add(new RowStyle(SizeType.Absolute,65));Controls.Add(layout);
-        layout.Controls.Add(new Label{Text=adapter.Name+"\n\n"+adapter.Hint,Dock=DockStyle.Fill},0,0);var actions=new FlowLayoutPanel{Dock=DockStyle.Fill};var import=new ModernButton("＋ Импорт ZIP",Color.FromArgb(115,94,244)){Width=190,Height=40};var remove=new ModernButton("Удалить выбранный",Color.FromArgb(35,40,63)){Width=230,Height=40};actions.Controls.Add(import);actions.Controls.Add(remove);layout.Controls.Add(actions,0,1);layout.Controls.Add(installed,0,2);layout.Controls.Add(status,0,3);
+        layout.Controls.Add(new SmoothLabel{Text=adapter.Name+"\n\n"+adapter.Hint,Dock=DockStyle.Fill},0,0);var actions=new FlowLayoutPanel{Dock=DockStyle.Fill};var import=new ModernButton("＋ Импорт ZIP",Color.FromArgb(115,94,244)){Width=190,Height=40};var remove=new ModernButton("Удалить выбранный",Color.FromArgb(35,40,63)){Width=230,Height=40};actions.Controls.Add(import);actions.Controls.Add(remove);layout.Controls.Add(actions,0,1);layout.Controls.Add(installed,0,2);layout.Controls.Add(status,0,3);
         void Reload(){installed.Items.Clear();try{foreach(var package in new ModInstaller(adapter.Root(game)).ReadState().Packages.Values.Where(p=>p.Id.StartsWith("Local-")))installed.Items.Add(package.Id);status.Text="Папка модов: "+adapter.Root(game);}catch(Exception ex){status.Text=ex.Message;}}
         async Task Run(Action<string,IProgress<string>> action){if(busy)return;busy=true;BusyChanged?.Invoke(true);import.Enabled=remove.Enabled=false;try{string root=adapter.Root(game);DlssManager.EnsureClosed(game);var progress=new Progress<string>(text=>{if(!IsDisposed)status.Text=text;});await Task.Run(()=>action(root,progress));Workspace.Current.History.Add(game,"Моды","Изменён набор локальных ZIP-модов");if(!IsDisposed)Reload();}catch(Exception ex){if(!IsDisposed)status.Text=ex.Message;}finally{busy=false;BusyChanged?.Invoke(false);if(!IsDisposed)import.Enabled=remove.Enabled=true;}}
         import.Click+=async(s,e)=>{using var picker=new OpenFileDialog{Filter="ZIP моды|*.zip",Title=adapter.Name};if(picker.ShowDialog(this)==DialogResult.OK)await Run((root,progress)=>NativeModImport.Install(adapter,game,picker.FileName,root,progress,cancellation.Token));};

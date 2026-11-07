@@ -6,7 +6,7 @@ internal sealed class UniversalDlss5Form : StudioDialog
     private readonly UniversalDlss5 service;
     private readonly GameInfo game;
     private string? executable;
-    private readonly Label status=new(){Dock=DockStyle.Fill,ForeColor=Color.FromArgb(180,192,215)};
+    private readonly SmoothLabel status=new(){Dock=DockStyle.Fill,ForeColor=Color.FromArgb(180,192,215)};
     private readonly CheckBox consent=new(){Text="Это одиночная игра без античита. Понимаю экспериментальный характер инжектора.",Dock=DockStyle.Fill};
     private readonly ModernButton install=new("Установить UniversalDLSS5",Color.FromArgb(115,94,244)){Dock=DockStyle.Fill};
     private readonly ModernButton import=new("Импорт NVIDIA runtime…",Color.FromArgb(35,45,63)){Dock=DockStyle.Fill};
@@ -19,14 +19,14 @@ internal sealed class UniversalDlss5Form : StudioDialog
         Text="PLAYSPACE / UniversalDLSS5 · "+game.Name;Size=new Size(940,760);MinimumSize=new Size(840,700);
         var layout=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=1,RowCount=9,Padding=new Padding(28)};
         foreach(float height in new[]{60f,145,42,50,50,50,48})layout.RowStyles.Add(new RowStyle(SizeType.Absolute,height));layout.RowStyles.Add(new RowStyle(SizeType.Percent,100));layout.RowStyles.Add(new RowStyle(SizeType.Absolute,28));ContentHost.Controls.Add(layout);
-        layout.Controls.Add(new Label{Text="DLSS 5 · Neural Rendering",Dock=DockStyle.Fill,Font=new Font("Segoe UI",23,FontStyle.Bold)},0,0);
-        layout.Controls.Add(new Label{Text="Экспериментальная интеграция UniversalDLSS5 0.5.1 (MotionflowOffical, Apache 2.0), не продукт NVIDIA. Модуль перехватывает рендер игры; совместимость и качество не гарантируются.\n\nПервый раз установи контроллер и импортируй официальный nvngx_dlssnr.dll из доступного тебе NVIDIA SDK. Затем можно запускать выбранную игру отсюда. Файлы игры не заменяются. Нужны совместимые GPU, драйвер и runtime. Для известных сетевых игр и обнаруженного античита запуск отключён.",Dock=DockStyle.Fill},0,1);
+        layout.Controls.Add(new SmoothLabel{Text="DLSS 5 · Neural Rendering",Dock=DockStyle.Fill,Font=new Font("Segoe UI",23,FontStyle.Bold)},0,0);
+        layout.Controls.Add(new SmoothLabel{Text="Экспериментальная интеграция UniversalDLSS5 0.5.1 (MotionflowOffical, Apache 2.0), не продукт NVIDIA. Модуль перехватывает рендер игры; совместимость и качество не гарантируются.\n\nПервый раз установи контроллер и импортируй официальный nvngx_dlssnr.dll из доступного тебе NVIDIA SDK. Затем можно запускать выбранную игру отсюда. Файлы игры не заменяются. Нужны совместимые GPU, драйвер и runtime. Для известных сетевых игр и обнаруженного античита запуск отключён.",Dock=DockStyle.Fill},0,1);
         var choose=new ModernButton("Выбрать основной EXE игры…",Color.FromArgb(35,40,63)){Dock=DockStyle.Fill};layout.Controls.Add(choose,0,2);
         var installRow=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=2};installRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,65));installRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,35));installRow.Controls.Add(install,0,0);
         var locate=new ModernButton("Указать установленный…",Color.FromArgb(35,40,63)){Dock=DockStyle.Fill};installRow.Controls.Add(locate,1,0);layout.Controls.Add(installRow,0,3);
         var runtimeRow=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=2};runtimeRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,65));runtimeRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,35));runtimeRow.Controls.Add(import,0,0);
         var source=new ModernButton("NVIDIA SDK ↗",Color.FromArgb(35,40,63)){Dock=DockStyle.Fill};runtimeRow.Controls.Add(source,1,0);layout.Controls.Add(runtimeRow,0,4);
-        layout.Controls.Add(open,0,5);layout.Controls.Add(consent,0,6);layout.Controls.Add(status,0,7);layout.Controls.Add(new Label{Text="Запуск через контроллер не передаёт параметры запуска PLAYSPACE. Отключение — Detach в контроллере или завершение игры.",Dock=DockStyle.Fill,Font=new Font("Segoe UI",8),ForeColor=Color.FromArgb(142,155,181)},0,8);
+        layout.Controls.Add(open,0,5);layout.Controls.Add(consent,0,6);layout.Controls.Add(status,0,7);layout.Controls.Add(new SmoothLabel{Text="Запуск через контроллер не передаёт параметры запуска PLAYSPACE. Отключение — Detach в контроллере или завершение игры.",Dock=DockStyle.Fill,Font=new Font("Segoe UI",8),ForeColor=Color.FromArgb(142,155,181)},0,8);
         // Keep the launch action next to the controller action, independent of the information panel.
         layout.Controls.Remove(open);var runRow=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=2};runRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,38));runRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,62));runRow.Controls.Add(open,0,0);runRow.Controls.Add(launch,1,0);layout.Controls.Add(runRow,0,5);
         consent.CheckedChanged+=(s,e)=>RefreshStatus();

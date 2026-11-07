@@ -44,5 +44,5 @@ internal sealed class Workspace
     internal static Workspace For(string folder){folder=Path.GetFullPath(folder);lock(instances){if(!instances.TryGetValue(folder,out var value))instances[folder]=value=new(folder);return value;}}
     internal readonly string Folder;internal readonly ActivityHistory History;internal readonly LibraryCollections Collections;internal readonly TransferCenter Transfers;
     private Workspace(string folder){Folder=folder;History=new(folder);Collections=new(folder);Transfers=new(Path.Combine(folder,"transfer-cache"));}
-    internal bool Offline=>LauncherPreferences.Load(Folder).OfflineMode;
+    internal bool Offline=>LauncherSession.SafeMode||LauncherPreferences.Load(Folder).OfflineMode;
 }

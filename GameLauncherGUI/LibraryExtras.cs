@@ -24,11 +24,14 @@ public partial class Form1
         tray.DoubleClick += (s,e) => RestoreWindow();
         preferences=LauncherPreferences.Load(appDataFolder);
         InitializeWorkspace();
+        LauncherSession.Record(appDataFolder,"Открыта библиотека");
+        if(updateChecksEnabled&&!LauncherSession.SafeMode&&!preferences.OnboardingCompleted&&myGames.Count==0)
+            Shown+=(s,e)=>BeginInvoke(new Action(()=>{if(!IsDisposed)FirstRun();}));
         InitializeUpdates();
         FormClosing += HandleCloseChoice;
         sessionTimer.Tick += (s,e) => TickSessions();
         sessionClock.Start(); sessionTimer.Start();
-        Shown += async (s,e) => { LoadSteamSettings(); if (steamKey.Length > 0) await SyncLibraryAchievements(); };
+        Shown += async (s,e) => { if(LauncherSession.SafeMode){lblStatus.Text="БЕЗОПАСНЫЙ РЕЖИМ · сеть и применение профилей отключены. Установленные моды в файлах игр не меняются.";return;}LoadSteamSettings(); if (steamKey.Length > 0) await SyncLibraryAchievements(); };
         gameMenu!.Items.Add(new ToolStripSeparator());
         gameMenu.Items.Add("Своя иконка…", null, (s,e) => ChangeIcon(false));
         gameMenu.Items.Add("Сбросить иконку", null, (s,e) => ChangeIcon(true));
@@ -130,6 +133,7 @@ public partial class Form1
     }
     private async Task<Bitmap?> LoadPosterAsync(GameInfo game)
     {
+        if(LauncherSession.SafeMode)return null;
         string id = game.SteamAppId ?? "";
         if (id.Length == 0 || !id.All(char.IsAsciiDigit)) return null;
         if (posters.TryGetValue(id,out var existing)) return existing;
@@ -154,7 +158,7 @@ public partial class Form1
         });
         if (IsDisposed) { image?.Dispose(); return null; }
         if (posters.TryGetValue(id,out existing)) { image?.Dispose(); return existing; }
-        posters[id]=image; return image;
+        if(image!=null)posters[id]=image; return image;
     }
     private Task FetchAchievements() { OpenSettings(); return Task.CompletedTask; }
     private void DisposeLibraryExtras()

@@ -8,10 +8,12 @@ internal static class SupportBotChecks
     private sealed class TelegramFixture : HttpMessageHandler
     {
         public readonly List<(string Method,JsonObject Body,long Id)> Calls=new();
+        public bool CollidingPromptIds;
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,CancellationToken cancellation)
         {
             var body=JsonNode.Parse(await request.Content!.ReadAsStringAsync(cancellation))!.AsObject();long id=Calls.Count+1000;
             string method=request.RequestUri!.Segments.Last();
+            if(CollidingPromptIds&&method=="sendMessage"&&body["reply_markup"]?["force_reply"]?.GetValue<bool>()==true)id=9000;
             if(method=="sendMessage"&&(body.ContainsKey("reply_markup")&&body["reply_markup"]==null||body.ContainsKey("reply_parameters")&&body["reply_parameters"]==null))
                 return new(HttpStatusCode.BadRequest){Content=new StringContent("{\"ok\":false,\"description\":\"Bad Request: reply parameters must be an object\"}")};
             Calls.Add((method,body,id));
@@ -65,6 +67,32 @@ internal static class SupportBotChecks
         bot.ConfigureMenus(default).GetAwaiter().GetResult();Check(handler.Calls.Any(c=>c.Method=="setMyCommands")&&handler.Calls.Any(c=>c.Method=="setChatMenuButton"),"Telegram menu configuration missing");
         Check(handler.Calls.Where(c=>c.Method=="sendMessage").All(c=>!c.Body.ContainsKey("reply_parameters")||c.Body["reply_parameters"]!=null),"Null reply parameters were sent to Telegram");
         Check(handler.Calls.Where(c=>c.Method=="sendMessage").All(c=>!c.Body.ContainsKey("reply_markup")||c.Body["reply_markup"]!=null),"Null keyboard was sent to Telegram");
-        Console.WriteLine($"PASS: {count} support bot checks: keyboards, FAQ/links, tickets/pagination, callback authorization, reply binding/restart/cancellation, closure, privacy and cooldown. Mock Telegram only.");
+        Callback(200,"inviteop");Check(config.OperatorInvites.Count==0,"User created operator invitation");
+        Callback(100,"inviteop");
+        string invite=handler.Calls.Last().Body["text"]!.GetValue<string>().Split("start=op_")[1];
+        Check(!File.ReadAllText(configPath).Contains(invite),"Raw invitation stored in private config");
+        Handle(300,"/start op_"+invite);Check(config.Operators.Any(o=>o.ChatId==300)&&config.OperatorInvites.Count==0,"Operator invitation not redeemed");
+        Handle(301,"/start op_"+invite);Check(!config.Operators.Any(o=>o.ChatId==301),"Invitation reused");
+        Callback(300,"inviteop");Check(config.OperatorInvites.Count==0,"Operator invited another operator");
+        Callback(100,"inviteop");string expired=handler.Calls.Last().Body["text"]!.GetValue<string>().Split("start=op_")[1];
+        config.OperatorInvites[0].Expires=DateTimeOffset.UtcNow.AddSeconds(-1);Handle(302,"/start op_"+expired);Check(!config.Operators.Any(o=>o.ChatId==302),"Expired invitation accepted");
+        Callback(100,"inviteop");string cancelled=handler.Calls.Last().Body["text"]!.GetValue<string>().Split("start=op_")[1];Callback(100,"cancelinvites");Handle(302,"/start op_"+cancelled);Check(!config.Operators.Any(o=>o.ChatId==302),"Revoked invitation accepted");
+        Handle(800,"multi-operator issue");Check(Delivered("forwardMessage",300)==1,"Operator did not receive issue");
+        int Ticket(long user)=>JsonNode.Parse(File.ReadAllText(Path.Combine(folder,"support-tickets.local.json")))!["Tickets"]!.AsArray().Last(t=>t!["Chat"]!.GetValue<long>()==user)!["Id"]!.GetValue<int>();
+        int first=Ticket(800);Callback(300,"take:"+first);Callback(100,"reply:"+first);
+        Check(handler.Calls.Last().Body["reply_markup"]?["force_reply"]==null,"Owner replied to another operator's ticket without reassignment");
+        Callback(100,"take:"+first);Callback(300,"close:"+first);Check(handler.Calls.Last().Body["text"]!.GetValue<string>().Contains("другим оператором"),"Other operator closed assigned issue");
+        Callback(100,"release:"+first);Callback(300,"reply:"+first);long operatorPrompt=handler.Calls.Last().Id;
+        var loaded=JsonSerializer.Deserialize<Configuration>(File.ReadAllText(configPath),new JsonSerializerOptions{PropertyNameCaseInsensitive=true})!;
+        bot=new Bot(loaded,configPath,client);Handle(300,"answer after operator restart",reply:operatorPrompt);Check(Delivered("copyMessage",800)==1,"Operator access/reply did not survive restart");
+        Handle(801,"another issue");int second=Ticket(801);handler.CollidingPromptIds=true;
+        Callback(100,"reply:"+second);Callback(300,"reply:"+first);Handle(300,"/cancel");Handle(100,"owner answer",reply:9000);
+        Check(Delivered("copyMessage",801)==1,"Operator cancellation removed owner's same-ID prompt");
+        Callback(300,"reply:"+first);Callback(100,"removeop:300");Check(loaded.Operators.Count==1,"Removal did not require confirmation");Callback(100,"confirmremoveop:300");Check(loaded.Operators.Count==0,"Operator not removed");
+        before=Delivered("copyMessage",800);Handle(300,"revoked answer",reply:9000);Check(Delivered("copyMessage",800)==before,"Revoked operator replied with stale prompt");
+        Callback(100,"reply:"+first);Check(handler.Calls.Last().Body["reply_markup"]?["force_reply"]?.GetValue<bool>()==true,"Revocation failed to release assigned ticket");
+        int former=Delivered("forwardMessage",300);Handle(802,"post-revocation issue");Check(Delivered("forwardMessage",300)==former,"Revoked operator received new issue");
+        Callback(100,"confirmremoveop:100");Check(loaded.OwnerChatId==100,"Owner removed through operator controls");
+        Console.WriteLine($"PASS: {count} support bot checks: existing menus/tickets, operator invitations/expiry/reuse/revocation, assignment, chat-bound prompts, restart and owner-only controls. Mock Telegram only.");
     }
 }

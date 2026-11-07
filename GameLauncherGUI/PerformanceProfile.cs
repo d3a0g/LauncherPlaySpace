@@ -5,6 +5,8 @@ namespace GameLauncherGUI;
 
 public sealed class PerformanceProfile
 {
+    public Dictionary<string,int> DetailLevels {get;set;}=new();
+    public Dictionary<string,string> NativeOptions {get;set;}=new();
     public int TargetFps { get; set; } = 60;
     public int MeasuredFps { get; set; }
     public int RenderScale { get; set; } = 100;
@@ -14,6 +16,7 @@ public sealed class PerformanceProfile
     public int ResolutionHeight { get; set; }
     public string WindowMode { get; set; } = "Безрамочный";
     public bool VSync { get; set; }
+    public bool UnlimitedFps {get;set;}
     public string? ConfigFile { get; set; }
 
     public PerformanceProfile Copy() => new() {
@@ -23,7 +26,8 @@ public sealed class PerformanceProfile
         ApplyOnLaunch = ApplyOnLaunch, ResolutionWidth = ResolutionWidth is >= 640 and <= 16384 ? ResolutionWidth : 0,
         ResolutionHeight = ResolutionHeight is >= 480 and <= 16384 ? ResolutionHeight : 0,
         WindowMode = new[] { "Полноэкранный", "Безрамочный", "Оконный" }.Contains(WindowMode) ? WindowMode : "Безрамочный",
-        VSync = VSync, ConfigFile = ConfigFile
+        VSync = VSync, ConfigFile = ConfigFile,UnlimitedFps=UnlimitedFps,
+        DetailLevels=GraphicsParameters.Sanitize(DetailLevels),NativeOptions=NativeOptions?.Where(p=>p.Key.Length<=160&&p.Value!=null&&p.Value.Length<=100&&(p.Key.StartsWith("/graphics",StringComparison.Ordinal)||p.Key.StartsWith("/video/display|",StringComparison.Ordinal))).Take(100).ToDictionary(p=>p.Key,p=>p.Value)??new()
     };
 }
 

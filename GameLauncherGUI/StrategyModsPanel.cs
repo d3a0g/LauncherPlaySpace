@@ -9,7 +9,7 @@ internal sealed class StrategyModsPanel : UserControl
     private readonly ListBox list = new() { Dock = DockStyle.Fill, BackColor = Color.FromArgb(23,28,42), ForeColor = Color.FromArgb(232,230,247), BorderStyle = BorderStyle.None, IntegralHeight = false, ItemHeight = 28 };
     private readonly TextBox details = new() { Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, BackColor = Color.FromArgb(23,28,42), ForeColor = Color.FromArgb(182,193,217), BorderStyle = BorderStyle.None, ScrollBars = ScrollBars.Vertical };
     private readonly TextBox search = new() { Dock = DockStyle.Fill, PlaceholderText = "Поиск установленных модов…", BackColor = Color.FromArgb(30,35,51), ForeColor = Color.White, BorderStyle = BorderStyle.FixedSingle };
-    private readonly Label status = new() { Dock = DockStyle.Fill, ForeColor = Color.FromArgb(160,173,202) };
+    private readonly SmoothLabel status = new() { Dock = DockStyle.Fill, ForeColor = Color.FromArgb(160,173,202) };
     private readonly ModernButton toggle = new("Включить", Color.FromArgb(115,94,244));
     private readonly ModernButton remove = new("Удалить", Color.FromArgb(46,35,55));
     private readonly ModernButton up = new("↑ Раньше", Color.FromArgb(35,40,63)), down = new("↓ Позже", Color.FromArgb(35,40,63));
@@ -18,11 +18,12 @@ internal sealed class StrategyModsPanel : UserControl
     private List<StrategyModEntry> entries = new();
     private CancellationTokenSource cancellation = new();
     private bool busy;
+    private bool disposed;
     public event Action<bool>? BusyChanged;
 
-    public StrategyModsPanel(StrategyGameAdapter adapter, GameInfo game)
+    public StrategyModsPanel(StrategyGameAdapter adapter, GameInfo game,StrategyModsManager? manager=null)
     {
-        historyGame=game; this.adapter = adapter; manager = new StrategyModsManager(adapter, game);
+        historyGame=game; this.adapter = adapter; this.manager = manager??new StrategyModsManager(adapter, game);
         BackColor = Color.FromArgb(14,17,27); ForeColor = Color.FromArgb(235,232,249); Font = new Font("Segoe UI",10); Dock = DockStyle.Fill;
         var layout = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 4, Margin = Padding.Empty };
         layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,100));
@@ -34,7 +35,7 @@ internal sealed class StrategyModsPanel : UserControl
         foreach(var button in new[]{import,workshop,refresh,restore,toggle,remove,up,down}){button.Dock=DockStyle.Fill;button.Margin=new Padding(0,4,8,6);button.Font=new Font("Segoe UI",9,FontStyle.Bold);}
         search.Margin=new Padding(0,10,12,6);tools.Controls.Add(import,0,0);tools.Controls.Add(workshop,1,0);tools.Controls.Add(search,2,0);tools.Controls.Add(refresh,3,0);
         layout.Controls.Add(tools,0,0);
-        layout.Controls.Add(new Label {Text="Workshop скачивает Steam; здесь видны уже загруженные моды. ZIP устанавливается прямо в PLAYSPACE.\nВключение и порядок действуют при прямом запуске игры из PLAYSPACE. Наборы Paradox Launcher не изменяются.",Dock=DockStyle.Fill,ForeColor=Color.FromArgb(153,167,195)},0,1);
+        layout.Controls.Add(new SmoothLabel {Text="Workshop скачивает Steam; здесь видны уже загруженные моды. ZIP устанавливается прямо в PLAYSPACE.\nВключение и порядок действуют при прямом запуске игры из PLAYSPACE. Наборы Paradox Launcher не изменяются.",Dock=DockStyle.Fill,ForeColor=Color.FromArgb(153,167,195)},0,1);
         var body=new TableLayoutPanel {Dock=DockStyle.Fill,ColumnCount=2,RowCount=1,Margin=Padding.Empty};
         body.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,55));body.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,45));body.RowStyles.Add(new RowStyle(SizeType.Percent,100));
         list.Margin=new Padding(0,4,14,4);body.Controls.Add(list,0,0);
@@ -96,5 +97,5 @@ internal sealed class StrategyModsPanel : UserControl
             entry.Name+"\r\n\r\n"+(entry.Enabled?"● Включён в профиле PLAYSPACE":"○ Отключён")+"\r\nЗаявленная версия игры: "+entry.SupportedVersion+"\r\nИсточник: "+(entry.Workshop?"Steam Workshop":"Локальный мод")+
             "\r\n\r\nЗависимости:\r\n"+string.Join("\r\n",StrategyModsManager.Dependencies(entry.Metadata))+"\r\n\r\nПапка:\r\n"+entry.Content;
     }
-    protected override void Dispose(bool disposing){if(disposing){cancellation.Cancel();cancellation.Dispose();}base.Dispose(disposing);}
+    protected override void Dispose(bool disposing){if(disposing&&!disposed){disposed=true;cancellation.Cancel();cancellation.Dispose();}base.Dispose(disposing);}
 }

@@ -89,7 +89,7 @@ internal sealed class UniversalDlss5
         if(File.Exists(target)){if(DlssManager.Hash(target)==verifiedHash)return;throw new IOException("В runtime уже есть другая DLL. Для её смены используй импорт NVIDIA SDK в контроллере UniversalDLSS5.");}
         string temp=target+"."+Guid.NewGuid().ToString("N")+".tmp";try{File.Copy(file,temp,false);if(DlssManager.Hash(temp)!=verifiedHash)throw new IOException("Runtime изменился после проверки.");cancellation.ThrowIfCancellationRequested();File.Move(temp,target,false);}finally{if(File.Exists(temp))File.Delete(temp);}
     }
-    internal static void ValidateGame(GameInfo game,string executable,bool acknowledged)
+    internal static void ValidateGame(GameInfo game,string executable,bool acknowledged,bool checkAntiCheat=true)
     {
         if(!acknowledged)throw new InvalidOperationException("Подтверди экспериментальный режим для одиночной игры.");
         if(!File.Exists(executable)||!executable.EndsWith(".exe",StringComparison.OrdinalIgnoreCase))throw new FileNotFoundException("Выбери основной EXE игры.");
@@ -100,7 +100,7 @@ internal sealed class UniversalDlss5
         if(!original&&!inGame)throw new IOException("Выбранный EXE не относится к папке этой игры.");
         if(new[]{"steam","epicgameslauncher","riotclientservices","dowser","universal dlss5","universaldlss5"}.Contains(Path.GetFileNameWithoutExtension(full),StringComparer.OrdinalIgnoreCase))throw new IOException("Нужен процесс игры, а не игровой клиент/контроллер.");
         var target=new GameInfo{Name=game.Name,SteamAppId=game.SteamAppId,ExePath=full,InstallDirectory=game.InstallDirectory??Path.GetDirectoryName(full)};
-        if(DlssManager.Blocked(target))throw new IOException("Для этой сетевой игры/обнаруженного античита экспериментальный инжектор отключён.");
+        if(checkAntiCheat&&DlssManager.Blocked(target))throw new IOException("Для этой сетевой игры/обнаруженного античита экспериментальный инжектор отключён.");
     }
     public static ProcessStartInfo StartInfo(string controller,GameInfo? game=null,string? executable=null,bool acknowledged=false)
     {
