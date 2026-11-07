@@ -4,6 +4,8 @@ param(
     [string]$KeyFile='',
     [string]$ReportFile='',
     [string]$Proxy='',
+    [string]$FileLabel='LauncherPlaySpace-1.0.5-Setup.exe',
+    [ValidatePattern('^[A-Za-z0-9_.-]+\.png$')][string]$ImageName='virustotal-installer.png',
     [string]$OutputDirectory='artifacts/virustotal'
 )
 $ErrorActionPreference='Stop'
@@ -25,13 +27,13 @@ else{
     finally{$apiKey=$null}
 }
 $a=$report.data.attributes
-if($report.data.id -ne $SHA256 -or $a.sha256 -ne $SHA256){throw 'Report hash does not match the requested installer.'}
+if($report.data.id -ne $SHA256 -or $a.sha256 -ne $SHA256){throw 'Report hash does not match the requested file.'}
 if(-not $a.last_analysis_stats -or -not $a.last_analysis_results -or -not $a.last_analysis_date){throw 'Report does not contain a completed analysis.'}
 $engines=@($a.last_analysis_results.PSObject.Properties|ForEach-Object{[pscustomobject]@{Engine=$_.Name;Category=$_.Value.category;Result=$_.Value.result;Updated=$_.Value.engine_update}})
 $flagged=@($engines|Where-Object{$_.Category -in @('malicious','suspicious')}|Sort-Object Engine)
 $url='https://www.virustotal.com/gui/file/'+$SHA256
 $analysis=[DateTimeOffset]::FromUnixTimeSeconds([long]$a.last_analysis_date).UtcDateTime.ToString('yyyy-MM-dd HH:mm UTC')
-$summary=[ordered]@{SHA256=$SHA256;AnalysisUTC=$analysis;RetrievedUTC=[DateTimeOffset]::UtcNow.ToString('o');Source=$url;Stats=$a.last_analysis_stats;EngineResults=$engines;Notice='API report summary. Detections are shown without omission. Undetected does not guarantee safety.'}
+$summary=[ordered]@{FileName=$FileLabel;SHA256=$SHA256;AnalysisUTC=$analysis;RetrievedUTC=[DateTimeOffset]::UtcNow.ToString('o');Source=$url;Stats=$a.last_analysis_stats;EngineResults=$engines;Notice='API report summary. Detections are shown without omission. Undetected does not guarantee safety.'}
 $utf8=[Text.UTF8Encoding]::new($false)
 [IO.File]::WriteAllText((Join-Path $OutputDirectory 'report.raw.json'),($report|ConvertTo-Json -Depth 80),$utf8)
 [IO.File]::WriteAllText((Join-Path $OutputDirectory 'report.public.json'),($summary|ConvertTo-Json -Depth 8),$utf8)
@@ -45,7 +47,7 @@ try{
     $title=New-Object Drawing.Font('Segoe UI',28,[Drawing.FontStyle]::Bold);$normal=New-Object Drawing.Font('Segoe UI',15);$small=New-Object Drawing.Font('Segoe UI',12);$mono=New-Object Drawing.Font('Consolas',13);$fonts=@($title,$normal,$small,$mono)
     $white=New-Object Drawing.SolidBrush([Drawing.Color]::FromArgb(232,237,249));$muted=New-Object Drawing.SolidBrush([Drawing.Color]::FromArgb(164,179,203));$alert=New-Object Drawing.SolidBrush([Drawing.Color]::FromArgb(255,154,139));$fonts=@($title,$normal,$small,$mono);$brushes=@($white,$muted,$alert)
     $graphics.DrawString('LauncherPlaySpace 1.0.5 - VirusTotal',$title,$white,40,30)
-    $graphics.DrawString('Installer SHA-256',$small,$muted,40,95);$graphics.DrawString($SHA256,$mono,$white,40,125)
+    $graphics.DrawString(($FileLabel+' | SHA-256'),$small,$muted,40,95);$graphics.DrawString($SHA256,$mono,$white,40,125)
     $graphics.DrawString(('Analysis: '+$analysis),$normal,$white,40,180)
     $graphics.DrawString(('Retrieved: '+$summary.RetrievedUTC),$small,$muted,40,220)
     $graphics.DrawString(('Flagged engines: '+$flagged.Count+' / '+$engines.Count),$title,$alert,40,265)
@@ -58,7 +60,7 @@ try{
     $graphics.DrawString('Undetected does not guarantee safety. This is not a security certificate.',$normal,$white,40,$y)
     $graphics.DrawString('Summary generated from the API; not an official VirusTotal screenshot.',$small,$muted,40,($y+40))
     $graphics.DrawString($url,$small,$muted,40,($y+78))
-    $bitmap.Save((Join-Path $OutputDirectory 'virustotal-installer.png'),[Drawing.Imaging.ImageFormat]::Png)
+    $bitmap.Save((Join-Path $OutputDirectory $ImageName),[Drawing.Imaging.ImageFormat]::Png)
 }finally{foreach($item in $fonts+$brushes){$item.Dispose()};$graphics.Dispose();$bitmap.Dispose()}
 Write-Output ('Saved API JSON and PNG: '+$OutputDirectory)
 Write-Output ('Flagged: '+$flagged.Count+' / '+$engines.Count+'. No upload or rescan was performed.')
