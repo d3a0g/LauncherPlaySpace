@@ -1,11 +1,13 @@
-# LauncherPlaySpace
+# LauncherPlaySpace — игровой лаунчер для Windows
 
 Авторские права (c) 2026 d3a0g  
 Copyright (c) 2026 d3a0g
 
-**Твоя библиотека игр, статистика Steam, моды и рекомендации — в одном Windows-приложении.**
+**Бесплатный лаунчер для игр на ПК: единая библиотека, статистика Steam, установка модов и настройки графики.**
 
-LauncherPlaySpace объединяет установленные игры в одном интерфейсе: запускай любимые проекты, закрепляй коллекцию, смотри наигранные часы Steam и находи следующую игру в рекомендациях.
+LauncherPlaySpace (PlaySpace) — программа с открытым исходным кодом для Windows 10 и Windows 11 x64. Лаунчер объединяет установленные игры в одной библиотеке: запускай игры Steam и локальные игры, создавай коллекции, смотри наигранные часы и достижения Steam, устанавливай поддерживаемые моды и находи новые игры в рекомендациях. Проект написан на C#/.NET и распространяется бесплатно по лицензии MIT.
+
+**English:** LauncherPlaySpace is a free, open-source Windows game launcher and mod manager with a unified game library, Steam playtime and achievements, game recommendations, save backups and supported per-game graphics profiles.
 
 [Скачать последнюю версию](https://github.com/d3a0g/playspace-releases/releases/latest) · [Все выпуски](https://github.com/d3a0g/playspace-releases/releases) · [Поддержка в Telegram](https://t.me/PlaySpaceSupport_bot)
 
