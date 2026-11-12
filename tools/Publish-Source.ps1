@@ -15,9 +15,9 @@ function Request([string]$endpoint,$payload){
     return ($answer|ConvertFrom-Json)
 }
 $files=@()
-foreach($directory in @('GameLauncherGUI','GameLauncherGUI.Tests','PlaySpace.SupportBot','tools','docs/screenshots','installer')){
+foreach($directory in @('GameLauncherGUI','GameLauncherGUI.Tests','PlaySpace.SupportBot','tools','docs','installer')){
     $files+=Get-ChildItem -LiteralPath (Join-Path $workspace $directory) -File -Recurse|Where-Object {
-        $_.FullName -notmatch '[\\/](bin|obj)[\\/]' -and $_.Name -ne 'Restore-UiBackup.ps1' -and $_.Extension -in @('.cs','.csproj','.md','.ps1','.ico','.png','.json','.iss','.txt')
+        $_.FullName -notmatch '[\\/](bin|obj|signpath)[\\/]' -and $_.Name -notin @('Restore-UiBackup.ps1','PROJECT-CONTEXT.md') -and $_.Extension -in @('.cs','.csproj','.md','.ps1','.ico','.png','.json','.iss','.txt')
     }
 }
 foreach($name in @('README.md','LICENSE','THIRD_PARTY_NOTICES.md','CONTRIBUTING.md','SECURITY.md','.gitignore','distribution/README.md','distribution/START-HERE.txt')){$files+=Get-Item -LiteralPath (Join-Path $workspace $name)}
@@ -29,7 +29,7 @@ $nodes=@()
 foreach($file in $files){
     $relative=$file.FullName.Substring($workspace.Length+1).Replace('\','/')
     if($relative -match '(^|/)(\.secrets|\.tools|bin|obj|artifacts)/|local\.json$|games\.json$'){throw "Excluded file selected: $relative"}
-    if($file.Extension -in @('.ico','.png')){$nodes+=@{path=$relative;mode='100644';type='blob';binary=$true;file=$file.FullName};continue}
+    if($file.Extension -in @('.ico','.png') -or $relative -in @('LICENSE','GameLauncherGUI/Assets/ThirdParty/NVIDIA-DLSS-LICENSE.txt')){$nodes+=@{path=$relative;mode='100644';type='blob';binary=$true;file=$file.FullName};continue}
     $content=[IO.File]::ReadAllText($file.FullName)
     if($PrivateDevelopment -and $relative -eq 'README.md'){
         $content="# LauncherPlaySpace - private development`n`nThis private repository contains unreleased working sources. It does not publish application updates. See [DEVELOPMENT.md](DEVELOPMENT.md) for collaboration instructions.`n`nPublic project: https://github.com/d3a0g/LauncherPlaySpace`n`n---`n`n"+$content
@@ -55,6 +55,16 @@ if($LASTEXITCODE -ne 0){throw 'Cannot read branch head'}
 $baseTree=& $gh api "repos/$Repository/git/commits/$head" --jq .tree.sha
 if($LASTEXITCODE -ne 0){throw 'Cannot read branch tree'}
 $treeNodes=@()
+$remoteFiles=& $gh api "repos/$Repository/git/trees/$baseTree`?recursive=1"
+if($LASTEXITCODE -ne 0){throw 'Cannot inspect existing source paths'}
+$existing=$remoteFiles|ConvertFrom-Json
+if($existing.truncated){throw 'Remote source inventory is truncated'}
+$selected=@{};foreach($node in $nodes){$selected[$node.path]=$true}
+foreach($entry in $existing.tree){
+    if($entry.type -eq 'blob' -and $entry.path -match '^(GameLauncherGUI/|GameLauncherGUI.Tests/|PlaySpace.SupportBot/|tools/|installer/)' -and -not $selected.ContainsKey($entry.path)){
+        $treeNodes+=@{path=$entry.path;mode='100644';type='blob';sha=$null}
+    }
+}
 foreach($node in $nodes){
     if($node.binary){
         $blob=Request "repos/$Repository/git/blobs" @{content=[Convert]::ToBase64String([IO.File]::ReadAllBytes($node.file));encoding='base64'}

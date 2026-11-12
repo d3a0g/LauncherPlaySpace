@@ -48,7 +48,11 @@ CloseApplicationsFilter=LauncherPlaySpace.exe
 Compression=lzma2
 SolidCompression=yes
 OutputDir={#BuildOutput}
+#ifdef InstallerName
+OutputBaseFilename={#InstallerName}
+#else
 OutputBaseFilename=LauncherPlaySpace-Setup-preview
+#endif
 LicenseFile=..\LICENSE
 InfoBeforeFile=INSTALL-NOTICE.txt
 Uninstallable=yes
@@ -66,6 +70,7 @@ Source: "{#PayloadDir}\{#AppExe}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#PayloadDir}\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#PayloadDir}\THIRD_PARTY_NOTICES.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#PayloadDir}\START-HERE.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#PayloadDir}\update-source.json"; DestDir: "{app}"; Flags: ignoreversion skipifsourcedoesntexist
 
 [Icons]
 Name: "{group}\LauncherPlaySpace"; Filename: "{app}\{#AppExe}"; WorkingDir: "{app}"
@@ -76,6 +81,15 @@ Name: "{autodesktop}\LauncherPlaySpace"; Filename: "{app}\{#AppExe}"; WorkingDir
 Filename: "{app}\{#AppExe}"; Description: "Launch LauncherPlaySpace / Запустить лаунчер"; Flags: nowait postinstall skipifsilent unchecked
 
 [Code]
+procedure CurInstallProgressChanged(CurProgress, MaxProgress: Integer);
+var
+  ProgressFile: String;
+begin
+  ProgressFile := ExpandConstant('{param:PLAYSPACEPROGRESS|}');
+  if (ProgressFile <> '') and (MaxProgress > 0) then
+    SaveStringToFile(ProgressFile, IntToStr(Round(100.0 * CurProgress / MaxProgress)), False);
+end;
+
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 var
   InstalledVersion, NewVersion: Int64;

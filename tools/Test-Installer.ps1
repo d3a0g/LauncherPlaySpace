@@ -1,9 +1,9 @@
 [CmdletBinding()]
-param()
+param([string]$Payload='artifacts/local-preview/improvements/app')
 $ErrorActionPreference='Stop'
 $workspace=Split-Path -Parent $PSScriptRoot
 $compiler=Join-Path $workspace '.tools/InnoSetup/ISCC.exe'
-$payload=Join-Path $workspace 'artifacts/local-preview/improvements/app'
+$payload=Join-Path $workspace $Payload
 $smokeRoot=Join-Path $workspace ('artifacts/installer-smoke-'+[Guid]::NewGuid().ToString('N'))
 $install=Join-Path $smokeRoot 'installed'
 $output=Join-Path $smokeRoot 'setup'
@@ -15,11 +15,12 @@ New-Item -ItemType Directory -Force -Path $output | Out-Null
 if($LASTEXITCODE -ne 0){throw 'Smoke installer compilation failed.'}
 $setup=Join-Path $output 'LauncherPlaySpace-Setup-preview.exe'
 function Install([string]$executable){
-    $process=Start-Process -FilePath $executable -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART',('/DIR="'+$install+'"'),'/GROUP="LauncherPlaySpace Local Smoke"','/TASKS=""',('/LOG="'+(Join-Path $smokeRoot 'install.log')+'"')) -WindowStyle Hidden -Wait -PassThru
+    $process=Start-Process -FilePath $executable -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART',('/DIR="'+$install+'"'),'/GROUP="LauncherPlaySpace Local Smoke"','/TASKS=""',('/PLAYSPACEPROGRESS="'+(Join-Path $smokeRoot 'progress.txt')+'"'),('/LOG="'+(Join-Path $smokeRoot 'install.log')+'"')) -WindowStyle Hidden -Wait -PassThru
     return $process.ExitCode
 }
 try{
     if((Install $setup) -ne 0){throw 'Fresh installation failed.'}
+    if([int](Get-Content -LiteralPath (Join-Path $smokeRoot 'progress.txt') -Raw) -lt 100){throw 'Installer did not report completed progress.'}
     $exe=Join-Path $install 'LauncherPlaySpace.exe'
     $expected=(Get-FileHash (Join-Path $payload 'LauncherPlaySpace.exe')).Hash
     if((Get-FileHash $exe).Hash -ne $expected){throw 'Installed executable differs from prepared payload.'}

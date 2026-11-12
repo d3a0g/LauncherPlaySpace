@@ -32,9 +32,19 @@ internal static class Program
     [STAThread]
     private static void Main(string[] args)
     {
+        if(args.Contains("--launcher-updater")){LauncherUpdaterChecks.Run();return;}
+        if(args.Contains("--studio-controls")){StudioControlsChecks.Run();return;}
         if(args.Contains("--ui-review")){UiReviewChecks.Run();return;}
         if(args.Contains("--rtx30")){Rtx30Checks.Run(args.Contains("--ui"));return;}
         if(args.Contains("--compatibility")){CompatibilityChecks.Run(args.Contains("--ui"));return;}
+        if(args.Contains("--async-audit")){AsyncAuditChecks.Run();return;}
+        if(args.Contains("--concurrency")){ConcurrencyChecks.Run();return;}
+        if(args.Contains("--experience")){ExperienceChecks.Run(args.Contains("--ui"));return;}
+        if(args.Contains("--update-help")){UpdateHelpChecks.Run(args.Contains("--ui"));return;}
+        if(args.Contains("--library-presentation")){LibraryPresentationChecks.Run();return;}
+        if(args.Contains("--updates")){UpdateChecks.Run(args.Contains("--ui"));return;}
+        if(args.Contains("--motion")){MotionChecks.Run();return;}
+        if(args.Contains("--desktop-library")){DesktopLibraryChecks.Run();return;}
         if(args.Contains("--hardware")){HardwareCatalogChecks.Run(args.Contains("--ui"));return;}
         if(args.Contains("--redesign")){RedesignChecks.Run(args.Contains("--ui"));return;}
         if(args.Contains("--import-hardware-evidence")){HardwareEvidenceImport.Run();return;}
@@ -210,6 +220,11 @@ internal static class Program
         Console.WriteLine($"PASS: {checks} adapter, dependency, archive, installation, uninstall and recovery checks. Only temporary fixtures were modified.");
         PerformanceChecks.Run(args.Contains("--ui"));
         LibraryChecks.Run(args.Contains("--ui"));
+        ExperienceChecks.Run(args.Contains("--ui"));
+        if(args.Contains("--ui"))LibraryPresentationChecks.Run();
+        if(args.Contains("--ui"))MotionChecks.Run();
+        if(args.Contains("--ui"))DesktopLibraryChecks.Run();
+        UpdateHelpChecks.Run(args.Contains("--ui"));
         DiscoveryChecks.Run(args.Contains("--ui"));
         PreferencesChecks.Run(args.Contains("--ui"));
         UpdateChecks.Run(args.Contains("--ui"));
@@ -226,6 +241,7 @@ internal static class Program
         UniversalDlss5Checks.Run(args.Contains("--ui"));
         Rtx30Checks.Run(args.Contains("--ui"));
         CompatibilityChecks.Run(args.Contains("--ui"));
+        if(args.Contains("--ui")){ConcurrencyChecks.Run();AsyncAuditChecks.Run();}
         HardwareCatalogChecks.Run(args.Contains("--ui"));
         RedesignChecks.Run(args.Contains("--ui"));
         StrategyChecks.Run(args.Contains("--ui"));
