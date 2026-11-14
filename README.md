@@ -12,7 +12,7 @@ LauncherPlaySpace (PlaySpace) объединяет установленные и
 
 **English:** A free, open-source Windows game launcher with a unified library, Steam playtime and achievements, mod management, save backups and supported per-game graphics profiles.
 
-![Библиотека игр LauncherPlaySpace](docs/screenshots/library.png)
+![Библиотека игр LauncherPlaySpace](docs/screenshots/v1.0.6/library.png)
 
 ## Возможности
 
@@ -45,20 +45,20 @@ LauncherPlaySpace (PlaySpace) объединяет установленные и
 
 ## Скриншоты
 
-Снимки показывают интерфейс с демонстрационной библиотекой и публичными материалами Steam. Личные аккаунты не используются; внешний вид может отличаться в зависимости от настроек.
+Снимки сделаны в версии **1.0.6** с демонстрационной библиотекой и публичными обложками Steam. Личные аккаунты не используются; внешний вид может отличаться в зависимости от настроек.
 
 ### Рекомендации
 
-![Рекомендации игр](docs/screenshots/recommendations.png)
+![Рекомендации игр](docs/screenshots/v1.0.6/recommendations.png)
 
 <details>
 <summary>Графика, сохранения и большой экран</summary>
 
-![Настройки графики и внешние тесты](docs/screenshots/performance.png)
+![Настройки графики](docs/screenshots/v1.0.6/performance.png)
 
-![Резервные копии и управление игрой](docs/screenshots/game-care.png)
+![Резервные копии и управление игрой](docs/screenshots/v1.0.6/game-care.png)
 
-![Режим большого экрана](docs/screenshots/controller.png)
+![Режим большого экрана](docs/screenshots/v1.0.6/controller.png)
 
 </details>
 
