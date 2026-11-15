@@ -8,7 +8,7 @@
 
 LauncherPlaySpace (PlaySpace) объединяет установленные игры в одной библиотеке. Запускай игры Steam и локальные проекты, собирай коллекции, устанавливай поддерживаемые моды, сохраняй игровые профили и находи, во что поиграть дальше.
 
-[Скачать для Windows](https://github.com/d3a0g/playspace-releases/releases/latest) · [Скриншоты](#скриншоты) · [Документация](docs/README.md) · [Поддержка](https://t.me/PlaySpaceSupport_bot) · [Поддержать проект](#поддержать-проект)
+[Скачать для Windows](https://github.com/d3a0g/playspace-releases/releases/latest) · [Скриншоты](#скриншоты) · [Документация](docs/README.md) · [Telegram-канал](https://t.me/LauncherPlaySpace) · [Поддержка](https://t.me/PlaySpaceSupport_bot) · [Поддержать проект](#поддержать-проект)
 
 **English:** A free, open-source Windows game launcher with a unified library, Steam playtime and achievements, mod management, save backups and supported per-game graphics profiles.
 
@@ -85,6 +85,10 @@ LauncherPlaySpace (PlaySpace) объединяет установленные и
 Моды и дополнительные компоненты не становятся доверенными только потому, что установлены через лаунчер. Проверяй источник и требования автора. Системные предупреждения Windows не отключаются. Отчёты сканирования относятся к конкретным файлам и их хешам.
 
 [Безопасность и отчёты](docs/security/README.md) · [Сообщить об уязвимости](SECURITY.md) · [Лицензии сторонних компонентов](THIRD_PARTY_NOTICES.md)
+
+## Новости проекта
+
+Официальный Telegram-канал — **[@LauncherPlaySpace](https://t.me/LauncherPlaySpace)**. Анонсы новых версий, новости разработки и обновления PlaySpace.
 
 ## Поддержка и предложения
 
