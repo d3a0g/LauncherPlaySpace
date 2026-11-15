@@ -8,7 +8,7 @@
 
 LauncherPlaySpace (PlaySpace) объединяет установленные игры в одной библиотеке. Запускай игры Steam и локальные проекты, собирай коллекции, устанавливай поддерживаемые моды, сохраняй игровые профили и находи, во что поиграть дальше.
 
-[Скачать для Windows](https://github.com/d3a0g/playspace-releases/releases/latest) · [Скриншоты](#скриншоты) · [Документация](docs/README.md) · [Поддержка](https://t.me/PlaySpaceSupport_bot)
+[Скачать для Windows](https://github.com/d3a0g/playspace-releases/releases/latest) · [Скриншоты](#скриншоты) · [Документация](docs/README.md) · [Поддержка](https://t.me/PlaySpaceSupport_bot) · [Поддержать проект](#поддержать-проект)
 
 **English:** A free, open-source Windows game launcher with a unified library, Steam playtime and achievements, mod management, save backups and supported per-game graphics profiles.
 
@@ -92,9 +92,25 @@ LauncherPlaySpace (PlaySpace) объединяет установленные и
 
 В сообщении об ошибке укажи версию приложения, название игры, действие перед сбоем и текст ошибки. Скриншот поможет воспроизвести проблему. Не отправляй пароли, API-ключи и коды подтверждения.
 
-## Разработка
+## Поддержать проект
 
-Добровольная поддержка автора не предусматривает встречных услуг или бонусов. Подключение приёма платежей через Robokassa пока не завершено; действующая платёжная ссылка здесь не размещена.
+Если PlaySpace оказался полезен, можно поддержать автора и дальнейшее развитие проекта добровольным пожертвованием через **tips.tips**.
+
+**[Поддержать PlaySpace →](https://tips.tips/000492195)**
+
+Сканируй QR-код камерой телефона или нажми на него, чтобы открыть страницу поддержки:
+
+<a href="https://tips.tips/000492195">
+  <img src="docs/support/tips-qr.png" alt="QR-код для добровольной поддержки PlaySpace через tips.tips" width="280" height="280">
+</a>
+
+PlaySpace остаётся бесплатным. Пожертвование добровольное и не является оплатой функций, услуг или бонусов.
+
+Помочь можно и без перевода: поставить звезду репозиторию, рассказать о проекте, сообщить об ошибке или предложить улучшение.
+
+**English:** [Support PlaySpace with a voluntary donation](https://tips.tips/000492195). PlaySpace remains free; donations do not purchase features, services or perks.
+
+## Разработка
 
 Проект написан на **C# / .NET 10 / Windows Forms**. Для сборки нужны Windows и .NET SDK 10.
 
