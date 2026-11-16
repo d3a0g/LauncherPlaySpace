@@ -20,8 +20,10 @@ async function session(name,source,port,run){
 }
 (async()=>{
  fs.copyFileSync(path.join(project,'test-results/library.png'),path.join(screens,'library.png'));
- fs.copyFileSync(path.join(project,'test-results/recommendations.png'),path.join(screens,'recommendations.png'));
  await session('controller',path.join(project,'test-results/native-profile'),9462,async page=>{
+  await page.getByRole('button',{name:'Во что поиграть',exact:true}).click();
+  await page.waitForFunction(()=>document.querySelectorAll('.recommendation img').length===4&&Array.from(document.querySelectorAll('.recommendation img')).every(img=>img.complete&&img.naturalWidth>0),null,{timeout:30000});
+  await page.screenshot({path:path.join(screens,'recommendations.png')});
   await page.getByRole('button',{name:'Режим большого экрана',exact:true}).click();
   await page.waitForFunction(()=>document.querySelectorAll('.controller-games img').length===3&&Array.from(document.querySelectorAll('.controller-games img')).every(img=>img.complete&&img.naturalWidth>0),null,{timeout:30000});
   await page.screenshot({path:path.join(screens,'controller.png')});
