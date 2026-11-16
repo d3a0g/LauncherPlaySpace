@@ -1,3 +1,5 @@
+> Historical 1.x documentation. Current PlaySpace 2.0 guides: https://github.com/d3a0g/LauncherPlaySpace/blob/main/docs/README.md
+
 # Профили графики
 
 Локальный новый интерфейс: отдельные параметры Unreal, чтение текущего конфига, безлимитный FPS, адаптер UserSettings.json Cyberpunk 2077 и просмотр изменений. Подробности: [REDESIGN.md](../../engineering/REDESIGN.md), проверяемые внешние замеры: [BENCHMARKS.md](BENCHMARKS.md).

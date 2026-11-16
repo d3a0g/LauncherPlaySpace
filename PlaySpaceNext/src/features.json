@@ -1,0 +1,146 @@
+[
+  {
+    "id": "mods",
+    "title": "Моды",
+    "description": "Thunderstore, ZIP, Paradox, зависимости и наборы",
+    "group": "Игры",
+    "requiresGame": true,
+    "engine": "native"
+  },
+  {
+    "id": "saves",
+    "title": "Сохранения",
+    "description": "Резервные копии, проверка и восстановление",
+    "group": "Игры",
+    "requiresGame": true,
+    "engine": "native"
+  },
+  {
+    "id": "graphics",
+    "title": "Графика и DLSS",
+    "description": "Профили производительности и поддерживаемые настройки",
+    "group": "Игры",
+    "requiresGame": true,
+    "engine": "native"
+  },
+  {
+    "id": "network",
+    "title": "Сеть / WARP",
+    "description": "Управление Cloudflare WARP и диагностика",
+    "group": "Система",
+    "requiresGame": false,
+    "engine": "native"
+  },
+  {
+    "id": "settings",
+    "title": "Настройки и Steam",
+    "description": "Подключение профиля, оформление и параметры",
+    "group": "Настройки",
+    "requiresGame": false,
+    "engine": "native"
+  },
+  {
+    "id": "sounds",
+    "title": "Звуки игр",
+    "description": "Свои звуки и расписание воспроизведения",
+    "group": "Игры",
+    "requiresGame": false,
+    "engine": "native"
+  },
+  {
+    "id": "admin",
+    "title": "Администрирование",
+    "description": "Разрешения, аудит и проверка сборок модов",
+    "group": "Система",
+    "requiresGame": false,
+    "engine": "native"
+  },
+  {
+    "id": "controller",
+    "title": "Большой экран",
+    "description": "Библиотека с управлением геймпадом",
+    "group": "Игры",
+    "requiresGame": false,
+    "engine": "native"
+  },
+  {
+    "id": "game-updates",
+    "title": "Обновления игр",
+    "description": "Действия через установленные игровые клиенты",
+    "group": "Игры",
+    "requiresGame": false,
+    "engine": "native"
+  },
+  {
+    "id": "downloads",
+    "title": "Загрузки",
+    "description": "Очередь, прогресс и управление скоростью",
+    "group": "Система",
+    "requiresGame": false,
+    "engine": "native"
+  },
+  {
+    "id": "collections",
+    "title": "Коллекции и теги",
+    "description": "Свои коллекции игр",
+    "group": "Библиотека",
+    "requiresGame": false,
+    "engine": "native"
+  },
+  {
+    "id": "history",
+    "title": "История",
+    "description": "Сеансы и изменения библиотеки",
+    "group": "Библиотека",
+    "requiresGame": false,
+    "engine": "native"
+  },
+  {
+    "id": "duplicates",
+    "title": "Дубликаты",
+    "description": "Поиск и объединение записей",
+    "group": "Библиотека",
+    "requiresGame": false,
+    "engine": "native"
+  },
+  {
+    "id": "transfer",
+    "title": "Перенос игры",
+    "description": "Перенос на другой диск с проверкой",
+    "group": "Библиотека",
+    "requiresGame": true,
+    "engine": "native"
+  },
+  {
+    "id": "storage",
+    "title": "Место на диске",
+    "description": "Обслуживание локального кеша",
+    "group": "Система",
+    "requiresGame": false,
+    "engine": "native"
+  },
+  {
+    "id": "backup-settings",
+    "title": "Перенос настроек",
+    "description": "Копии и импорт настроек",
+    "group": "Настройки",
+    "requiresGame": false,
+    "engine": "native"
+  },
+  {
+    "id": "recommendations",
+    "title": "Полный каталог рекомендаций",
+    "description": "Актуальная популярность, описания и подборки",
+    "group": "Магазины",
+    "requiresGame": false,
+    "engine": "native"
+  },
+  {
+    "id": "deals",
+    "title": "Скидки и раздачи",
+    "description": "Steam / Epic, категории, жанры и страницы",
+    "group": "Магазины",
+    "requiresGame": false,
+    "engine": "native"
+  }
+]

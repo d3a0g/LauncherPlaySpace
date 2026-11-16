@@ -1,0 +1,3 @@
+# Preserve the original upstream license bytes (legacy Windows encoding).
+PlaySpaceNext/src-tauri/catalog/NVIDIA-DLSS-LICENSE.txt -text -diff
+GameLauncherGUI/Assets/ThirdParty/NVIDIA-DLSS-LICENSE.txt -text -diff

@@ -1,0 +1,60 @@
+// Real native IPC + WebView2, isolated launcher profile. Never installs into Documents.
+const {spawn}=require('node:child_process');
+const fs=require('node:fs');const path=require('node:path');const assert=require('node:assert/strict');
+let playwright;try{playwright=require('playwright-core');}catch{playwright=require(path.join(process.env.USERPROFILE,'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright'));}
+const output=path.resolve(__dirname,'../test-results/teardown');
+const profile=path.join(output,'profile');fs.mkdirSync(profile,{recursive:true});
+const fixture=path.join(output,'game');fs.mkdirSync(fixture,{recursive:true});
+const exePath=path.join(fixture,'teardown.exe');fs.writeFileSync(exePath,'Not executable: isolated UI fixture.');
+const gameId='71234567890123456789012345678901';
+fs.writeFileSync(path.join(profile,'games.json'),JSON.stringify([{LibraryId:gameId,Name:'Teardown',SteamAppId:'1167630',ExePath:exePath,InstallDirectory:fixture,PlayedSeconds:0}]));
+const preferences={Language:'ru',OfflineMode:false,CloseBehavior:2};
+fs.writeFileSync(path.join(profile,'preferences.json'),JSON.stringify(preferences));
+const production=path.join(process.env.LOCALAPPDATA,'GameLauncherPRO','games.json');
+const before=fs.existsSync(production)?fs.readFileSync(production):null;
+const child=spawn(process.env.PLAYSPACE_NEXT_EXE??path.resolve(__dirname,'../src-tauri/target/release/playspace-next.exe'),[],{windowsHide:true,stdio:'ignore',env:{...process.env,PLAYSPACE_NEXT_PROFILE:profile,WEBVIEW2_USER_DATA_FOLDER:path.join(output,'webview'),WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS:'--remote-debugging-port=9448 --remote-debugging-address=127.0.0.1'}});
+let browser;
+(async()=>{try{
+ for(let i=0;i<80;i++){try{browser=await playwright.chromium.connectOverCDP('http://127.0.0.1:9448',{timeout:1000});break;}catch{if(child.exitCode!==null)throw Error('Fixture launcher exited');await new Promise(r=>setTimeout(r,500));}}
+ assert(browser,'WebView2 unavailable');const context=browser.contexts()[0],page=context.pages()[0];const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.getByRole('button',{name:'Мастерская модов',exact:true}).click();
+ const region=page.getByRole('region',{name:'Моды',exact:true});await region.locator('.game-select select').selectOption(gameId);
+ await region.getByRole('heading',{name:'Мастерская Steam',exact:true}).waitFor();
+ await region.locator('.mod-workshop__card').first().waitFor({timeout:60000});
+ const first=await region.locator('.mod-workshop__name').first().textContent();
+ assert(await region.locator('.mod-workshop__card').count()>0);
+ await page.waitForFunction(()=>Array.from(document.querySelectorAll('.mod-workshop__image img')).some(img=>img.complete&&img.naturalWidth>0),null,{timeout:15000});
+ assert.equal(await region.getByText('Разрешить исполняемые файлы загрузчика',{exact:true}).count(),0);
+ assert(await region.locator('.file-path').first().textContent().then(p=>/Teardown[\\/]mods$/.test(p)));
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+ await page.screenshot({path:path.join(output,'workshop-ru.png')});
+ await region.getByRole('combobox',{name:'Категория мода',exact:true}).selectOption('Vehicle');
+ await region.locator('.mod-workshop__card').first().waitFor({timeout:60000});
+ await region.getByRole('combobox',{name:'Порядок модов',exact:true}).selectOption('toprated');
+ await region.locator('.mod-workshop__card').first().waitFor({timeout:60000});
+ await region.getByRole('button',{name:'Следующая',exact:true}).click();
+ await region.locator('.mod-workshop__status').getByText('Страница мастерской 2',{exact:true}).waitFor({timeout:60000});
+ assert((await region.locator('.mod-workshop__status').textContent()).includes('2'));
+ await page.screenshot({path:path.join(output,'workshop-vehicles-page2.png')});
+ const ipc=(operation,payload)=>page.evaluate(({operation,payload})=>window.__TAURI_INTERNALS__.invoke('request',{operation,payload}),{operation,payload});
+ const cached=await ipc('mods',{id:gameId,action:'workshop_catalog',page:2,sort:'toprated',category:'Vehicle'});
+ assert.equal(cached.cached,true);assert.equal(cached.page,2);assert(cached.items.length>0);
+ fs.writeFileSync(path.join(profile,'preferences.json'),JSON.stringify({...preferences,OfflineMode:true}));
+ const updateStatus=await ipc('app_update',{action:'status'});
+ assert.equal(updateStatus.configured,true);assert.equal(updateStatus.version,'2.0.0');
+ const offline=await ipc('mods',{id:gameId,action:'workshop_catalog',page:2,sort:'toprated',category:'Vehicle',refresh:true});
+ assert.equal(offline.cached,true);assert.equal(offline.items[0].id,cached.items[0].id);
+ for(const item of ['https://example.com','123/../../','']){assert(await ipc('mods',{id:gameId,action:'workshop_open',item}).then(()=>false,()=>true));}
+ fs.writeFileSync(path.join(profile,'preferences.json'),JSON.stringify({...preferences,OfflineMode:true,Language:'en'}));
+ await page.reload();await page.getByRole('button',{name:'Mod workshop',exact:true}).click();
+ const english=page.getByRole('region',{name:'Mods',exact:true});
+ await english.getByRole('heading',{name:'Steam Workshop',exact:true}).waitFor();
+ await english.getByRole('button',{name:'Local ZIP',exact:true}).waitFor();
+ const cdp=await context.newCDPSession(page);await cdp.send('Emulation.setDeviceMetricsOverride',{width:900,height:640,deviceScaleFactor:1,mobile:false});
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+ await page.screenshot({path:path.join(output,'workshop-en-900.png')});
+ assert.deepEqual(errors,[]);
+ if(before)assert(fs.readFileSync(production).equals(before),'Production library changed');
+ const report={passed:true,first,catalogItems:cached.items.length,total:cached.total,cached:true,offline:true,invalidSteamItemsRejected:true,locales:['ru','en'],widths:[1440,900],installation:'unit fixtures only; no real game writes',steamSubscription:'not executed'};
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+}finally{if(browser)await browser.close();if(child.exitCode===null)child.kill();}})().catch(e=>{console.error(e);process.exitCode=1;});

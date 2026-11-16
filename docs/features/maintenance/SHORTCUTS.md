@@ -1,3 +1,5 @@
+> Historical 1.x documentation. Current PlaySpace 2.0 guides: https://github.com/d3a0g/LauncherPlaySpace/blob/main/docs/README.md
+
 # Windows блокирует закреплённый ярлык
 
 На скриншоте указан `LauncherPlaySpace.lnk` из `User Pinned\TaskBar`. Если распакованный `LauncherPlaySpace.exe` запускается напрямую, это отличается от блокировки самого EXE. Происхождение файла и применённую политику нужно проверять на том ПК, где возникает ошибка.

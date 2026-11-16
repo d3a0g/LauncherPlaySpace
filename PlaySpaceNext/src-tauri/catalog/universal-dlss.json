@@ -1,0 +1,14 @@
+{
+  "version": "0.5.1",
+  "url": "https://github.com/MotionflowOffical/UniversalDLSS5/releases/download/v0.5.1/UniversalDLSS5-0.5.1-Setup-x64.exe",
+  "sha256": "0ded01f5509a5cbb427806e1574d0f9ed21e200320191022677ec82e66916231",
+  "files": {
+    "UniversalDLSS5.exe": "1671a71a60492075818799856680b16aadb949df23d73c8e222ede32aab123da",
+    "UniversalDLSS5.Bridge.dll": "f7c0ae595718aef78bf441f8fda197967a84295296a2ecf2eb4e2eb8f2968a22",
+    "UniversalDLSS5.Bridge32.dll": "cd09f42fec5ee104c1fb9b1b6dd034d706d10baf684265aba990d19513fc918f",
+    "UniversalDLSS5.Injector.exe": "d21f87f552f197fc86dfcb0713f5d71b45c3c7d6383ed3d9ccdbb81de8347ed0",
+    "UniversalDLSS5.Injector32.exe": "044a42f24a1eabf496e967585e17de7453ee8170e83addf8c4f9a821e8b643d1",
+    "UniversalDLSS5.NRHost.exe": "9150117fd3aa4ca0a40d1558c1632daf01ce475e2bba1294e788636d532b1d25",
+    "nvngx.dll_UniversalDLSS5_NRForwarder.dll": "9589c44bb18976ad5e66b0c6c9458483e49ff9ac28e9cfbcc52be45b01e10ba7"
+  }
+}

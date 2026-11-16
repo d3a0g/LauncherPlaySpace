@@ -1,0 +1,11 @@
+PlaySpace 2.0 — Windows 10/11 x64
+
+Установка выполняется для текущего пользователя в прежнюю папку LauncherPlaySpace. Версия 2.0 использует нативное приложение Rust/Tauri; .NET и C#-адаптер не требуются. Перед заменой файлов закройте PlaySpace, включая значок в трее. Не завершайте работающие игры ради обновления.
+
+Старые данные остаются в %LOCALAPPDATA%\GameLauncherPRO. Новый профиль находится в %LOCALAPPDATA%\io.playspace.next.local. Установщик не изменяет и не удаляет эти профили, игры, моды или сохранения. Импорт библиотеки в интерфейсе копирует записи из прежнего профиля; Steam-ключи и разрешения администратора автоматически не переносятся.
+
+Для работы необходим Microsoft Edge WebView2 Runtime. Если Runtime отсутствует, установщик запускает официальный Microsoft Evergreen bootstrapper; требуется Интернет. Если Runtime установить не удалось, установка PlaySpace останавливается с сообщением об ошибке.
+
+This per-user installer replaces the application in its existing folder. Profiles, games, mods and saves are preserved. The library import copies legacy records; credentials and administrator grants are not imported. Microsoft WebView2 Runtime is required and is installed using the Microsoft bootstrapper only when absent. Internet access is required for that installation.
+
+Сторонние лицензии находятся в комплекте приложения. Установщик не отключает защиту Windows. Подпись канала обновлений и доверенная подпись Windows — разные механизмы; наличие первой не означает наличие второй.

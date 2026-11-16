@@ -1,0 +1,33 @@
+[package]
+name = "playspace-next"
+version = "2.0.0"
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-dialog = "2"
+tauri-plugin-updater = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+uuid = { version = "1", features = ["v4"] }
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls", "gzip"] }
+chrono = { version = "0.4", features = ["serde"] }
+sha2 = { version = "0.10", features = ["oid"] }
+base64 = "0.22"
+image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp"] }
+zip = { version = "2", default-features = false, features = ["deflate"] }
+regex = "1"
+scraper = "0.24"
+html-escape = "0.2"
+sysinfo = "0.33"
+winreg = "0.55"
+rsa = "0.9"
+windows-sys = { version = "0.59", features = ["Win32_Security", "Win32_Security_Credentials", "Win32_System_Threading", "Win32_Media_Audio", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging", "Win32_System_Memory", "Win32_Graphics_Gdi"] }
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1

@@ -1,0 +1,9 @@
+import {useEffect,useState} from 'react';
+import {request} from './api';
+import {t} from './i18n';
+export function ModProfiles({gameId,kind,execute}:{gameId:string|null;kind:string;execute:(operation:string,payload?:Record<string,any>,message?:string,reload?:boolean)=>Promise<any>}){
+ const [profiles,setProfiles]=useState<any[]>([]),[name,setName]=useState(''),[plan,setPlan]=useState<any>(null);
+ async function refresh(){const result=await request<any>('mods',{id:gameId,kind,action:'profile_list'});setProfiles(Array.isArray(result)?result:Object.keys(result).map(name=>({id:name,name,packages:result[name].length})));}
+ useEffect(()=>{void refresh().catch(()=>{});},[gameId,kind]);
+ return <section className="native-section"><h3>{t('Профиль модов')}</h3><div className="native-actions"><input aria-label={t('Название')} placeholder={t('Название')} value={name} onChange={e=>setName(e.target.value)}/><button className="button" onClick={()=>void execute('mods',{id:gameId,kind,action:'profile_save',name}).then(result=>result&&refresh())}>{t('Сохранить')}</button></div>{profiles.map(p=><div className="native-row" key={p.id}><div><strong>{p.name}</strong><p>{p.packages} {t('Моды')}</p></div><button className="button" onClick={()=>void execute('mods',{id:gameId,kind,action:kind==='paradox'?'profile_apply':'profile_activate',profile:p.id,name:p.name,confirmed:kind==='paradox'}).then(result=>result&&(kind==='paradox'?refresh():setPlan({id:p.id,...result})))}>{t('Применить')}</button></div>)}{plan&&<div><h3>{t('Просмотр плана')}</h3>{plan.changes.map((c:any,i:number)=><p key={i}><code>{c.path}</code> · {t(c.action)}</p>)}<button className="button" onClick={()=>void execute('mods',{id:gameId,kind,action:'profile_activate',profile:plan.id,confirmed:true},'Готово',true).then(()=>{setPlan(null);void refresh();})}>{t('Подтвердить')}</button></div>}</section>;
+}

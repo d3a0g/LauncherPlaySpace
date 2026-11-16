@@ -1,3 +1,5 @@
+> Historical 1.x documentation. Current PlaySpace 2.0 guides: https://github.com/d3a0g/LauncherPlaySpace/blob/main/docs/README.md
+
 # Расширение модов: локальная версия 1.0.5-preview
 
 Авторские права (c) 2026 d3a0g

@@ -1,3 +1,5 @@
+> Historical 1.x documentation. Current PlaySpace 2.0 guides: https://github.com/d3a0g/LauncherPlaySpace/blob/main/docs/README.md
+
 # Справочник внешних замеров
 
 Проверено 7 ноября 2026 года. В `Assets/benchmarks-expanded.json` включены 337 опубликованных замеров для 9 GPU, 11 игр и 39 сочетаний CPU/GPU. Статистика Steam содержит 32 популярных GPU за октябрь 2026. Это отдельные компоненты, а не связанные конфигурации игроков. Подробности: [HARDWARE-CATALOG.md](HARDWARE-CATALOG.md).

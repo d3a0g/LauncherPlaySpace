@@ -1,3 +1,5 @@
+> Historical 1.x documentation. Current PlaySpace 2.0 guides: https://github.com/d3a0g/LauncherPlaySpace/blob/main/docs/README.md
+
 # Моды в PLAYSPACE
 
 Режимы для GeForce RTX 30: **Моды → DLSS / RTX → RTX 30 · FSR кадры**. Доступны DLSS 4.5 Super Resolution, выбор модели и альтернативная FSR Frame Generation через OptiScaler. [Инструкция и ограничения](../dlss/RTX30.md).

@@ -16,3 +16,15 @@ support-bot.pid
 distribution/profile/
 
 .backups/
+**/node_modules/
+PlaySpaceNext/dist/
+PlaySpaceNext/src-tauri/target/
+PlaySpaceNext/src-tauri/gen/
+PlaySpaceNext/src-tauri/binaries/
+PlaySpaceNext/.local-data/
+PlaySpaceNext/test-results/
+*.tsbuildinfo
+launcher-chat-recovered.txt
+docs/engineering/PROJECT-CONTEXT.md
+*.dpapi
+*.key

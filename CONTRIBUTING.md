@@ -1,13 +1,19 @@
 # Участие в разработке
 
-Нужны Windows x64 и .NET SDK 10. Клонируйте репозиторий или скачайте исходники через Code → Download ZIP.
+Для PlaySpace 2.0 нужны Windows x64, Node.js 22.12+ или 24, Rust stable (MSVC), Visual Studio Build Tools с C++ и Windows SDK, Microsoft Edge WebView2. Клонируйте репозиторий или скачайте исходники через Code → Download ZIP.
 
 ```powershell
-dotnet build GameLauncherGUI/GameLauncherGUI.csproj -c Release
-dotnet run --project GameLauncherGUI.Tests/GameLauncherGUI.Tests.csproj -c Release -- --ui
+cd PlaySpaceNext
+npm ci
+npm test
+npm run build
+cd src-tauri
+cargo test
+cd ..
+npm run tauri dev
 ```
 
-Тесты — отдельная консольная программа: используйте `dotnet run`, а не `dotnet test`. Проверки UI требуют интерактивного сеанса Windows. Сетевые проверки запускаются отдельно; обычные проверки используют временные файлы и тестовые ответы.
+TypeScript проверяется Vitest, локальные службы — `cargo test`. Desktop-проверки в `PlaySpaceNext/tests` требуют Windows/WebView2 и Playwright; они используют отдельные профили и фиктивные игровые файлы. Сетевые проверки запускаются отдельно. Нельзя тестировать установку модов, перенос или восстановление на пользовательских играх без отдельного запроса.
 
 Для ошибки создайте Issue с версией, названием игры и шагами воспроизведения. Для изменений откройте pull request: опишите результат и выполненные проверки. Новому адаптеру модов нужны проверка путей, резервная копия и откат. Не обещайте поддержку всех игр или гарантированный FPS.
 

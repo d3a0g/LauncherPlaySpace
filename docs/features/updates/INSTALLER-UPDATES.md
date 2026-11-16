@@ -1,3 +1,5 @@
+> Historical 1.x documentation. Current PlaySpace 2.0 guides: https://github.com/d3a0g/LauncherPlaySpace/blob/main/docs/README.md
+
 # Обновление через установщик
 
 Новые выпуски публикуют `LauncherPlaySpace-<версия>-Setup.exe`. Поля `downloadUrl` и `installerUrl` в `latest.json` указывают на установщик. Поэтому установщик получают и старые версии лаунчера, читающие только `downloadUrl`.

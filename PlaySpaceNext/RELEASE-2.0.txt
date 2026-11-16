@@ -1,0 +1,30 @@
+PlaySpace 2.0.0 / Windows x64 / 17 ноября 2026
+
+Запустите LauncherPlaySpace.exe. Требуется Microsoft Edge WebView2 Runtime.
+Установщик проверяет WebView2 и при необходимости устанавливает Runtime
+официальным Microsoft Bootstrapper. Среда .NET не требуется.
+
+Run LauncherPlaySpace.exe. Microsoft Edge WebView2 Runtime is required.
+The installer checks WebView2 and can install the official Microsoft Runtime.
+.NET is not required. Select RU / EN in the top bar.
+
+Профиль / Profile: %LOCALAPPDATA%\io.playspace.next.local
+Профиль 1.x сохраняется в %LOCALAPPDATA%\GameLauncherPRO.
+Кнопка импорта копирует библиотеку 1.x; старый файл не удаляется.
+Legacy library import copies game records; old settings are not auto-migrated.
+
+Teardown: мастерская Steam с поиском/категориями и импорт одного ZIP-мода
+с info.txt. Workshop устанавливает Steam. Включение модов — в самой игре.
+
+Обновления / Updates: signed latest-v2.json; signature bound to app version.
+Подпись пакета обновления не является сертификатом издателя Windows.
+Windows code signing has not been established; system checks remain enabled.
+
+Скачать / Downloads: https://github.com/d3a0g/playspace-releases/releases/latest
+Исходники / Source: https://github.com/d3a0g/LauncherPlaySpace
+Новости / News: https://t.me/LauncherPlaySpace
+Помощь / Help: https://t.me/PlaySpaceSupport_bot
+Поддержать / Support development: https://tips.tips/000492195
+
+Игры, моды и дополнительные компоненты имеют отдельные требования и лицензии.
+Приложение бесплатно; добровольная поддержка не покупает функции или услуги.

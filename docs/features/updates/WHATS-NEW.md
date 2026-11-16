@@ -1,3 +1,5 @@
+> Historical 1.x documentation. Current PlaySpace 2.0 guides: https://github.com/d3a0g/LauncherPlaySpace/blob/main/docs/README.md
+
 # История изменений в настройках
 
 Открыть: **Настройки → Что нового**. Список версий, краткие изменения и известные проблемы встроены в EXE и доступны без сети и дополнительных файлов.
