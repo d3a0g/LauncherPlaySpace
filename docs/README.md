@@ -20,6 +20,8 @@ PlaySpace 2.0 — приложение Windows на React/TypeScript и Rust/Tau
 
 Подпись обновления и кодовая подпись Windows — разные проверки. Authenticode не подтверждён. Реальные игровые сессии и физический геймпад не тестировались; наличие адаптера не гарантирует совместимость каждого мода.
 
-Новости: [@LauncherPlaySpace](https://t.me/LauncherPlaySpace). Помощь: [@PlaySpaceSupport_bot](https://t.me/PlaySpaceSupport_bot) или [GitHub Issues](https://github.com/d3a0g/LauncherPlaySpace/issues). [Поддержать через tips.tips](https://tips.tips/000492195) — добровольно, приложение бесплатно.
+Новости: [@LauncherPlaySpace](https://t.me/LauncherPlaySpace). Помощь: [@PlaySpaceSupport_bot](https://t.me/PlaySpaceSupport_bot) или [GitHub Issues](https://github.com/d3a0g/LauncherPlaySpace/issues). [Поддержать через Robokassa](https://auth.robokassa.ru/merchant/Invoice/IYhjSKAkQEeZj7JPhZEHwA) — добровольно, приложение бесплатно.
 
 **English:** Start with [Installation](2.0/INSTALLATION.md), [Mods](2.0/MODS.md) and [Updates](2.0/UPDATES.md). Run the native `LauncherPlaySpace.exe`; WebView2 is required, .NET is not. Legacy library import preserves the old profile without automatically migrating settings. See [2.0.0 release notes](releases/2.0.0.md) for changes and verification limits.
+
+[Поддержать через Robokassa — RU](https://auth.robokassa.ru/merchant/Invoice/IYhjSKAkQEeZj7JPhZEHwA) · [Support via Robokassa — EN](https://auth.robokassa.ru/merchant/Invoice/KL10bltZtkCT1pfk7R0EVQ)

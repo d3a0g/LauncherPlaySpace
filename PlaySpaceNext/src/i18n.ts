@@ -20,7 +20,7 @@ const en:Record<string,string>={
  'Открыть мод в Steam':'Open mod in Steam','Открыть в Steam для подписки':'Open in Steam to subscribe','Страницы мастерской':'Workshop pages',
  'Помощь и поддержка проекта':'Help and project support',
  'Поддержка':'Get help','Помощь в Telegram':'Help on Telegram','Написать в @PlaySpaceSupport_bot':'Contact @PlaySpaceSupport_bot',
- 'Поддержать нас!':'Support us!','На развитие проекта':'Help PlaySpace grow','Добровольная поддержка PlaySpace на tips.tips':'Voluntarily support PlaySpace on tips.tips',
+ 'Поддержать нас!':'Support us!','На развитие проекта':'Help PlaySpace grow','Добровольная поддержка PlaySpace на Robokassa':'Voluntarily support PlaySpace on Robokassa',
  'Не удалось открыть ссылку. Проверь браузер по умолчанию и попробуй ещё раз.':'Could not open the link. Check your default browser and try again.',
  'Локальная версия':'Local preview',
  'Для этой игры пока нет адаптера модов':'This game does not have a mod adapter yet','Выбери другую игру. Установка недоступна, пока не добавлена поддержка её формата.':'Choose another game. Installation is available once its mod format is supported.',

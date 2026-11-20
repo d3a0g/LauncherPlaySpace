@@ -82,13 +82,15 @@ PlaySpace объединяет установленные игры Steam, Epic G
 
 ## Поддержать проект
 
-**Скачивание и использование PlaySpace — 0 ₽.** Добровольно поддержать разработку можно через **[tips.tips](https://tips.tips/000492195)**. Сумму выбираешь сам; пожертвование не покупает функции, услуги или бонусы.
+**Скачивание и использование PlaySpace — 0 ₽.** Добровольно поддержать разработку можно через **[Robokassa](https://auth.robokassa.ru/merchant/Invoice/IYhjSKAkQEeZj7JPhZEHwA)**. Сумму перевода проверяй перед подтверждением; пожертвование не покупает функции, услуги или бонусы.
 
 [Условия поддержки и возврата](docs/legal/README.md) · [Публичная оферта](docs/legal/support-offer.md)
 
-<a href="https://tips.tips/000492195"><img src="docs/support/tips-qr.png" alt="Поддержать PlaySpace через tips.tips" width="220" height="220"></a>
+<a href="https://auth.robokassa.ru/merchant/Invoice/IYhjSKAkQEeZj7JPhZEHwA"><img src="docs/support/robokassa-ru-qr.png" alt="Поддержать PlaySpace через Robokassa" width="220" height="220"></a>
 
-**English:** [Support PlaySpace with a voluntary donation](https://tips.tips/000492195). The app remains free; donations do not purchase features, services or perks. Support: [@PlaySpaceSupport_bot](https://t.me/PlaySpaceSupport_bot).
+**English:** [Support PlaySpace with a voluntary donation](https://auth.robokassa.ru/merchant/Invoice/KL10bltZtkCT1pfk7R0EVQ). The app remains free; donations do not purchase features, services or perks. Support: [@PlaySpaceSupport_bot](https://t.me/PlaySpaceSupport_bot).
+
+<a href="https://auth.robokassa.ru/merchant/Invoice/KL10bltZtkCT1pfk7R0EVQ"><img src="docs/support/robokassa-en-qr.png" alt="Support PlaySpace via Robokassa in English" width="220" height="220"></a>
 
 ## Сборка из исходников / Build from source
 

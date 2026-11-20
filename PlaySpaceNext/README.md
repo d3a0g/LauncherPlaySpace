@@ -64,8 +64,10 @@ npm run tauri build -- --no-bundle
 
 ## Поддержка и лицензии
 
-[Поддержка](https://t.me/PlaySpaceSupport_bot) · [Новости](https://t.me/LauncherPlaySpace) · [Добровольная поддержка через tips.tips](https://tips.tips/000492195)
+[Поддержка](https://t.me/PlaySpaceSupport_bot) · [Новости](https://t.me/LauncherPlaySpace) · [Добровольная поддержка через Robokassa](https://auth.robokassa.ru/merchant/Invoice/IYhjSKAkQEeZj7JPhZEHwA)
 
 Приложение бесплатно; пожертвования не покупают функции или услуги. [Условия поддержки](../docs/legal/README.md). [MIT](../LICENSE) · [Лицензии компонентов](../THIRD_PARTY_NOTICES.md). Внешние графические компоненты имеют собственные условия и не включаются автоматически.
 
 **English:** PlaySpace 2.0 uses React/TypeScript and Rust/Tauri with Russian and English UI. Run the distributed `LauncherPlaySpace.exe` on Windows x64 with WebView2. Build here with `npm ci` and `npm run tauri dev`; Rust MSVC and Windows C++ build tools are required. Legacy import copies the library only. Steam manages Workshop subscriptions; PlaySpace manages imported Teardown ZIP mods separately. Real gameplay, physical controllers and Windows code signing have not been verified.
+
+[Поддержать через Robokassa — RU](https://auth.robokassa.ru/merchant/Invoice/IYhjSKAkQEeZj7JPhZEHwA) · [Support via Robokassa — EN](https://auth.robokassa.ru/merchant/Invoice/KL10bltZtkCT1pfk7R0EVQ)

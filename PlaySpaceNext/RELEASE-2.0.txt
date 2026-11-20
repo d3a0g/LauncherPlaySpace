@@ -24,7 +24,10 @@ Windows code signing has not been established; system checks remain enabled.
 Исходники / Source: https://github.com/d3a0g/LauncherPlaySpace
 Новости / News: https://t.me/LauncherPlaySpace
 Помощь / Help: https://t.me/PlaySpaceSupport_bot
-Поддержать / Support development: https://tips.tips/000492195
+Поддержать / Support development: https://auth.robokassa.ru/merchant/Invoice/IYhjSKAkQEeZj7JPhZEHwA
 
 Игры, моды и дополнительные компоненты имеют отдельные требования и лицензии.
 Приложение бесплатно; добровольная поддержка не покупает функции или услуги.
+
+Robokassa RU: https://auth.robokassa.ru/merchant/Invoice/IYhjSKAkQEeZj7JPhZEHwA
+Robokassa EN: https://auth.robokassa.ru/merchant/Invoice/KL10bltZtkCT1pfk7R0EVQ

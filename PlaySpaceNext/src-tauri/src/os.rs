@@ -67,7 +67,8 @@ pub fn open_url(url: &str) -> Result<Value> {
 pub fn open_project_link(p: &Value) -> Result<Value> {
     let url = match str(p, "id") {
         "support" => "https://t.me/PlaySpaceSupport_bot",
-        "donate" => "https://tips.tips/000492195",
+        "donate" if str(p, "language") == "en" => "https://auth.robokassa.ru/merchant/Invoice/KL10bltZtkCT1pfk7R0EVQ",
+        "donate" => "https://auth.robokassa.ru/merchant/Invoice/IYhjSKAkQEeZj7JPhZEHwA",
         _ => return Err("Unknown project link".into()),
     };
     launch_uri(url)
