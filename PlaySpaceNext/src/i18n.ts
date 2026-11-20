@@ -2,11 +2,15 @@ import {useSyncExternalStore} from 'react';
 export type Language='ru'|'en';
 let language:Language=localStorage.getItem('playspace.language')==='en'?'en':'ru';
 const listeners=new Set<()=>void>();
+let translationRevision=0;
+let remoteTranslations:Record<Language,Record<string,string>>={ru:{},en:{}};
+export function setRemoteTranslations(next:Record<Language,Record<string,string>>){if(JSON.stringify(next)===JSON.stringify(remoteTranslations))return;remoteTranslations=next;translationRevision++;listeners.forEach(fn=>fn());}
 export function setLanguage(next:Language){language=next;localStorage.setItem('playspace.language',next);document.documentElement.lang=next;listeners.forEach(fn=>fn());}
-export function useLanguage(){return useSyncExternalStore(fn=>{listeners.add(fn);return()=>listeners.delete(fn);},()=>language);}
+export function useLanguage():Language{useSyncExternalStore(fn=>{listeners.add(fn);return()=>listeners.delete(fn);},()=>`${language}:${translationRevision}`);return language;}
 export function currentLanguage(){return language;}
 document.documentElement.lang=language;
 const en:Record<string,string>={
+ 'Настройки проекта':'Project settings','Ссылки, объявления и каталоги обновляются отдельно от приложения.':'Links, announcements and catalogues update separately from the app.','Встроенные настройки':'Built-in settings','Проверенная копия на ПК':'Verified local copy','Проверенные настройки с GitHub':'Verified settings from GitHub','Редакция':'Revision','Действует до':'Valid until','Проверить настройки проекта':'Check project settings','Проверка…':'Checking…','Не удалось проверить настройки. Сохранённая конфигурация продолжает работать.':'Could not refresh settings. The saved configuration remains active.',
  // Steam Workshop browser (native mods).
  'Мастерская Steam':'Steam Workshop',
  'Откройте мод в Steam и подпишитесь: Steam загрузит его для игры. Локальные ZIP устанавливаются отдельно через «Локальный ZIP».':'Open a mod in Steam and subscribe: Steam downloads it for the game. Install local ZIP files separately using “Local ZIP”.',
@@ -80,6 +84,6 @@ const en:Record<string,string>={
  'Полный выход':'Quit','Показать PlaySpace':'Show PlaySpace','Язык интерфейса сохранён':'Interface language saved','Выбери инструмент':'Choose a tool','Работает в новом интерфейсе':'Available in the new interface','Совместимость C#':'C# compatibility','Ещё переносится':'Migration in progress','Открыть прежний раздел':'Open legacy section',
 };
 const reverse=Object.fromEntries(Object.entries(en).map(([ru,english])=>[english,ru]));
-export function t(value:string):string{if(language==='ru')return reverse[value]??value;return en[value]??value;}
+export function t(value:string):string{const key=reverse[value]??value;return remoteTranslations[language][key]??(language==='ru'?key:en[key]??value);}
 export function countGames(count:number){return language==='en'?`${count} ${count===1?'game':'games'}`:`${count} игр`;}
 export function playtime(seconds:number,unknown=false){return unknown?t('время не загружено'):`${(seconds/3600).toLocaleString(language,{maximumFractionDigits:1})} ${language==='en'?'h':'ч'}`;}

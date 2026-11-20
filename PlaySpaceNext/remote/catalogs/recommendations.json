@@ -1,0 +1,3836 @@
+[
+  {
+    "id": "730",
+    "name": "Counter-Strike 2",
+    "categories": [
+      "Шутеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1172470",
+    "name": "Apex Legends",
+    "categories": [
+      "Шутеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "548430",
+    "name": "Deep Rock Galactic",
+    "categories": [
+      "Шутеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "892970",
+    "name": "Valheim",
+    "categories": [
+      "Выживание",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "648800",
+    "name": "Raft",
+    "categories": [
+      "Выживание",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "264710",
+    "name": "Subnautica",
+    "categories": [
+      "Выживание",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "620",
+    "name": "Portal 2",
+    "categories": [
+      "Головоломки",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "105600",
+    "name": "Terraria",
+    "categories": [
+      "Выживание",
+      "Кооп",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "427520",
+    "name": "Factorio",
+    "categories": [
+      "Стратегии",
+      "Песочницы",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1966720",
+    "name": "Lethal Company",
+    "categories": [
+      "Хорроры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "739630",
+    "name": "Phasmophobia",
+    "categories": [
+      "Хорроры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "883710",
+    "name": "Resident Evil 2",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "394360",
+    "name": "Hearts of Iron IV",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "281990",
+    "name": "Stellaris",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "1158310",
+    "name": "Crusader Kings III",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "1091500",
+    "name": "Cyberpunk 2077",
+    "categories": [
+      "Ролевые",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "1086940",
+    "name": "Baldur's Gate 3",
+    "categories": [
+      "Ролевые",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1245620",
+    "name": "ELDEN RING",
+    "categories": [
+      "Ролевые",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "413150",
+    "name": "Stardew Valley",
+    "categories": [
+      "Уютные",
+      "Кооп",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "1332010",
+    "name": "Stray",
+    "categories": [
+      "Уютные",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "220",
+    "name": "Half-Life 2",
+    "categories": [
+      "Шутеры",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "367520",
+    "name": "Hollow Knight",
+    "categories": [
+      "Приключения"
+    ]
+  },
+  {
+    "id": "477160",
+    "name": "Human Fall Flat",
+    "categories": [
+      "Головоломки",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "391540",
+    "name": "Undertale",
+    "categories": [
+      "Ролевые",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "440",
+    "name": "Team Fortress 2",
+    "categories": [
+      "Шутеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "550",
+    "name": "Left 4 Dead 2",
+    "categories": [
+      "Шутеры",
+      "Кооп",
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "400",
+    "name": "Portal",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "4000",
+    "name": "Garry's Mod",
+    "categories": [
+      "Песочницы",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "70",
+    "name": "Half-Life",
+    "categories": [
+      "Шутеры",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "500",
+    "name": "Left 4 Dead",
+    "categories": [
+      "Шутеры",
+      "Кооп",
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "240",
+    "name": "Counter-Strike: Source",
+    "categories": [
+      "Шутеры"
+    ]
+  },
+  {
+    "id": "570",
+    "name": "Dota 2",
+    "categories": [
+      "Стратегии",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "252490",
+    "name": "Rust",
+    "categories": [
+      "Выживание",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "346110",
+    "name": "ARK: Survival Evolved",
+    "categories": [
+      "Выживание",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "2399830",
+    "name": "ARK: Survival Ascended",
+    "categories": [
+      "Выживание",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1623730",
+    "name": "Palworld",
+    "categories": [
+      "Выживание",
+      "Кооп",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "242760",
+    "name": "The Forest",
+    "categories": [
+      "Выживание",
+      "Хорроры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1326470",
+    "name": "Sons Of The Forest",
+    "categories": [
+      "Выживание",
+      "Хорроры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "322330",
+    "name": "Don't Starve Together",
+    "categories": [
+      "Выживание",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "219740",
+    "name": "Don't Starve",
+    "categories": [
+      "Выживание"
+    ]
+  },
+  {
+    "id": "251570",
+    "name": "7 Days to Die",
+    "categories": [
+      "Выживание",
+      "Кооп",
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "108600",
+    "name": "Project Zomboid",
+    "categories": [
+      "Выживание",
+      "Песочницы",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1604030",
+    "name": "V Rising",
+    "categories": [
+      "Выживание",
+      "Ролевые",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1203620",
+    "name": "Enshrouded",
+    "categories": [
+      "Выживание",
+      "Ролевые",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1145360",
+    "name": "Hades",
+    "categories": [
+      "Рогалики",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "1145350",
+    "name": "Hades II",
+    "categories": [
+      "Рогалики",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "632360",
+    "name": "Risk of Rain 2",
+    "categories": [
+      "Рогалики",
+      "Шутеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "646570",
+    "name": "Slay the Spire",
+    "categories": [
+      "Рогалики",
+      "Карточные"
+    ]
+  },
+  {
+    "id": "2379780",
+    "name": "Balatro",
+    "categories": [
+      "Рогалики",
+      "Карточные"
+    ]
+  },
+  {
+    "id": "1794680",
+    "name": "Vampire Survivors",
+    "categories": [
+      "Рогалики",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "588650",
+    "name": "Dead Cells",
+    "categories": [
+      "Рогалики",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "311690",
+    "name": "Enter the Gungeon",
+    "categories": [
+      "Рогалики",
+      "Шутеры"
+    ]
+  },
+  {
+    "id": "250900",
+    "name": "The Binding of Isaac: Rebirth",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "242680",
+    "name": "Nuclear Throne",
+    "categories": [
+      "Рогалики",
+      "Шутеры"
+    ]
+  },
+  {
+    "id": "881100",
+    "name": "Noita",
+    "categories": [
+      "Рогалики",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "1942280",
+    "name": "Brotato",
+    "categories": [
+      "Рогалики",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "977950",
+    "name": "A Dance of Fire and Ice",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "322170",
+    "name": "Geometry Dash",
+    "categories": [
+      "Ритм-игры",
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "504230",
+    "name": "Celeste",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "268910",
+    "name": "Cuphead",
+    "categories": [
+      "Платформеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1057090",
+    "name": "Ori and the Will of the Wisps",
+    "categories": [
+      "Платформеры",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "387290",
+    "name": "Ori and the Blind Forest: Definitive Edition",
+    "categories": [
+      "Платформеры",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "253230",
+    "name": "A Hat in Time",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "250760",
+    "name": "Shovel Knight: Treasure Trove",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "731490",
+    "name": "Crash Bandicoot N. Sane Trilogy",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "860510",
+    "name": "Little Nightmares II",
+    "categories": [
+      "Хорроры",
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "424840",
+    "name": "Little Nightmares",
+    "categories": [
+      "Хорроры",
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "304430",
+    "name": "INSIDE",
+    "categories": [
+      "Головоломки",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "48000",
+    "name": "LIMBO",
+    "categories": [
+      "Головоломки",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "753640",
+    "name": "Outer Wilds",
+    "categories": [
+      "Головоломки",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "638970",
+    "name": "Yakuza 0",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "292030",
+    "name": "The Witcher 3: Wild Hunt",
+    "categories": [
+      "Ролевые",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "489830",
+    "name": "The Elder Scrolls V: Skyrim Special Edition",
+    "categories": [
+      "Ролевые",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "377160",
+    "name": "Fallout 4",
+    "categories": [
+      "Ролевые",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "22380",
+    "name": "Fallout: New Vegas",
+    "categories": [
+      "Ролевые"
+    ]
+  },
+  {
+    "id": "814380",
+    "name": "Sekiro: Shadows Die Twice",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "374320",
+    "name": "DARK SOULS III",
+    "categories": [
+      "Ролевые",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "570940",
+    "name": "DARK SOULS: REMASTERED",
+    "categories": [
+      "Ролевые",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "990080",
+    "name": "Hogwarts Legacy",
+    "categories": [
+      "Ролевые",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "435150",
+    "name": "Divinity: Original Sin 2",
+    "categories": [
+      "Ролевые",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1184370",
+    "name": "Pathfinder: Wrath of the Righteous",
+    "categories": [
+      "Ролевые"
+    ]
+  },
+  {
+    "id": "1593500",
+    "name": "God of War",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "2322010",
+    "name": "God of War Ragnarök",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "1817070",
+    "name": "Marvel's Spider-Man Remastered",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "1659420",
+    "name": "UNCHARTED: Legacy of Thieves Collection",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "1174180",
+    "name": "Red Dead Redemption 2",
+    "categories": [
+      "Приключения",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "271590",
+    "name": "Grand Theft Auto V Legacy",
+    "categories": [
+      "Экшен",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "412020",
+    "name": "Metro Exodus",
+    "categories": [
+      "Шутеры",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "782330",
+    "name": "DOOM Eternal",
+    "categories": [
+      "Шутеры",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "379720",
+    "name": "DOOM",
+    "categories": [
+      "Шутеры",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "1237970",
+    "name": "Titanfall 2",
+    "categories": [
+      "Шутеры"
+    ]
+  },
+  {
+    "id": "1229490",
+    "name": "ULTRAKILL",
+    "categories": [
+      "Шутеры",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "553850",
+    "name": "HELLDIVERS 2",
+    "categories": [
+      "Шутеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "397540",
+    "name": "Borderlands 3",
+    "categories": [
+      "Шутеры",
+      "Кооп",
+      "Ролевые"
+    ]
+  },
+  {
+    "id": "49520",
+    "name": "Borderlands 2",
+    "categories": [
+      "Шутеры",
+      "Кооп",
+      "Ролевые"
+    ]
+  },
+  {
+    "id": "218620",
+    "name": "PAYDAY 2",
+    "categories": [
+      "Шутеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "359550",
+    "name": "Tom Clancy's Rainbow Six Siege",
+    "categories": [
+      "Шутеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1172620",
+    "name": "Sea of Thieves",
+    "categories": [
+      "Приключения",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "945360",
+    "name": "Among Us",
+    "categories": [
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1426210",
+    "name": "It Takes Two",
+    "categories": [
+      "Кооп",
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "1222700",
+    "name": "A Way Out",
+    "categories": [
+      "Кооп",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "728880",
+    "name": "Overcooked! 2",
+    "categories": [
+      "Кооп",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "1599600",
+    "name": "PlateUp!",
+    "categories": [
+      "Кооп",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "1260320",
+    "name": "Party Animals",
+    "categories": [
+      "Кооп"
+    ]
+  },
+  {
+    "id": "2881650",
+    "name": "Content Warning",
+    "categories": [
+      "Кооп",
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "3527290",
+    "name": "PEAK",
+    "categories": [
+      "Кооп",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "3241660",
+    "name": "R.E.P.O.",
+    "categories": [
+      "Кооп",
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "254700",
+    "name": "Resident Evil 4 (2005)",
+    "categories": [
+      "Хорроры",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "2050650",
+    "name": "Resident Evil 4",
+    "categories": [
+      "Хорроры",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "418370",
+    "name": "Resident Evil 7 Biohazard",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "1196590",
+    "name": "Resident Evil Village",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "2124490",
+    "name": "SILENT HILL 2",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "17470",
+    "name": "Dead Space (2008)",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "1693980",
+    "name": "Dead Space",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "214490",
+    "name": "Alien: Isolation",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "238320",
+    "name": "Outlast",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "414700",
+    "name": "Outlast 2",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "1943950",
+    "name": "Escape the Backrooms",
+    "categories": [
+      "Хорроры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "221100",
+    "name": "DayZ",
+    "categories": [
+      "Выживание",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "236850",
+    "name": "Europa Universalis IV",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "529340",
+    "name": "Victoria 3",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "859580",
+    "name": "Imperator: Rome",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "294100",
+    "name": "RimWorld",
+    "categories": [
+      "Стратегии",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "975370",
+    "name": "Dwarf Fortress",
+    "categories": [
+      "Стратегии",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "8930",
+    "name": "Sid Meier's Civilization V",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "289070",
+    "name": "Sid Meier's Civilization VI",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "813780",
+    "name": "Age of Empires II: Definitive Edition",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "1466860",
+    "name": "Age of Empires IV: Anniversary Edition",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "1142710",
+    "name": "Total War: WARHAMMER III",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "255710",
+    "name": "Cities: Skylines",
+    "categories": [
+      "Стратегии",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "526870",
+    "name": "Satisfactory",
+    "categories": [
+      "Песочницы",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1366540",
+    "name": "Dyson Sphere Program",
+    "categories": [
+      "Стратегии",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "457140",
+    "name": "Oxygen Not Included",
+    "categories": [
+      "Выживание",
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "784150",
+    "name": "Workers & Resources: Soviet Republic",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "644930",
+    "name": "They Are Billions",
+    "categories": [
+      "Стратегии",
+      "Выживание"
+    ]
+  },
+  {
+    "id": "261550",
+    "name": "Mount & Blade II: Bannerlord",
+    "categories": [
+      "Ролевые",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "275850",
+    "name": "No Man's Sky",
+    "categories": [
+      "Выживание",
+      "Песочницы",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "620980",
+    "name": "Beat Saber",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "227300",
+    "name": "Euro Truck Simulator 2",
+    "categories": [
+      "Симуляторы",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "270880",
+    "name": "American Truck Simulator",
+    "categories": [
+      "Симуляторы",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "284160",
+    "name": "BeamNG.drive",
+    "categories": [
+      "Гонки",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "1551360",
+    "name": "Forza Horizon 5",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "244210",
+    "name": "Assetto Corsa",
+    "categories": [
+      "Гонки",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "690790",
+    "name": "DiRT Rally 2.0",
+    "categories": [
+      "Гонки",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "1290000",
+    "name": "PowerWash Simulator",
+    "categories": [
+      "Симуляторы",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "916440",
+    "name": "Anno 1800",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "1454400",
+    "name": "Cookie Clicker",
+    "categories": [
+      "Уютные"
+    ]
+  },
+  {
+    "id": "1202900",
+    "name": "Assemble with Care",
+    "categories": [
+      "Уютные",
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "972660",
+    "name": "Spiritfarer: Farewell Edition",
+    "categories": [
+      "Уютные",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "1135690",
+    "name": "Unpacking",
+    "categories": [
+      "Уютные",
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "2198150",
+    "name": "Tiny Glade",
+    "categories": [
+      "Уютные",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "1291340",
+    "name": "Townscaper",
+    "categories": [
+      "Уютные",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "1318690",
+    "name": "shapez",
+    "categories": [
+      "Головоломки",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "703080",
+    "name": "Planet Zoo",
+    "categories": [
+      "Симуляторы",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "493340",
+    "name": "Planet Coaster",
+    "categories": [
+      "Симуляторы",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "221910",
+    "name": "The Stanley Parable",
+    "categories": [
+      "Приключения",
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "813230",
+    "name": "ANIMAL WELL",
+    "categories": [
+      "Головоломки",
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "736260",
+    "name": "Baba Is You",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "210970",
+    "name": "The Witness",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "288160",
+    "name": "The Room",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "287980",
+    "name": "Mini Metro",
+    "categories": [
+      "Головоломки",
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "1127500",
+    "name": "Mini Motorways",
+    "categories": [
+      "Головоломки",
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "266010",
+    "name": "LYNE",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "1092790",
+    "name": "Inscryption",
+    "categories": [
+      "Карточные",
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "438100",
+    "name": "VRChat",
+    "categories": [
+      "Кооп",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "413420",
+    "name": "Danganronpa 2: Goodbye Despair",
+    "categories": [
+      "Приключения"
+    ]
+  },
+  {
+    "id": "250320",
+    "name": "The Wolf Among Us",
+    "categories": [
+      "Приключения"
+    ]
+  },
+  {
+    "id": "207610",
+    "name": "The Walking Dead",
+    "categories": [
+      "Приключения"
+    ]
+  },
+  {
+    "id": "282140",
+    "name": "SOMA",
+    "categories": [
+      "Хорроры",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "239140",
+    "name": "Dying Light",
+    "categories": [
+      "Выживание",
+      "Кооп",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "534380",
+    "name": "Dying Light 2 Stay Human",
+    "categories": [
+      "Выживание",
+      "Кооп",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "230230",
+    "name": "Divinity: Original Sin",
+    "categories": [
+      "Ролевые",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "2358720",
+    "name": "Black Myth: Wukong",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "2054970",
+    "name": "Dragon's Dogma 2",
+    "categories": [
+      "Ролевые",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "1088850",
+    "name": "Marvel's Guardians of the Galaxy",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "268500",
+    "name": "XCOM 2",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "200510",
+    "name": "XCOM: Enemy Unknown",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "1250410",
+    "name": "Microsoft Flight Simulator",
+    "categories": [
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "253150",
+    "name": "Halfway",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "1206560",
+    "name": "WorldBox - God Simulator",
+    "categories": [
+      "Песочницы",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "312520",
+    "name": "Rain World",
+    "categories": [
+      "Выживание",
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "2060130",
+    "name": "Return to Monkey Island",
+    "categories": [
+      "Приключения",
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "1451940",
+    "name": "NEEDY STREAMER OVERLOAD",
+    "categories": [
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "1150690",
+    "name": "OMORI",
+    "categories": [
+      "Ролевые",
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "1229380",
+    "name": "Everhood",
+    "categories": [
+      "Ритм-игры",
+      "Ролевые"
+    ]
+  },
+  {
+    "id": "1790600",
+    "name": "DRAGON BALL: Sparking! ZERO",
+    "categories": [
+      "Экшен"
+    ]
+  },
+  {
+    "id": "678960",
+    "name": "CODE VEIN",
+    "categories": [
+      "Ролевые",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "678950",
+    "name": "DRAGON BALL FighterZ",
+    "categories": [
+      "Экшен"
+    ]
+  },
+  {
+    "id": "1778820",
+    "name": "TEKKEN 8",
+    "categories": [
+      "Экшен"
+    ]
+  },
+  {
+    "id": "1364780",
+    "name": "Street Fighter 6",
+    "categories": [
+      "Экшен"
+    ]
+  },
+  {
+    "id": "1971870",
+    "name": "Mortal Kombat 1",
+    "categories": [
+      "Экшен"
+    ]
+  },
+  {
+    "id": "976310",
+    "name": "Mortal Kombat 11",
+    "categories": [
+      "Экшен"
+    ]
+  },
+  {
+    "id": "601150",
+    "name": "Devil May Cry 5",
+    "categories": [
+      "Экшен"
+    ]
+  },
+  {
+    "id": "524220",
+    "name": "NieR:Automata",
+    "categories": [
+      "Ролевые",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "1113560",
+    "name": "NieR Replicant ver.1.22474487139...",
+    "categories": [
+      "Ролевые",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "2138710",
+    "name": "Sifu",
+    "categories": [
+      "Экшен"
+    ]
+  },
+  {
+    "id": "460950",
+    "name": "Katana ZERO",
+    "categories": [
+      "Экшен",
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "2231450",
+    "name": "Pizza Tower",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "774361",
+    "name": "Blasphemous",
+    "categories": [
+      "Платформеры",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "2114740",
+    "name": "Blasphemous 2",
+    "categories": [
+      "Платформеры",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "1119980",
+    "name": "In Sound Mind",
+    "categories": [
+      "Хорроры",
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "1680880",
+    "name": "Forspoken",
+    "categories": [
+      "Ролевые",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "2321470",
+    "name": "Deep Rock Galactic: Survivor",
+    "categories": [
+      "Рогалики",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "1217060",
+    "name": "Gunfire Reborn",
+    "categories": [
+      "Рогалики",
+      "Шутеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "692890",
+    "name": "Roboquest",
+    "categories": [
+      "Рогалики",
+      "Шутеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "440900",
+    "name": "Conan Exiles",
+    "categories": [
+      "Выживание",
+      "Песочницы",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1149460",
+    "name": "ICARUS",
+    "categories": [
+      "Выживание",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "815370",
+    "name": "Green Hell",
+    "categories": [
+      "Выживание",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "313120",
+    "name": "Stranded Deep",
+    "categories": [
+      "Выживание",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "282070",
+    "name": "This War of Mine",
+    "categories": [
+      "Выживание",
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "573090",
+    "name": "Stormworks: Build and Rescue",
+    "categories": [
+      "Симуляторы",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "387990",
+    "name": "Scrap Mechanic",
+    "categories": [
+      "Песочницы",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "244850",
+    "name": "Space Engineers",
+    "categories": [
+      "Песочницы",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "298610",
+    "name": "Ylands",
+    "categories": [
+      "Песочницы",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "361420",
+    "name": "ASTRONEER",
+    "categories": [
+      "Песочницы",
+      "Выживание",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1167630",
+    "name": "Teardown",
+    "categories": [
+      "Песочницы",
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "2183900",
+    "name": "Warhammer 40,000: Space Marine 2",
+    "categories": [
+      "Экшен",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "552500",
+    "name": "Warhammer: Vermintide 2",
+    "categories": [
+      "Экшен",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1361210",
+    "name": "Warhammer 40,000: Darktide",
+    "categories": [
+      "Шутеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "552520",
+    "name": "Far Cry 5",
+    "categories": [
+      "Шутеры",
+      "Песочницы",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "298110",
+    "name": "Far Cry 4",
+    "categories": [
+      "Шутеры",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "960090",
+    "name": "Bloons TD 6",
+    "categories": [
+      "Стратегии",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1271700",
+    "name": "HOT WHEELS UNLEASHED",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "1465360",
+    "name": "SnowRunner",
+    "categories": [
+      "Симуляторы",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "675010",
+    "name": "MudRunner",
+    "categories": [
+      "Симуляторы",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "787860",
+    "name": "Farming Simulator 19",
+    "categories": [
+      "Симуляторы",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "1248130",
+    "name": "Farming Simulator 22",
+    "categories": [
+      "Симуляторы",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "1063730",
+    "name": "New World: Aeternum",
+    "categories": [
+      "Ролевые",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "306130",
+    "name": "The Elder Scrolls Online",
+    "categories": [
+      "Ролевые",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "39210",
+    "name": "FINAL FANTASY XIV Online",
+    "categories": [
+      "Ролевые",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1172380",
+    "name": "STAR WARS Jedi: Fallen Order",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "1774580",
+    "name": "STAR WARS Jedi: Survivor",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "1240440",
+    "name": "Halo Infinite",
+    "categories": [
+      "Шутеры"
+    ]
+  },
+  {
+    "id": "976730",
+    "name": "Halo: The Master Chief Collection",
+    "categories": [
+      "Шутеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "594650",
+    "name": "Hunt: Showdown 1896",
+    "categories": [
+      "Шутеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "578080",
+    "name": "PUBG: BATTLEGROUNDS",
+    "categories": [
+      "Шутеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1274570",
+    "name": "DEVOUR",
+    "categories": [
+      "Хорроры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1304930",
+    "name": "The Outlast Trials",
+    "categories": [
+      "Хорроры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "594330",
+    "name": "Visage",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "319630",
+    "name": "Life is Strange",
+    "categories": [
+      "Приключения"
+    ]
+  },
+  {
+    "id": "532210",
+    "name": "Life is Strange 2",
+    "categories": [
+      "Приключения"
+    ]
+  },
+  {
+    "id": "936790",
+    "name": "Life is Strange: True Colors",
+    "categories": [
+      "Приключения"
+    ]
+  },
+  {
+    "id": "383870",
+    "name": "Firewatch",
+    "categories": [
+      "Приключения"
+    ]
+  },
+  {
+    "id": "501300",
+    "name": "What Remains of Edith Finch",
+    "categories": [
+      "Приключения"
+    ]
+  },
+  {
+    "id": "990630",
+    "name": "The Last Campfire",
+    "categories": [
+      "Головоломки",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "638230",
+    "name": "Journey",
+    "categories": [
+      "Приключения",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "232430",
+    "name": "Gone Home",
+    "categories": [
+      "Приключения"
+    ]
+  },
+  {
+    "id": "612880",
+    "name": "Wolfenstein II: The New Colossus",
+    "categories": [
+      "Шутеры",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "201810",
+    "name": "Wolfenstein: The New Order",
+    "categories": [
+      "Шутеры",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "350080",
+    "name": "Wolfenstein: The Old Blood",
+    "categories": [
+      "Шутеры",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "35140",
+    "name": "Batman: Arkham Asylum GOTY Edition",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "200260",
+    "name": "Batman: Arkham City GOTY",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "208650",
+    "name": "Batman: Arkham Knight",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "8870",
+    "name": "BioShock Infinite",
+    "categories": [
+      "Шутеры",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "409710",
+    "name": "BioShock Remastered",
+    "categories": [
+      "Шутеры",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "409720",
+    "name": "BioShock 2 Remastered",
+    "categories": [
+      "Шутеры",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "480490",
+    "name": "Prey",
+    "categories": [
+      "Шутеры",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "403640",
+    "name": "Dishonored 2",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "205100",
+    "name": "Dishonored",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "268050",
+    "name": "The Evil Within",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "601430",
+    "name": "The Evil Within 2",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "962130",
+    "name": "Grounded",
+    "categories": [
+      "Выживание",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1072420",
+    "name": "DRAGON QUEST BUILDERS 2",
+    "categories": [
+      "Ролевые",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "1363080",
+    "name": "Manor Lords",
+    "categories": [
+      "Стратегии",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "323190",
+    "name": "Frostpunk",
+    "categories": [
+      "Стратегии",
+      "Выживание"
+    ]
+  },
+  {
+    "id": "1601580",
+    "name": "Frostpunk 2",
+    "categories": [
+      "Стратегии",
+      "Выживание"
+    ]
+  },
+  {
+    "id": "233450",
+    "name": "Prison Architect",
+    "categories": [
+      "Стратегии",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "535930",
+    "name": "Two Point Hospital",
+    "categories": [
+      "Симуляторы",
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "1649080",
+    "name": "Two Point Campus",
+    "categories": [
+      "Симуляторы",
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "690830",
+    "name": "Foundation",
+    "categories": [
+      "Стратегии",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "1066780",
+    "name": "Transport Fever 2",
+    "categories": [
+      "Симуляторы",
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "246420",
+    "name": "Kingdom Rush",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "458710",
+    "name": "Kingdom Rush Frontiers",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "816340",
+    "name": "Kingdom Rush Origins",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "1102190",
+    "name": "Monster Train",
+    "categories": [
+      "Карточные",
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "1286680",
+    "name": "Tiny Tina's Wonderlands",
+    "categories": [
+      "Шутеры",
+      "Ролевые",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "1284190",
+    "name": "The Planet Crafter",
+    "categories": [
+      "Выживание",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "383120",
+    "name": "Empyrion - Galactic Survival",
+    "categories": [
+      "Выживание",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "1716740",
+    "name": "Starfield",
+    "categories": [
+      "Ролевые",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "949230",
+    "name": "Cities: Skylines II",
+    "categories": [
+      "Стратегии",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "208580",
+    "name": "STAR WARS Knights of the Old Republic II",
+    "categories": [
+      "Ролевые"
+    ]
+  },
+  {
+    "id": "32370",
+    "name": "STAR WARS Knights of the Old Republic",
+    "categories": [
+      "Ролевые"
+    ]
+  },
+  {
+    "id": "1325200",
+    "name": "Nioh 2 - The Complete Edition",
+    "categories": [
+      "Ролевые",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "485510",
+    "name": "Nioh: Complete Edition",
+    "categories": [
+      "Ролевые",
+      "Экшен"
+    ]
+  },
+  {
+    "id": "1151640",
+    "name": "Horizon Zero Dawn Complete Edition",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "2420110",
+    "name": "Horizon Forbidden West Complete Edition",
+    "categories": [
+      "Экшен",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "1659040",
+    "name": "HITMAN World of Assassination",
+    "categories": [
+      "Экшен",
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "960170",
+    "name": "DJMAX RESPECT V",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "655500",
+    "name": "MX Bikes",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "4364730",
+    "name": "IGTAP: an Incremental Game That's Also a Platformer",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "2531310",
+    "name": "The Last of Us™ Part II Remastered",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "2949320",
+    "name": "Ratatan",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "4108000",
+    "name": "Machine Party",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "1996390",
+    "name": "Escape from Ever After",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "1562430",
+    "name": "DREDGE",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "3445190",
+    "name": "Breakout Garage",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "4659620",
+    "name": "Touhou Koumakyou: New Classic - the Embodiment of Scarlet Devil",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "4995030",
+    "name": "Folded Fables: Tidy Up The Dragon Hoard",
+    "categories": [
+      "Уютные"
+    ]
+  },
+  {
+    "id": "1030300",
+    "name": "Hollow Knight: Silksong",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "3124540",
+    "name": "Far Far West",
+    "categories": [
+      "Шутеры",
+      "Выживание"
+    ]
+  },
+  {
+    "id": "4732690",
+    "name": "Arknights: Endfield",
+    "categories": [
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "3940610",
+    "name": "EA SPORTS™ Madden NFL 27",
+    "categories": [
+      "Стратегии",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "1449850",
+    "name": "Yu-Gi-Oh! Master Duel",
+    "categories": [
+      "Стратегии",
+      "Симуляторы",
+      "Карточные"
+    ]
+  },
+  {
+    "id": "1190000",
+    "name": "Car Mechanic Simulator 2021",
+    "categories": [
+      "Головоломки",
+      "Гонки"
+    ]
+  },
+  {
+    "id": "1476970",
+    "name": "IdleOn - The Incremental MMO",
+    "categories": [
+      "Ролевые",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "1295660",
+    "name": "Sid Meier's Civilization VII",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "3832030",
+    "name": "BOOST VECTOR EX",
+    "categories": [
+      "Платформеры",
+      "Гонки"
+    ]
+  },
+  {
+    "id": "2001120",
+    "name": "Split Fiction",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "3028330",
+    "name": "Battlefield™ REDSEC",
+    "categories": [
+      "Шутеры"
+    ]
+  },
+  {
+    "id": "1962700",
+    "name": "Subnautica 2",
+    "categories": [
+      "Выживание",
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "2522120",
+    "name": "Airframe Ultra",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "3052450",
+    "name": "Morimens",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "2113850",
+    "name": "Spirit City: Lofi Sessions",
+    "categories": [
+      "Уютные",
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "2486820",
+    "name": "Sonic Racing: CrossWorlds",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "4430260",
+    "name": "Beat For Speed",
+    "categories": [
+      "Гонки",
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "2223980",
+    "name": "Nomad Drive",
+    "categories": [
+      "Выживание",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "4019220",
+    "name": "Dressmaker",
+    "categories": [
+      "Уютные",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "427410",
+    "name": "Abiotic Factor",
+    "categories": [
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "1737870",
+    "name": "REKA",
+    "categories": [
+      "Песочницы",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "291550",
+    "name": "Brawlhalla",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "2914150",
+    "name": "Yunyun Syndrome!? Rhythm Psychosis",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "3224770",
+    "name": "Umamusume: Pretty Derby",
+    "categories": [
+      "Рогалики",
+      "Гонки",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "4262460",
+    "name": "ROB RUN",
+    "categories": [
+      "Выживание",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "2440760",
+    "name": "GRAVHOUNDS",
+    "categories": [
+      "Песочницы",
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "2071280",
+    "name": "Ravenswatch",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "2320980",
+    "name": "Loftia",
+    "categories": [
+      "Кооп",
+      "Ролевые",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "2246340",
+    "name": "Monster Hunter Wilds",
+    "categories": [
+      "Ролевые"
+    ]
+  },
+  {
+    "id": "885000",
+    "name": "Synth Riders",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "2395210",
+    "name": "Tony Hawk's™ Pro Skater™ 1 + 2",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "1144200",
+    "name": "Ready or Not",
+    "categories": [
+      "Шутеры",
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "1809540",
+    "name": "Nine Sols",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "5119400",
+    "name": "WORKS: Motorsport Factory",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "381210",
+    "name": "Dead by Daylight",
+    "categories": [
+      "Выживание",
+      "Кооп",
+      "Хорроры",
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "200210",
+    "name": "Realm of the Mad God Exalt",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "553420",
+    "name": "TUNIC",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "1401590",
+    "name": "Disney Dreamlight Valley",
+    "categories": [
+      "Приключения",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "2661300",
+    "name": "Grounded 2",
+    "categories": [
+      "Выживание",
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "1617400",
+    "name": "The Bazaar",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "261570",
+    "name": "Ori and the Blind Forest",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "3501070",
+    "name": "Car Service Together",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "4032350",
+    "name": "EA SPORTS™ College Football 27",
+    "categories": [
+      "Стратегии",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "1808500",
+    "name": "ARC Raiders",
+    "categories": [
+      "Выживание"
+    ]
+  },
+  {
+    "id": "2495100",
+    "name": "Hello Kitty Island Adventure",
+    "categories": [
+      "Головоломки",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "2513280",
+    "name": "SONIC X SHADOW GENERATIONS",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "1114150",
+    "name": "CarX Street",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "3396010",
+    "name": "Black Friday Janitor: Clean the Whole Mall",
+    "categories": [
+      "Уютные"
+    ]
+  },
+  {
+    "id": "2141730",
+    "name": "Backrooms: Escape Together",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "1858720",
+    "name": "Message From Aliens",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "750920",
+    "name": "Shadow of the Tomb Raider: Definitive Edition",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "225260",
+    "name": "Brutal Legend",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "1954420",
+    "name": "RiichiCity × KAKEGURUI2 Collab",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "2139460",
+    "name": "Once Human",
+    "categories": [
+      "Выживание",
+      "Кооп",
+      "Приключения",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "3499520",
+    "name": "Piano Glow",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "1172710",
+    "name": "Dune: Awakening",
+    "categories": [
+      "Выживание",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "2507950",
+    "name": "Delta Force",
+    "categories": [
+      "Шутеры"
+    ]
+  },
+  {
+    "id": "4150860",
+    "name": "The Loopler",
+    "categories": [
+      "Рогалики",
+      "Гонки"
+    ]
+  },
+  {
+    "id": "2567870",
+    "name": "Chained Together",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "1629520",
+    "name": "A Little to the Left",
+    "categories": [
+      "Головоломки",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "2698940",
+    "name": "The Crew Motorfest",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "3164330",
+    "name": "Infinity Nikki",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "1551980",
+    "name": "Clive Barker's Hellraiser: Revival",
+    "categories": [
+      "Шутеры",
+      "Выживание",
+      "Головоломки",
+      "Хорроры",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "5266240",
+    "name": "Potato Please",
+    "categories": [
+      "Уютные",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "4555040",
+    "name": "Sushiamo",
+    "categories": [
+      "Уютные",
+      "Карточные"
+    ]
+  },
+  {
+    "id": "2288630",
+    "name": "Taiko no Tatsujin: Rhythm Festival",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "774181",
+    "name": "Rhythm Doctor",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "1973530",
+    "name": "Limbus Company",
+    "categories": [
+      "Стратегии",
+      "Ролевые"
+    ]
+  },
+  {
+    "id": "3204330",
+    "name": "County of Fortune",
+    "categories": [
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "3271280",
+    "name": "Shroom and Gloom",
+    "categories": [
+      "Рогалики",
+      "Карточные"
+    ]
+  },
+  {
+    "id": "2144740",
+    "name": "Ghostrunner 2",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "4049180",
+    "name": "Disney•Pixar Toy Story 3 Complete Edition",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "1799840",
+    "name": "Queen's Domain",
+    "categories": [
+      "Ролевые",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "2141910",
+    "name": "Magic: The Gathering Arena",
+    "categories": [
+      "Стратегии",
+      "Карточные"
+    ]
+  },
+  {
+    "id": "3219030",
+    "name": "Planet Zoo 2",
+    "categories": [
+      "Стратегии",
+      "Песочницы",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "3179730",
+    "name": "Deck of Haunts",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "4282500",
+    "name": "hololive Dreams",
+    "categories": [
+      "Головоломки",
+      "Карточные",
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "3493540",
+    "name": "Transport Fever 3",
+    "categories": [
+      "Стратегии",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "3511030",
+    "name": "Mini Cozy Room: Lo-Fi",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "1282100",
+    "name": "REMNANT II®",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "1671210",
+    "name": "DELTARUNE",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "2069310",
+    "name": "RealFlight Evolution",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "2085540",
+    "name": "Stick It to the Stickman",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "2956680",
+    "name": "LORT",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "4049170",
+    "name": "Disney•Pixar Toy Story: Retro Roundup!",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "2217000",
+    "name": "Rivals of Aether II",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "2701700",
+    "name": "Maestro",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "3156770",
+    "name": "Witchfire",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "292000",
+    "name": "No More Room in Hell 2",
+    "categories": [
+      "Шутеры",
+      "Выживание",
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "774171",
+    "name": "Muse Dash",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "1867240",
+    "name": "WARDOGS",
+    "categories": [
+      "Шутеры",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "2325290",
+    "name": "Sky: Children of the Light",
+    "categories": [
+      "Головоломки",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "3948120",
+    "name": "Scritchy Scratchy",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "1798230",
+    "name": "ATMOSFAR",
+    "categories": [
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "4406280",
+    "name": "the cabin game",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "1190970",
+    "name": "House Flipper 2",
+    "categories": [
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "2694490",
+    "name": "Path of Exile 2",
+    "categories": [
+      "Хорроры",
+      "Ролевые",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "2369900",
+    "name": "Castlevania Dominus Collection",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "1533390",
+    "name": "Gorilla Tag",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "3917700",
+    "name": "Dicevaders",
+    "categories": [
+      "Рогалики",
+      "Карточные"
+    ]
+  },
+  {
+    "id": "2400510",
+    "name": "Dungeons & Degenerate Gamblers",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "2478970",
+    "name": "Tomb Raider I-III Remastered Starring Lara Croft",
+    "categories": [
+      "Головоломки",
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "3259780",
+    "name": "FINAL FANTASY RESONANCE",
+    "categories": [
+      "Ролевые",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "1203220",
+    "name": "NARAKA: BLADEPOINT",
+    "categories": [
+      "Выживание"
+    ]
+  },
+  {
+    "id": "2622380",
+    "name": "ELDEN RING NIGHTREIGN",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "2929250",
+    "name": "over the hill",
+    "categories": [
+      "Кооп",
+      "Приключения",
+      "Гонки",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "3201730",
+    "name": "Flamecraft",
+    "categories": [
+      "Головоломки",
+      "Уютные",
+      "Карточные"
+    ]
+  },
+  {
+    "id": "1066890",
+    "name": "Automobilista 2",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "1875580",
+    "name": "Mina the Hollower",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "230410",
+    "name": "Warframe",
+    "categories": [
+      "Кооп",
+      "Ролевые"
+    ]
+  },
+  {
+    "id": "1677110",
+    "name": "Lightyear Frontier",
+    "categories": [
+      "Шутеры",
+      "Песочницы",
+      "Уютные",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "3905450",
+    "name": "WheelMates",
+    "categories": [
+      "Платформеры",
+      "Гонки"
+    ]
+  },
+  {
+    "id": "1256670",
+    "name": "Library Of Ruina",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "2625420",
+    "name": "Drive Beyond Horizons",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "2879840",
+    "name": "Escape Simulator 2",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "2290180",
+    "name": "Riders Republic",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "4001890",
+    "name": "How to Fish",
+    "categories": [
+      "Шутеры",
+      "Кооп",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "3195790",
+    "name": "White Knuckle",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "2615540",
+    "name": "VOID/BREAKER",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "1817230",
+    "name": "Hi-Fi RUSH",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "2399420",
+    "name": "Le Mans Ultimate",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "4300090",
+    "name": "Neat!",
+    "categories": [
+      "Уютные"
+    ]
+  },
+  {
+    "id": "516750",
+    "name": "My Summer Car",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "1374490",
+    "name": "RuneScape: Dragonwilds",
+    "categories": [
+      "Выживание",
+      "Кооп",
+      "Ролевые",
+      "Приключения",
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "4954910",
+    "name": "Scam With Your Friends",
+    "categories": [
+      "Кооп",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "2121510",
+    "name": "Tenebris Somnia",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "2677660",
+    "name": "Indiana Jones and the Great Circle",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "2235200",
+    "name": "Neon Abyss 2",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "2707930",
+    "name": "Palia",
+    "categories": [
+      "Песочницы",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "499170",
+    "name": "Order of the Sinking Star",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "5228920",
+    "name": "Brick by Brick: Tidy Up the Small Town!",
+    "categories": [
+      "Головоломки",
+      "Песочницы",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "3059520",
+    "name": "F1® 25",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "2221490",
+    "name": "Tom Clancy’s The Division® 2",
+    "categories": [
+      "Выживание",
+      "Кооп",
+      "Ролевые",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "4512570",
+    "name": "A Game About Chopping Trees",
+    "categories": [
+      "Уютные"
+    ]
+  },
+  {
+    "id": "2133760",
+    "name": "Tiny Bookshop",
+    "categories": [
+      "Уютные"
+    ]
+  },
+  {
+    "id": "4883590",
+    "name": "iRacing® Studios NASCAR 26",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "3322630",
+    "name": "Culdcept BEGINS",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "2569760",
+    "name": "The Mound: Omen of Cthulhu",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "5258340",
+    "name": "One Million Coins",
+    "categories": [
+      "Уютные"
+    ]
+  },
+  {
+    "id": "4104440",
+    "name": "Dragon Traveler",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "668580",
+    "name": "Atomic Heart",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "1054490",
+    "name": "Wingspan",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "2713000",
+    "name": "Resonance: A Plague Tale Legacy",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "2638890",
+    "name": "Onimusha: Way of the Sword",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "3296060",
+    "name": "Escape Academy 2: Back 2 School",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "4244510",
+    "name": "Pratfall",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "3751260",
+    "name": "The Blood of Dawnwalker",
+    "categories": [
+      "Ролевые",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "2584270",
+    "name": "Mortal Shell II",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "4452700",
+    "name": "STAGE TOUR",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "4530370",
+    "name": "Football Manager 27",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "4348910",
+    "name": "Probably Stolen - Cyberpunk Shopkeeper Sim",
+    "categories": [
+      "Ролевые",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "1285190",
+    "name": "Borderlands 4",
+    "categories": [
+      "Шутеры",
+      "Кооп",
+      "Ролевые",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "2742830",
+    "name": "Monster Train 2",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "3321460",
+    "name": "Crimson Desert Enhanced",
+    "categories": [
+      "Ролевые",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "1989270",
+    "name": "Slay the Princess — The Pristine Cut",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "1721110",
+    "name": "Abyssus",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "3798230",
+    "name": "Idol Party 2 - Love Vibe",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "2437170",
+    "name": "SMITE 2",
+    "categories": [
+      "Стратегии"
+    ]
+  },
+  {
+    "id": "3026450",
+    "name": "Deadly Days: Roadtrip",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "2344520",
+    "name": "Diablo® IV",
+    "categories": [
+      "Ролевые"
+    ]
+  },
+  {
+    "id": "2920220",
+    "name": "Terrible Lizards",
+    "categories": [
+      "Хорроры",
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "4468030",
+    "name": "OFFBEAT",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "1997040",
+    "name": "MARVEL SNAP",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "2784470",
+    "name": "9 Kings",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "2129530",
+    "name": "REANIMAL",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "3812600",
+    "name": "ReStory: Chill Electronics Repairs",
+    "categories": [
+      "Песочницы",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "2828710",
+    "name": "Valor Mortis",
+    "categories": [
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "4358690",
+    "name": "Graveyard Keeper 2",
+    "categories": [
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "1059990",
+    "name": "Trombone Champ",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "2273430",
+    "name": "BlazBlue Entropy Effect",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "3240220",
+    "name": "Grand Theft Auto V Enhanced",
+    "categories": [
+      "Кооп",
+      "Приключения",
+      "Гонки"
+    ]
+  },
+  {
+    "id": "262060",
+    "name": "Darkest Dungeon®",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "1929290",
+    "name": "Bits & Bops",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "1085660",
+    "name": "Destiny 2",
+    "categories": [
+      "Шутеры",
+      "Кооп",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "5064340",
+    "name": "DinoBones: Tidy Up the Museum",
+    "categories": [
+      "Головоломки",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "1643320",
+    "name": "S.T.A.L.K.E.R. 2: Heart of Chornobyl",
+    "categories": [
+      "Шутеры",
+      "Выживание"
+    ]
+  },
+  {
+    "id": "799960",
+    "name": "Wizard101",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "236390",
+    "name": "War Thunder",
+    "categories": [
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "1592190",
+    "name": "BONELAB",
+    "categories": [
+      "Головоломки"
+    ]
+  },
+  {
+    "id": "219150",
+    "name": "Hotline Miami",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "3917090",
+    "name": "Assetto Corsa Rally",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "2124120",
+    "name": "SULFUR",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "221680",
+    "name": "Rocksmith® 2014 Edition REMASTERED LEARN & PLAY",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "4380490",
+    "name": "Cat Mail Co.",
+    "categories": [
+      "Головоломки",
+      "Уютные"
+    ]
+  },
+  {
+    "id": "2887580",
+    "name": "Active Matter",
+    "categories": [
+      "Шутеры",
+      "Хорроры"
+    ]
+  },
+  {
+    "id": "552990",
+    "name": "World of Warships",
+    "categories": [
+      "Стратегии",
+      "Симуляторы"
+    ]
+  },
+  {
+    "id": "4557380",
+    "name": "Batomon Showdown",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "3375110",
+    "name": "Tiny Eden",
+    "categories": [
+      "Уютные"
+    ]
+  },
+  {
+    "id": "1962663",
+    "name": "Call of Duty®: Warzone™",
+    "categories": [
+      "Шутеры",
+      "Выживание"
+    ]
+  },
+  {
+    "id": "2448570",
+    "name": "Road Rash™: 30th Anniversary Edition",
+    "categories": [
+      "Гонки"
+    ]
+  },
+  {
+    "id": "311210",
+    "name": "Call of Duty®: Black Ops III",
+    "categories": [
+      "Шутеры"
+    ]
+  },
+  {
+    "id": "481510",
+    "name": "Night in the Woods",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "2073850",
+    "name": "THE FINALS",
+    "categories": [
+      "Шутеры",
+      "Кооп"
+    ]
+  },
+  {
+    "id": "3393110",
+    "name": "AION 2",
+    "categories": [
+      "Ролевые",
+      "Приключения"
+    ]
+  },
+  {
+    "id": "3404260",
+    "name": "Dead as Disco",
+    "categories": [
+      "Ритм-игры"
+    ]
+  },
+  {
+    "id": "1913120",
+    "name": "Tears of Metal",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "1689500",
+    "name": "Dune: Imperium",
+    "categories": [
+      "Карточные"
+    ]
+  },
+  {
+    "id": "3558600",
+    "name": "Leafy Corner",
+    "categories": [
+      "Уютные"
+    ]
+  },
+  {
+    "id": "3699590",
+    "name": "Well Dweller",
+    "categories": [
+      "Платформеры"
+    ]
+  },
+  {
+    "id": "5306540",
+    "name": "Groundwork Simulator",
+    "categories": [
+      "Песочницы"
+    ]
+  },
+  {
+    "id": "3934270",
+    "name": "How Many Dudes? The Roguelike Autobattler",
+    "categories": [
+      "Рогалики"
+    ]
+  },
+  {
+    "id": "4358660",
+    "name": "Hull Rupture",
+    "categories": [
+      "Рогалики"
+    ]
+  }
+]

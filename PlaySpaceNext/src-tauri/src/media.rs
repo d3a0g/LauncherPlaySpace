@@ -266,12 +266,11 @@ fn search(params: &[(&str, String)]) -> Result<Value> {
     serde_json::from_slice(&bytes).map_err(err)
 }
 fn recommendations(profile: &Path, p: &Value) -> Result<Value> {
-    let base: Vec<Value> =
-        serde_json::from_str(include_str!("../catalog/recommendations.json")).map_err(err)?;
+    let base: Vec<Value> = serde_json::from_value(crate::remote::catalog(profile,"recommendations").unwrap_or_else(||serde_json::from_str(include_str!("../catalog/recommendations.json")).expect("embedded recommendations"))).map_err(err)?;
     let file = profile.join("recommendations-live.json");
     let old = read(&file, Value::Null).unwrap_or(Value::Null);
     let due = chrono::DateTime::parse_from_rfc3339(str(&old, "UpdatedUtc"))
-        .map(|t| {let elapsed=chrono::Utc::now()-t.with_timezone(&chrono::Utc);elapsed.num_seconds()<0||elapsed.num_hours()>=6})
+        .map(|t| {let elapsed=chrono::Utc::now()-t.with_timezone(&chrono::Utc);elapsed.num_seconds()<0||elapsed.num_seconds()>=crate::remote::seconds(profile,"recommendationsCacheSeconds",21600) as i64})
         .unwrap_or(true);
     let mut snapshot = old;
     if (due || p["refresh"] == true) && prefs(profile)?["OfflineMode"] != true {

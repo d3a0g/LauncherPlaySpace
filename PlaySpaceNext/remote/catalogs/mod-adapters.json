@@ -1,0 +1,733 @@
+{
+  "thunderstore": [
+    {
+      "SteamId": "3241660",
+      "Name": "R.E.P.O.",
+      "Community": "repo",
+      "Executable": "REPO.exe",
+      "Loader": "BepInEx-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": null,
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "1966720",
+      "Name": "Lethal Company",
+      "Community": "lethal-company",
+      "Executable": "Lethal Company.exe",
+      "Loader": "BepInEx-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": null,
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "892970",
+      "Name": "Valheim",
+      "Community": "valheim",
+      "Executable": "valheim.exe",
+      "Loader": "denikson-BepInExPack_Valheim",
+      "UnrealProject": null,
+      "DataFolder": null,
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "632360",
+      "Name": "Risk of Rain 2",
+      "Community": "riskofrain2",
+      "Executable": "Risk of Rain 2.exe",
+      "Loader": "bbepis-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": null,
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "1557740",
+      "Name": "ROUNDS",
+      "Community": "rounds",
+      "Executable": "Rounds.exe",
+      "Loader": "BepInEx-BepInExPack_ROUNDS",
+      "UnrealProject": null,
+      "DataFolder": null,
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "1229490",
+      "Name": "ULTRAKILL",
+      "Community": "ultrakill",
+      "Executable": "ULTRAKILL.exe",
+      "Loader": "BepInEx-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": null,
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "1092790",
+      "Name": "Inscryption",
+      "Community": "inscryption",
+      "Executable": "Inscryption.exe",
+      "Loader": "BepInEx-BepInExPack_Inscryption",
+      "UnrealProject": null,
+      "DataFolder": null,
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "2881650",
+      "Name": "Content Warning",
+      "Community": "content-warning",
+      "Executable": "Content Warning.exe",
+      "Loader": "BepInEx-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": null,
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "4704690",
+      "Name": "MECCHA CHAMELEON",
+      "Community": "meccha-chameleon",
+      "Executable": "PenguinHotel.exe",
+      "Loader": "Thunderstore-MecchaChameleon_UE4SS",
+      "UnrealProject": "Chameleon",
+      "DataFolder": null,
+      "IsUnreal": true
+    },
+    {
+      "SteamId": "3527290",
+      "Name": "PEAK",
+      "Community": "peak",
+      "Executable": "PEAK.exe",
+      "Loader": "BepInEx-BepInExPack_PEAK",
+      "UnrealProject": null,
+      "DataFolder": null,
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "1366540",
+      "Name": "Dyson Sphere Program",
+      "Community": "dyson-sphere-program",
+      "Executable": "DSPGAME.exe",
+      "Loader": "xiaoye97-BepInEx",
+      "UnrealProject": null,
+      "DataFolder": null,
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "1623730",
+      "Name": "Palworld",
+      "Community": "palworld",
+      "Executable": "Palworld.exe",
+      "Loader": "Thunderstore-unreal_shimloader",
+      "UnrealProject": "Pal",
+      "DataFolder": null,
+      "IsUnreal": true
+    },
+    {
+      "SteamId": "493520",
+      "Name": "GTFO",
+      "Community": "gtfo",
+      "Executable": "GTFO.exe",
+      "Loader": "BepInEx-BepInExPack_GTFO",
+      "UnrealProject": null,
+      "DataFolder": null,
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "2784470",
+      "Name": "9 Kings",
+      "Community": "9-kings",
+      "Executable": "9Kings.exe",
+      "Loader": "BepInEx-BepInExPack_IL2CPP",
+      "UnrealProject": null,
+      "DataFolder": "9Kings_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "1629520",
+      "Name": "A Little to the Left",
+      "Community": "a-little-to-the-left",
+      "Executable": "A Little To The Left.exe",
+      "Loader": "BepInEx-BepInExPack_IL2CPP",
+      "UnrealProject": null,
+      "DataFolder": "A Little To The Left_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "945360",
+      "Name": "Among Us",
+      "Community": "among-us",
+      "Executable": "Among Us.exe",
+      "Loader": "BepInEx-BepInExPack_AmongUs",
+      "UnrealProject": null,
+      "DataFolder": "Among Us_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "949230",
+      "Name": "Cities: Skylines II",
+      "Community": "cities-skylines-ii",
+      "Executable": "Cities2.exe",
+      "Loader": "BepInEx-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": "CitiesSkylines2_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "268910",
+      "Name": "Cuphead",
+      "Community": "cuphead",
+      "Executable": "Cuphead.exe",
+      "Loader": "BepInEx-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": "Cuphead_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "2321470",
+      "Name": "Deep Rock Galactic: Survivor",
+      "Community": "deep-rock-galactic-survivor",
+      "Executable": "DRG Survivor.exe",
+      "Loader": "BepInEx-BepInExPack_IL2CPP",
+      "UnrealProject": null,
+      "DataFolder": "DRG Survivor_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "1562430",
+      "Name": "DREDGE",
+      "Community": "dredge",
+      "Executable": "DREDGE.exe",
+      "Loader": "BepInEx-BepInExPack_x86",
+      "UnrealProject": null,
+      "DataFolder": "DREDGE_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "311690",
+      "Name": "Enter the Gungeon",
+      "Community": "enter-the-gungeon",
+      "Executable": "EtG.exe",
+      "Loader": "BepInEx-BepInExPack_EtG",
+      "UnrealProject": null,
+      "DataFolder": "EtG_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "4358690",
+      "Name": "Graveyard Keeper 2",
+      "Community": "graveyard-keeper-2",
+      "Executable": "GraveyardKeeper2.exe",
+      "Loader": "BepInEx-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": "GraveyardKeeper2_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "1030300",
+      "Name": "Hollow Knight: Silksong",
+      "Community": "hollow-knight-silksong",
+      "Executable": "Hollow Knight Silksong.exe",
+      "Loader": "silksong_modding-BepInExPack_Silksong",
+      "UnrealProject": null,
+      "DataFolder": "Hollow Knight Silksong_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "4001890",
+      "Name": "How to Fish",
+      "Community": "how-to-fish",
+      "Executable": "How to Fish.exe",
+      "Loader": "BepInEx-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": "How to Fish_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "477160",
+      "Name": "Human Fall Flat",
+      "Community": "human-fall-flat",
+      "Executable": "Human.exe",
+      "Loader": "BepInEx-BepInExPack_HumanFallFlat",
+      "UnrealProject": null,
+      "DataFolder": "Human_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "2742830",
+      "Name": "Monster Train 2",
+      "Community": "monster-train-2",
+      "Executable": "MonsterTrain2.exe",
+      "Loader": "BepInEx-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": "MonsterTrain2_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "1809540",
+      "Name": "Nine Sols",
+      "Community": "nine-sols",
+      "Executable": "NineSols.exe",
+      "Loader": "BepInEx-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": "Nine Sols_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "648800",
+      "Name": "Raft",
+      "Community": "raft",
+      "Executable": "Raft.exe",
+      "Loader": "BepInEx-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": "Raft_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "774181",
+      "Name": "Rhythm Doctor",
+      "Community": "rhythm-doctor",
+      "Executable": "Rhythm Doctor.exe",
+      "Loader": "BepInEx-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": "Rhythm Doctor_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "1326470",
+      "Name": "Sons Of The Forest",
+      "Community": "sons-of-the-forest",
+      "Executable": "SonsOfTheForest.exe",
+      "Loader": "BepInEx-BepInExPack_IL2CPP",
+      "UnrealProject": null,
+      "DataFolder": "SonsOfTheForest_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "264710",
+      "Name": "Subnautica",
+      "Community": "subnautica",
+      "Executable": "Subnautica.exe",
+      "Loader": "Subnautica_Modding-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": "Subnautica_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "2124120",
+      "Name": "SULFUR",
+      "Community": "sulfur",
+      "Executable": "Sulfur.exe",
+      "Loader": "BepInEx-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": "Sulfur_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "1284190",
+      "Name": "The Planet Crafter",
+      "Community": "the-planet-crafter",
+      "Executable": "Planet Crafter.exe",
+      "Loader": "BepInEx-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": "ThePlanetCrafter_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "1059990",
+      "Name": "Trombone Champ",
+      "Community": "trombone-champ",
+      "Executable": "TromboneChamp.exe",
+      "Loader": "BepInEx-BepInExPack_TromboneChamp",
+      "UnrealProject": null,
+      "DataFolder": "TromboneChamp_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "1604030",
+      "Name": "V Rising",
+      "Community": "v-rising",
+      "Executable": "VRising.exe",
+      "Loader": "BepInEx-BepInExPack_V_Rising",
+      "UnrealProject": null,
+      "DataFolder": "VRising_Data",
+      "IsUnreal": false
+    },
+    {
+      "SteamId": "3195790",
+      "Name": "White Knuckle",
+      "Community": "white-knuckle",
+      "Executable": "White Knuckle.exe",
+      "Loader": "BepInEx-BepInExPack",
+      "UnrealProject": null,
+      "DataFolder": "White Knuckle_Data",
+      "IsUnreal": false
+    }
+  ],
+  "native": [
+    {
+      "SteamId": "413150",
+      "Name": "Stardew Valley / SMAPI",
+      "Layout": "smapi",
+      "Folder": "Mods",
+      "UserBase": null,
+      "RequiredFile": "StardewModdingAPI.exe",
+      "Hint": "Требуется установленный SMAPI. ZIP одного мода с manifest.json; запускай через StardewModdingAPI.exe."
+    },
+    {
+      "SteamId": "294100",
+      "Name": "RimWorld",
+      "Layout": "rimworld",
+      "Folder": "Mods",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP одного мода с About/About.xml. Активируй мод и порядок в меню RimWorld."
+    },
+    {
+      "SteamId": "268500",
+      "Name": "XCOM 2",
+      "Layout": "xcom",
+      "Folder": "XComGame/Mods",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP с .XComMod. Активируй мод в игровом менеджере XCOM 2."
+    },
+    {
+      "SteamId": "427520",
+      "Name": "Factorio",
+      "Layout": "factorio",
+      "Folder": "Factorio/mods",
+      "UserBase": "appdata",
+      "RequiredFile": null,
+      "Hint": "ZIP с info.json сохраняется как штатный архив Factorio. Зависимости/активация настраиваются в игре."
+    },
+    {
+      "SteamId": "1091500",
+      "Name": "Cyberpunk 2077 / архивные моды",
+      "Layout": "archive",
+      "Folder": "archive/pc/mod",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "Только архивные .archive-моды. REDmod, RED4ext и скриптовые установщики не поддерживаются этим импортом."
+    },
+    {
+      "SteamId": "292030",
+      "Name": "The Witcher 3",
+      "Layout": "witcher",
+      "Folder": "Mods",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP модов в папку Mods. Порядок, зависимости и совместимость проверяются в игре."
+    },
+    {
+      "SteamId": "1086940",
+      "Name": "Baldur's Gate 3 / PAK",
+      "Layout": "pak",
+      "Folder": "Larian Studios/Baldur's Gate 3/Mods",
+      "UserBase": "local",
+      "RequiredFile": null,
+      "Hint": "Только .pak. Активация и зависимости — в менеджере модов игры. Не каждый PAK совместим с текущей версией."
+    },
+    {
+      "SteamId": "435150",
+      "Name": "Divinity: Original Sin 2 / PAK",
+      "Layout": "pak",
+      "Folder": "Larian Studios/Divinity Original Sin 2 Definitive Edition/Mods",
+      "UserBase": "documents",
+      "RequiredFile": null,
+      "Hint": "Только .pak. Активация и зависимости — в менеджере модов игры. Не каждый PAK совместим с текущей версией."
+    },
+    {
+      "SteamId": "489830",
+      "Name": "Skyrim Special Edition / Data",
+      "Layout": "data",
+      "Folder": "Data",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "Импорт файлов Data без перезаписи оригиналов. Плагины активируются отдельно в менеджере игры. SKSE/F4SE и DLL-загрузчики не устанавливаются."
+    },
+    {
+      "SteamId": "72850",
+      "Name": "Skyrim / Data",
+      "Layout": "data",
+      "Folder": "Data",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "Импорт файлов Data без перезаписи оригиналов. Плагины активируются отдельно в менеджере игры. SKSE/F4SE и DLL-загрузчики не устанавливаются."
+    },
+    {
+      "SteamId": "377160",
+      "Name": "Fallout 4 / Data",
+      "Layout": "data",
+      "Folder": "Data",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "Импорт файлов Data без перезаписи оригиналов. Плагины активируются отдельно в менеджере игры. SKSE/F4SE и DLL-загрузчики не устанавливаются."
+    },
+    {
+      "SteamId": "22380",
+      "Name": "Fallout: New Vegas / Data",
+      "Layout": "data",
+      "Folder": "Data",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "Импорт файлов Data без перезаписи оригиналов. Плагины активируются отдельно в менеджере игры. SKSE/F4SE и DLL-загрузчики не устанавливаются."
+    },
+    {
+      "SteamId": "22370",
+      "Name": "Fallout 3 GOTY / Data",
+      "Layout": "data",
+      "Folder": "Data",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "Импорт файлов Data без перезаписи оригиналов. Плагины активируются отдельно в менеджере игры. SKSE/F4SE и DLL-загрузчики не устанавливаются."
+    },
+    {
+      "SteamId": "22330",
+      "Name": "Oblivion / Data",
+      "Layout": "data",
+      "Folder": "Data",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "Импорт файлов Data без перезаписи оригиналов. Плагины активируются отдельно в менеджере игры. SKSE/F4SE и DLL-загрузчики не устанавливаются."
+    },
+    {
+      "SteamId": "550",
+      "Name": "Left 4 Dead 2 / VPK",
+      "Layout": "vpk",
+      "Folder": "left4dead2/addons",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP с VPK-аддонами. Активация — в игре. Серверы с sv_pure могут запрещать изменённый контент; скрипты SourceMod и DLL-плагины этим адаптером не устанавливаются."
+    },
+    {
+      "SteamId": "500",
+      "Name": "Left 4 Dead / VPK",
+      "Layout": "vpk",
+      "Folder": "left4dead/addons",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP с VPK-аддонами. Активация — в игре. Серверы с sv_pure могут запрещать изменённый контент; скрипты SourceMod и DLL-плагины этим адаптером не устанавливаются."
+    },
+    {
+      "SteamId": "440",
+      "Name": "Team Fortress 2 / VPK",
+      "Layout": "vpk",
+      "Folder": "tf/custom",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP с VPK-аддонами. Активация — в игре. Серверы с sv_pure могут запрещать изменённый контент; скрипты SourceMod и DLL-плагины этим адаптером не устанавливаются."
+    },
+    {
+      "SteamId": "240",
+      "Name": "Counter-Strike: Source / VPK",
+      "Layout": "vpk",
+      "Folder": "cstrike/custom",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP с VPK-аддонами. Активация — в игре. Серверы с sv_pure могут запрещать изменённый контент; скрипты SourceMod и DLL-плагины этим адаптером не устанавливаются."
+    },
+    {
+      "SteamId": "220",
+      "Name": "Half-Life 2 / VPK",
+      "Layout": "vpk",
+      "Folder": "hl2/custom",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP с VPK-аддонами. Активация — в игре. Серверы с sv_pure могут запрещать изменённый контент; скрипты SourceMod и DLL-плагины этим адаптером не устанавливаются."
+    },
+    {
+      "SteamId": "4000",
+      "Name": "Garry's Mod / ZIP addons",
+      "Layout": "gmod",
+      "Folder": "garrysmod/addons",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP одного распакованного аддона с addon.json. GMA и серверные DLL этим импортом не поддерживаются."
+    },
+    {
+      "SteamId": "322330",
+      "Name": "Don't Starve Together",
+      "Layout": "dontstarve",
+      "Folder": "mods",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP одного мода с modinfo.lua. Включите его в меню модов; для кооператива проверьте совместимость и необходимость установки у других игроков."
+    },
+    {
+      "SteamId": "219740",
+      "Name": "Don't Starve",
+      "Layout": "dontstarve",
+      "Folder": "mods",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP одного мода с modinfo.lua. Включите его в меню модов; для кооператива проверьте совместимость и необходимость установки у других игроков."
+    },
+    {
+      "SteamId": "251570",
+      "Name": "7 Days to Die",
+      "Layout": "7days",
+      "Folder": "7DaysToDie/Mods",
+      "UserBase": "appdata",
+      "RequiredFile": null,
+      "Hint": "ZIP одного модлета с ModInfo.xml. Импорт в пользовательскую папку Mods. Проверьте версию игры; кодовые моды могут требовать запуск без EAC, лаунчер не меняет античит."
+    },
+    {
+      "SteamId": "261550",
+      "Name": "Mount & Blade II: Bannerlord",
+      "Layout": "bannerlord",
+      "Folder": "Modules",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP одного модуля с SubModule.xml. Папка модуля создаётся по его Id. Включите мод и зависимости в официальном лаунчере; DLL могут требовать отдельной проверки доверия Windows."
+    },
+    {
+      "SteamId": "8930",
+      "Name": "Civilization V",
+      "Layout": "civ",
+      "Folder": "My Games/Sid Meier's Civilization 5/MODS",
+      "UserBase": "documents",
+      "RequiredFile": null,
+      "Hint": "ZIP одного мода с .modinfo. Включите его в меню дополнительных материалов игры. Зависимости и совместимость сохранений проверяются отдельно."
+    },
+    {
+      "SteamId": "289070",
+      "Name": "Civilization VI",
+      "Layout": "civ",
+      "Folder": "My Games/Sid Meier's Civilization VI/Mods",
+      "UserBase": "documents",
+      "RequiredFile": null,
+      "Hint": "ZIP одного мода с .modinfo. Включите его в меню дополнительных материалов игры. Зависимости и совместимость сохранений проверяются отдельно."
+    },
+    {
+      "SteamId": "1142710",
+      "Name": "Total War: WARHAMMER III / PACK",
+      "Layout": "pack",
+      "Folder": "data",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP с PACK-файлами Total War. Включите мод через менеджер игры; порядок и совместимость версий проверяются отдельно. Movie-пакеты могут загружаться автоматически."
+    },
+    {
+      "SteamId": "262060",
+      "Name": "Darkest Dungeon",
+      "Layout": "darkest",
+      "Folder": "mods",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP одного мода с project.xml. Включите мод для нужного сохранения в меню игры; совместимость кампании и порядок не меняются автоматически."
+    },
+    {
+      "SteamId": "1281930",
+      "Name": "tModLoader / Terraria",
+      "Layout": "tmod",
+      "Folder": "My Games/Terraria/tModLoader/Mods",
+      "UserBase": "documents",
+      "RequiredFile": null,
+      "Hint": "ZIP с готовыми .tmod для установленного tModLoader. Включите моды в меню tModLoader; версия Terraria и tModLoader должна соответствовать требованиям мода."
+    },
+    {
+      "SteamId": "646570",
+      "Name": "Slay the Spire / ModTheSpire",
+      "Layout": "jar",
+      "Folder": "mods",
+      "UserBase": null,
+      "RequiredFile": "ModTheSpire.jar",
+      "Hint": "ZIP с JAR-модами Slay the Spire. Требуется ModTheSpire.jar рядом с EXE; выбор модов и зависимостей выполняется в ModTheSpire. JAR содержит исполняемый код, устанавливайте только доверенные моды."
+    },
+    {
+      "SteamId": "211820",
+      "Name": "Starbound / PAK",
+      "Layout": "pak",
+      "Folder": "mods",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "Только .pak. Активация и зависимости — в менеджере модов игры. Не каждый PAK совместим с текущей версией."
+    },
+    {
+      "SteamId": "611670",
+      "Name": "Skyrim VR / Data",
+      "Layout": "data",
+      "Folder": "Data",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "Импорт файлов Data без перезаписи оригиналов. Плагины активируются отдельно в менеджере игры. SKSE/F4SE и DLL-загрузчики не устанавливаются."
+    },
+    {
+      "SteamId": "611660",
+      "Name": "Fallout 4 VR / Data",
+      "Layout": "data",
+      "Folder": "Data",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "Импорт файлов Data без перезаписи оригиналов. Плагины активируются отдельно в менеджере игры. SKSE/F4SE и DLL-загрузчики не устанавливаются."
+    },
+    {
+      "SteamId": "594570",
+      "Name": "Total War: WARHAMMER II / PACK",
+      "Layout": "pack",
+      "Folder": "data",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP с PACK-файлами Total War. Включите мод через менеджер игры; порядок и совместимость версий проверяются отдельно. Movie-пакеты могут загружаться автоматически."
+    },
+    {
+      "SteamId": "214950",
+      "Name": "Total War: ROME II / PACK",
+      "Layout": "pack",
+      "Folder": "data",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP с PACK-файлами Total War. Включите мод через менеджер игры; порядок и совместимость версий проверяются отдельно. Movie-пакеты могут загружаться автоматически."
+    },
+    {
+      "SteamId": "779340",
+      "Name": "Total War: THREE KINGDOMS / PACK",
+      "Layout": "pack",
+      "Folder": "data",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP с PACK-файлами Total War. Включите мод через менеджер игры; порядок и совместимость версий проверяются отдельно. Movie-пакеты могут загружаться автоматически."
+    },
+    {
+      "SteamId": "1167630",
+      "Executable": "teardown.exe",
+      "Name": "Teardown",
+      "Layout": "teardown",
+      "Folder": "Teardown/mods",
+      "UserBase": "documents",
+      "RequiredFile": null,
+      "WorkshopAppId": "1167630",
+      "Hint": "ZIP: один мод с info.txt; карты, инструменты, транспорт и игровые модификации. Включение и запуск — в меню модов Teardown."
+    }
+  ],
+  "paradox": [
+    {
+      "SteamId": "394360",
+      "Name": "Hearts of Iron IV",
+      "DocumentsFolder": "Hearts of Iron IV",
+      "Executable": "hoi4.exe"
+    },
+    {
+      "SteamId": "236850",
+      "Name": "Europa Universalis IV",
+      "DocumentsFolder": "Europa Universalis IV",
+      "Executable": "eu4.exe"
+    },
+    {
+      "SteamId": "281990",
+      "Name": "Stellaris",
+      "DocumentsFolder": "Stellaris",
+      "Executable": "stellaris.exe"
+    },
+    {
+      "SteamId": "1158310",
+      "Name": "Crusader Kings III",
+      "DocumentsFolder": "Crusader Kings III",
+      "Executable": "binaries/ck3.exe"
+    },
+    {
+      "SteamId": "859580",
+      "Name": "Imperator: Rome",
+      "DocumentsFolder": "Imperator",
+      "Executable": "binaries/imperator.exe"
+    }
+  ]
+}

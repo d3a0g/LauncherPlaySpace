@@ -2,7 +2,7 @@ $bg: #17181c;
 $panel: #202126;
 $line: #ffffff12;
 $muted: #9a9ca8;
-$accent: #6d9cfa;
+$accent: var(--remote-accent, #6d9cfa);
 
 :root { font-family: 'Segoe UI', Inter, sans-serif; color: #eeeef2; background: $bg; font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; color-scheme: dark; }
 * { box-sizing: border-box; }
@@ -232,3 +232,6 @@ select { border: 1px solid #ffffff20; border-radius: 4px; background: #24262d; p
 .controller-shade { padding: 0; .native-panel { width: 100%; height: 100vh; border-radius: 0; } }
 .controller-games { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; margin: 25px 0; button { background: #252d40; border: 2px solid transparent; border-radius: 7px; overflow: hidden; padding: 0 0 15px; text-align: left; &.selected { border-color: #9cbfff; box-shadow: 0 0 30px #709be940; } img,.deal-placeholder { width: 100%; aspect-ratio: 460/215; object-fit: cover; } strong { display: block; margin: 15px 13px; font-size: 15px; } svg { margin-left: 13px; } } }
 @media(max-width:900px){.native-shade{padding:15px}.native-header,.native-content{padding:17px}.native-columns{grid-template-columns:1fr}.native-row{flex-wrap:wrap}.controller-games{grid-template-columns:repeat(2,1fr)}}
+
+.remote-announcement { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding:16px; margin-bottom:16px; background:#232936; border:1px solid #ffffff18; border-left:3px solid var(--remote-accent,#6d9cfa); border-radius:10px; overflow-wrap:anywhere; p { white-space:pre-wrap; color:#c0c5d1; margin:8px 0; } > button { font-size:24px; } }
+.remote-settings { overflow-wrap:anywhere; }

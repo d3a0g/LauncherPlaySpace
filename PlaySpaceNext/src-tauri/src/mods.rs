@@ -10,8 +10,7 @@ use std::{
 pub fn adapters() -> Value {
     serde_json::from_str(include_str!("../catalog/mod-adapters.json")).unwrap()
 }
-fn adapter(g: &Value, kind: &str) -> Option<Value> {
-    let all = adapters();
+fn adapter(g: &Value, kind: &str, all: &Value) -> Option<Value> {
     all[kind]
         .as_array()?
         .iter()
@@ -1054,14 +1053,15 @@ fn profiles(root: &Path, g: &Value, p: &Value) -> Result<Value> {
     result
 }
 pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
+    let all=crate::remote::catalog(profile,"modAdapters").unwrap_or_else(adapters);
     if str(p, "action") == "adapters" {
-        return Ok(adapters());
+        return Ok(all);
     }
     let g = game(profile, p)?;
     let kind = if str(p, "kind").is_empty() {
-        if adapter(&g, "thunderstore").is_some() {
+        if adapter(&g, "thunderstore", &all).is_some() {
             "thunderstore"
-        } else if adapter(&g, "paradox").is_some() {
+        } else if adapter(&g, "paradox", &all).is_some() {
             "paradox"
         } else {
             "native"
@@ -1069,8 +1069,8 @@ pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
     } else {
         str(p, "kind")
     };
-    let Some(a) = adapter(&g,kind) else {
-        if str(p,"action")=="get" {return Ok(json!({"unsupported":true,"available":adapters()}))}
+    let Some(a) = adapter(&g,kind,&all) else {
+        if str(p,"action")=="get" {return Ok(json!({"unsupported":true,"available":all}))}
         return Err("No mod adapter for this game".into());
     };
     if kind == "paradox" {
@@ -1232,7 +1232,7 @@ pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
         return result;
     }
     Ok(
-        json!({"adapter":a,"kind":kind,"root":root,"installed":installed_view(&root, &a)?,"available":adapters()}),
+        json!({"adapter":a,"kind":kind,"root":root,"installed":installed_view(&root, &a)?,"available":all}),
     )
 }
 
@@ -1305,8 +1305,8 @@ mod dependency_tests {
             assert_eq!(files.len(), 2);
         }
         let game = json!({"SteamAppId":"1167630"});
-        assert_eq!(adapter(&game,"native").unwrap()["Layout"], "teardown");
-        assert_eq!(adapter(&json!({"ExePath":"C:\\Games\\Teardown\\teardown.exe"}),"native").unwrap()["Name"], "Teardown");
+        assert_eq!(adapter(&game,"native",&adapters()).unwrap()["Layout"], "teardown");
+        assert_eq!(adapter(&json!({"ExePath":"C:\\Games\\Teardown\\teardown.exe"}),"native",&adapters()).unwrap()["Name"], "Teardown");
     }
     #[test]
     fn exact_loader_dependency_wins_over_implicit_latest() {

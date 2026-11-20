@@ -18,6 +18,7 @@ mod native_tests;
 mod os;
 mod paradox;
 mod runtime;
+mod remote;
 mod saves;
 mod sounds;
 mod steam;
@@ -46,6 +47,7 @@ fn allowed(operation: &str) -> bool {
             | "store_details"
             | "open_store"
             | "project_link"
+            | "remote_config"
             | "health"
             | "workspace"
             | "saves"
@@ -82,6 +84,9 @@ async fn request(
     let legacy = state.legacy.clone();
     tauri::async_runtime::spawn_blocking(move || {
         let p = payload.unwrap_or(json!({}));
+        if matches!(operation.as_str(), "recommendations"|"deals"|"mods"|"network"|"sounds"|"graphics"|"universal") && !remote::enabled(&profile,&operation) {
+            return Err("This feature is temporarily unavailable".into());
+        }
         if library::handles(&operation) {
             return library::handle(&profile, &legacy, &operation, &p);
         }
@@ -113,7 +118,8 @@ async fn request(
             "open_folder" => os::open_folder(&profile, &p),
             "game_update" => os::game_update(&profile, &p),
             "open_store" => os::open_store(&p),
-            "project_link" => os::open_project_link(&p),
+            "project_link" => os::open_project_link(&profile, &p),
+            "remote_config" => remote::handle(&profile, &p),
             "health" => {
                 Ok(json!({"engine":"rust","missingBindings":[],"compatibilityBridge":false}))
             }
@@ -139,6 +145,11 @@ async fn request(
     .map_err(|_| "The operation could not be completed".to_string())?
 }
 fn main() {
+    let args:Vec<_>=std::env::args_os().collect();
+    if args.get(1).is_some_and(|s|s=="--verify-remote-config") {
+        let result=args.get(2).ok_or("Supply a signed manifest path".to_string()).and_then(|p|remote::verify_file(std::path::Path::new(p)));
+        match result {Ok(value)=>{println!("{value}");return;},Err(message)=>{eprintln!("{message}");std::process::exit(1);}}
+    }
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
@@ -214,6 +225,12 @@ fn main() {
             std::thread::spawn(move || loop {
                 let _=installation::reconcile(&installation_profile);
                 std::thread::sleep(std::time::Duration::from_secs(15));
+            });
+            let remote_profile=profile.clone();
+            let _=remote::view(&remote_profile);
+            std::thread::spawn(move || loop {
+                remote::refresh(&remote_profile,false);
+                std::thread::sleep(std::time::Duration::from_secs(60));
             });
             app.manage(NativeState { profile, legacy });
             Ok(())

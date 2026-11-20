@@ -158,7 +158,7 @@ pub fn handle(
         let tools: Value = serde_json::from_str(include_str!("../../src/features.json"))
             .map_err(|_| "Некорректный реестр инструментов")?;
         return Ok(
-            json!({"games":games.iter().map(view).collect::<Vec<_>>(),"tools":tools,"legacyAvailable":legacy.exists()||legacy.with_extension("json.bak").exists(),"profileFolder":profile,"notice":notice}),
+            json!({"games":games.iter().map(view).collect::<Vec<_>>(),"tools":crate::remote::tools(profile,tools),"legacyAvailable":legacy.exists()||legacy.with_extension("json.bak").exists(),"profileFolder":profile,"notice":notice}),
         );
     }
     let _guard = lock(profile)?;

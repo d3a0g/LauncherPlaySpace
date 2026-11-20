@@ -1,0 +1,13 @@
+{
+  "links": {
+    "donate": {"ru":"https://auth.robokassa.ru/merchant/Invoice/IYhjSKAkQEeZj7JPhZEHwA","en":"https://auth.robokassa.ru/merchant/Invoice/KL10bltZtkCT1pfk7R0EVQ"},
+    "support": {"ru":"https://t.me/PlaySpaceSupport_bot","en":"https://t.me/PlaySpaceSupport_bot"},
+    "news": {"ru":"https://t.me/LauncherPlaySpace","en":"https://t.me/LauncherPlaySpace"},
+    "offer": {"ru":"https://github.com/d3a0g/LauncherPlaySpace/blob/main/docs/legal/support-offer.md","en":"https://github.com/d3a0g/LauncherPlaySpace/blob/main/docs/legal/support-offer.md"},
+    "project": {"ru":"https://github.com/d3a0g/LauncherPlaySpace","en":"https://github.com/d3a0g/LauncherPlaySpace"}
+  },
+  "features":{"donate":true,"announcements":true,"recommendations":true,"deals":true,"mods":true,"network":true,"sounds":true,"quotes":true,"controller":true,"graphics":true,"universal":true},
+  "branding":{"accent":"#6d9cfa","tagline":{"ru":"ВСЕ ТВОИ ИГРЫ. ОДНО МЕСТО.","en":"ALL YOUR GAMES. ONE PLACE."},"logoPng":null},
+  "timing":{"refreshSeconds":1800,"recommendationsCacheSeconds":21600,"workshopCacheSeconds":300},
+  "tools":{}
+}

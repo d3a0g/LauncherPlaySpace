@@ -317,13 +317,13 @@ fn cached_page(envelope: &Value, request: &Request) -> Option<Value> {
     Some(page)
 }
 
-fn fresh(page: &Value) -> bool {
+fn fresh_for(page: &Value, seconds: i64) -> bool {
     page["updatedAt"]
         .as_str()
         .and_then(|s| chrono::DateTime::parse_from_rfc3339(s).ok())
         .is_some_and(|t| {
             let age = chrono::Utc::now().signed_duration_since(t).num_seconds();
-            (0..CACHE_SECONDS).contains(&age)
+            (0..seconds).contains(&age)
         })
 }
 
@@ -494,7 +494,7 @@ pub fn catalog(profile: &Path, app_id: &str, p: &Value) -> Result<Value> {
             .ok_or("No cached Workshop results for this query/page in offline mode".into());
     }
     if !request.refresh {
-        if let Some(page) = cached.as_ref().filter(|v| fresh(v)) {
+        if let Some(page) = cached.as_ref().filter(|v| fresh_for(v,crate::remote::seconds(profile,"workshopCacheSeconds",CACHE_SECONDS as u64) as i64)) {
             return Ok(with_previews(profile, page.clone(), false));
         }
     }
@@ -669,7 +669,7 @@ mod tests {
         page["updatedAt"] = json!("2020-01-01T00:00:00Z");
         let envelope = json!({"request":r.identity(),"data":page});
         assert_eq!(cached_page(&envelope, &r).unwrap()["cached"], true);
-        assert!(!fresh(&page));
+        assert!(!fresh_for(&page,CACHE_SECONDS));
         assert!(cached_page(
             &envelope,
             &Request::new(APP_ID, &json!({"query":"different"})).unwrap()
@@ -682,7 +682,7 @@ mod tests {
         bad["data"]["updatedAt"] = json!("invalid");
         assert!(cached_page(&bad, &r).is_none());
         page["updatedAt"] = json!(common::now());
-        assert!(fresh(&page));
+        assert!(fresh_for(&page,CACHE_SECONDS));
     }
 
     #[test]

@@ -64,15 +64,11 @@ pub fn open_url(url: &str) -> Result<Value> {
     }
     launch_uri(url)
 }
-pub fn open_project_link(p: &Value) -> Result<Value> {
-    let url = match str(p, "id") {
-        "support" => "https://t.me/PlaySpaceSupport_bot",
-        "donate" if str(p, "language") == "en" => "https://auth.robokassa.ru/merchant/Invoice/KL10bltZtkCT1pfk7R0EVQ",
-        "donate" => "https://auth.robokassa.ru/merchant/Invoice/IYhjSKAkQEeZj7JPhZEHwA",
-        _ => return Err("Unknown project link".into()),
-    };
-    launch_uri(url)
+pub fn open_project_link(profile: &Path, p: &Value) -> Result<Value> {
+    let url=crate::remote::link(profile,str(p,"id"),str(p,"language"))?;
+    launch_uri(&url)
 }
+
 fn launch_uri(url: &str) -> Result<Value> {
     let operation: Vec<u16> = "open\0".encode_utf16().collect();
     let file: Vec<u16> = format!("{url}\0").encode_utf16().collect();

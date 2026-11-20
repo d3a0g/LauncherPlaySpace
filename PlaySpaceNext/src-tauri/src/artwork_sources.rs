@@ -23,7 +23,7 @@ pub fn resolve(profile: &Path, name: &str, offline: bool) -> Option<String> {
             if let Some(id)=value["id"].as_str(){if id.parse::<u32>().is_ok_and(|n|n>0){return Some(id.into())}}
         }
     }
-    let base:Vec<Value>=serde_json::from_str(include_str!("../catalog/recommendations.json")).ok()?;
+    let base:Vec<Value>=serde_json::from_value(crate::remote::catalog(profile,"recommendations").unwrap_or_else(||serde_json::from_str(include_str!("../catalog/recommendations.json")).expect("embedded recommendations"))).ok()?;
     let mut found=exact_id(&base,name);
     if found.is_none()&&!offline {
         let result=http().ok()?.get("https://store.steampowered.com/api/storesearch/")
