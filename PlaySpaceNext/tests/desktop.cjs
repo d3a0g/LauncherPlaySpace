@@ -143,7 +143,14 @@ let browser;const issues=[];
    if(fs.existsSync(fixture)){
      const marker=path.join(path.dirname(fixture),'started.txt');if(fs.existsSync(marker))fs.unlinkSync(marker);
      const added=await page.evaluate(path=>window.__TAURI_INTERNALS__.invoke('request',{operation:'save_game',payload:{path}}),fixture);
-     const started=await page.evaluate(id=>window.__TAURI_INTERNALS__.invoke('request',{operation:'launch',payload:{id}}),added.id);
+     const started=await page.evaluate(async id=>{
+       const call=(operation,payload)=>window.__TAURI_INTERNALS__.invoke('request',{operation,payload});
+       const payload={area:'launch-profiles',id};
+       await call('workspace',{...payload,action:'capture',name:'Fixture profile',extraArguments:'--fixture'});
+       const profiles=await call('workspace',{...payload,action:'get'});
+       if(profiles.length!==1)throw Error('Launch profile was not saved');
+       return call('launch',{id,launchProfile:profiles[0].id});
+     },added.id);
      assert(started.accepted,'Native launch command rejected');
      for(let i=0;i<120&&!fs.existsSync(marker);i++)await new Promise(r=>setTimeout(r,250));
      assert(fs.existsSync(marker),'Launch preparation never started the harmless fixture');
@@ -215,6 +222,35 @@ let browser;const issues=[];
    await page.getByRole('group',{name:'Массовые действия',exact:true}).getByRole('button',{name:'Выбрать все',exact:true}).click();
    assert(await page.getByRole('group',{name:'Массовые действия',exact:true}).locator('input:checked').count()>=4);
    await page.screenshot({path:path.join(output,'library-management.png'),fullPage:true});
+   await page.getByRole('button',{name:'Библиотека',exact:true}).click();
+   await page.getByRole('button',{name:'Выбрать Portal 2',exact:true}).click();
+   await page.getByRole('button',{name:'Параметры игры',exact:true}).first().click();
+   await page.getByRole('heading',{name:'Профили запуска',exact:true}).waitFor();
+   await page.screenshot({path:path.join(output,'launch-profiles.png'),fullPage:true});
+   // A bad executable forces spawn to fail after the profile changed the Unreal config.
+   const rollbackFolder=path.join(output,'profile-rollback-fixture');
+   fs.mkdirSync(rollbackFolder,{recursive:true});
+   const badExe=path.join(rollbackFolder,'Example-Win64-Shipping.exe');
+   const settings=path.join(rollbackFolder,'GameUserSettings.ini');
+   const originalSettings='[/Script/Engine.GameUserSettings]\nResolutionSizeX=1280\nUserCustomSetting=KeepMe\n';
+   fs.writeFileSync(badExe,'Deliberately invalid executable');
+   fs.writeFileSync(settings,originalSettings);
+   await page.evaluate(async ({badExe,settings})=>{
+     const call=(operation,payload)=>window.__TAURI_INTERNALS__.invoke('request',{operation,payload});
+     const game=await call('save_game',{path:badExe});
+     await call('graphics',{id:game.id,action:'save',value:{ConfigFile:settings,ApplyOnLaunch:true,ResolutionWidth:1920}});
+     const payload={id:game.id,area:'launch-profiles'};
+     await call('workspace',{...payload,action:'capture',name:'Rollback fixture'});
+     const [saved]=await call('workspace',{...payload,action:'get'});
+     try{await call('launch',{id:game.id,launchProfile:saved.id});}catch(error){
+       if(String(error).match(/os error (193|216)|not a valid|Win32/i))return;
+       throw error;
+     }
+     throw Error('Invalid game executable unexpectedly started');
+   },{badExe,settings});
+   assert.equal(fs.readFileSync(settings,'utf8'),originalSettings,'Failed profile launch must roll back graphics');
+
+
 
    assert.deepEqual(issues,[]);
    fs.writeFileSync(path.join(output,'desktop-report.json'),JSON.stringify({passed:true,automaticRemovalVerified,integratedWorkspaces:true,legacyBridgeRejected:true,liveArtworkVerified:process.env.PLAYSPACE_TEST_LIVE_ART==='1',nativeTauri:true,nativeLibraryStorage:true,nativeRuntime:health.engine==='rust',nativeCollections:true,englishAndRussian:true,libraryCount:4,toolsCount:18,sidebarSearchAndSelection:true,detailsView:true,resizableCovers:true,recommendationSearchAndGenre:true,originalLibraryUntouched:true,launchFixtureVerified,actualGamesLaunched:false,modsInstalled:false,errors:issues},null,2));

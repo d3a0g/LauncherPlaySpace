@@ -11,10 +11,12 @@
   #error WebViewBootstrap must point to the verified Microsoft Evergreen bootstrapper
 #endif
 #define AppExe "LauncherPlaySpace.exe"
-#define AppVersion "2.0.0"
-#define AppFileVersion "2.0.0.0"
+#ifndef AppVersion
+  #define AppVersion "2.0.0"
+#endif
+#define AppFileVersion AppVersion + ".0"
 #if GetVersionNumbersString(AddBackslash(PayloadDir) + AppExe) != AppFileVersion
-  #error Native LauncherPlaySpace.exe must have file version 2.0.0.0
+  #error Native LauncherPlaySpace.exe must match AppFileVersion
 #endif
 
 [Setup]
@@ -54,7 +56,7 @@ OutputDir={#BuildOutput}
 #ifdef InstallerName
 OutputBaseFilename={#InstallerName}
 #else
-OutputBaseFilename=LauncherPlaySpace-2.0.0-Setup
+OutputBaseFilename=LauncherPlaySpace-{#AppVersion}-Setup
 #endif
 LicenseFile=..\LICENSE
 InfoBeforeFile=PLAYSPACE2-NOTICE.txt

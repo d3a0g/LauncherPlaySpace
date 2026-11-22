@@ -7,6 +7,7 @@ use std::{
     fs,
     path::{Path, PathBuf},
 };
+static SNAPSHOT_WRITES: std::sync::Mutex<()> = std::sync::Mutex::new(());
 const MAX: u64 = 2 * 1024 * 1024 * 1024;
 pub fn closed(g: &Value) -> Result<()> {
     let path = PathBuf::from(text(g, "ExePath"));
@@ -164,11 +165,10 @@ fn snapshot(root: &Path, c: &Value, id: &str) -> Result<Value> {
 }
 fn create(profile: &Path, g: &Value, c: &Value, kind: &str) -> Result<Value> {
     closed(g)?;
+    let _write = SNAPSHOT_WRITES.lock().map_err(err)?;
     let source = source(profile, c)?;
     let root = root(profile, c)?;
-    if snapshots(&root)?.len() >= 50 {
-        return Err("Backup limit reached: 50 per game".into());
-    }
+    let existing = snapshots(&root)?;
     let entries = files(&source, MAX)?;
     if entries.len() > 10000 {
         return Err("Too many save files".into());
@@ -194,10 +194,38 @@ fn create(profile: &Path, g: &Value, c: &Value, kind: &str) -> Result<Value> {
             let size = fs::metadata(&target).map_err(err)?.len();
             manifest.push(json!({"Path":relative,"Size":size,"Sha256":hash(&target)?}));
         }
+        manifest.sort_by(|a,b| str(a,"Path").cmp(str(b,"Path")));
+        if matches!(kind, "Before launch" | "After playing") {
+            if let Some(last) = existing.first() {
+                let mut previous = last["Files"].as_array().cloned().unwrap_or_default();
+                previous.sort_by(|a,b| str(a,"Path").cmp(str(b,"Path")));
+                if manifest == previous && snapshot(&root,c,str(last,"Id")).is_ok() {
+                    return Ok(last.clone());
+                }
+            }
+        }
+        let limit = c["BackupRetention"].as_u64().unwrap_or(20).clamp(1, 50) as usize;
+        let automatic: Vec<_> = existing.iter().filter(|point|
+            point["Protected"] != true && matches!(str(point,"Kind"),"Before launch" | "After playing")
+        ).collect();
+        let excess = automatic.len().saturating_add(1).saturating_sub(limit);
+        if existing.len().saturating_sub(if matches!(kind,"Before launch" | "After playing"){excess}else{0}) >= 50 {
+            return Err("Backup limit reached: 50 per game".into());
+        }
         let snapshot =
             json!({"Id":id,"Owner":c["Id"],"Created":now(),"Kind":kind,"Files":manifest});
         write(&stage.join("snapshot.json"), &snapshot)?;
         fs::rename(&stage, root.join(&id)).map_err(err)?;
+        if matches!(kind, "Before launch" | "After playing") {
+            for point in automatic.iter().rev().take(excess) {
+                let token = str(point,"Id");
+                if uuid::Uuid::parse_str(token).is_ok() && point["Owner"] == c["Id"] {
+                    let folder = safe(&root, token)?;
+                    no_links(&folder)?;
+                    fs::remove_dir_all(folder).map_err(err)?;
+                }
+            }
+        }
         history(profile, g, "Backup", kind);
         Ok(snapshot)
     })();
@@ -227,6 +255,7 @@ pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
         c["SaveDirectory"] = p["directory"].clone();
         c["Notes"] = json!(str(p, "notes").chars().take(4000).collect::<String>());
         c["BackupBeforeLaunch"] = json!(p["automatic"] == true);
+        c["BackupRetention"] = json!(p["retention"].as_u64().unwrap_or(20).clamp(1,50));
         c["BackupAfterPlaying"] = json!(p["afterPlaying"] == true);
         source(profile, &c)?;
         update_game(profile, str(p, "id"), |g| {
@@ -239,6 +268,14 @@ pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
         return create(profile, &g, &c, "Manual");
     }
     let root = root(profile, &c)?;
+    if action == "protect" {
+        let _guard = library::lock(profile)?;
+        let token = str(p,"snapshot");
+        let _write = SNAPSHOT_WRITES.lock().map_err(err)?;
+        let mut point = snapshot(&root,&c,token)?;
+        point["Protected"] = json!(p["protected"] == true);
+        write(&safe(&root, &format!("{token}/snapshot.json"))?, &point)?;
+    }
     if matches!(action, "verify" | "preview" | "restore") {
         let _guard = library::lock(profile)?;
         let source = source(profile, &c)?;

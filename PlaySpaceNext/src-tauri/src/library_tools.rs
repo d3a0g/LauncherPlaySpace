@@ -33,25 +33,67 @@ pub fn handle(profile:&Path,p:&Value)->Result<Value>{
             if ids.is_empty(){return Err("Select games".into())}
             let _lock=library::lock(profile)?;
             let mut games=library::load(&profile.join("games.json"))?.0;
-            write(&profile.join("library-tools-undo.json"),&json!(games))?;
-            let mut affected=0;
-            for g in &mut games {if ids.iter().any(|id|id.as_str()==Some(&library::text(g,"LibraryId"))){
-                match str(p,"field") {
-                    "IsPinned"=>library::set(g,"IsPinned",json!(p["value"]==true)),
-                    "PlayStatus"=>{let s=str(p,"value");if !["planned","playing","completed","paused",""].contains(&s){return Err("Invalid status".into())}library::set(g,"PlayStatus",json!(s));},
-                    _=>return Err("Unsupported bulk action".into())
-                }affected+=1;
-            }}
-            library::save(profile,&games)?; Ok(json!({"affected":affected}))
+            let mut changes=Vec::new();
+            let key=str(p,"field");
+            let value=match key {
+                "IsPinned" | "Hidden"=>json!(p["value"]==true),
+                "PlayStatus" if ["planned","playing","completed","paused",""].contains(&str(p,"value"))=>p["value"].clone(),
+                "CustomArtworkPath"=>json!(""),
+                _=>return Err("Unsupported bulk action".into())
+            };
+            for game in &mut games {
+                let id=library::text(game,"LibraryId");
+                if ids.iter().any(|selected|selected.as_str()==Some(&id)) {
+                    let previous=library::field(game,key).cloned().unwrap_or(Value::Null);
+                    if previous!=value {
+                        changes.push(json!({"id":id,"before":previous,"after":value}));
+                        library::set(game,key,value.clone());
+                    }
+                }
+            }
+            if changes.is_empty(){return Ok(json!({"affected":0}))}
+            write(&profile.join("library-tools-undo.json"),&json!({"key":key,"changes":changes}))?;
+            library::save(profile,&games)?;
+            Ok(json!({"affected":changes.len()}))
         },
         "undo"=>{
             let _lock=library::lock(profile)?;
-            let before:Vec<Value>=serde_json::from_value(read(&profile.join("library-tools-undo.json"),Value::Null)?).map_err(err)?;
+            let file=profile.join("library-tools-undo.json");
+            let operation=read(&file,Value::Null)?;
+            let key=str(&operation,"key");
+            if !["IsPinned","Hidden","PlayStatus","CustomArtworkPath"].contains(&key){
+                return Err("There is no recent bulk change to undo".into());
+            }
+            let changes=operation["changes"].as_array().ok_or("Invalid undo record")?;
             let mut current=library::load(&profile.join("games.json"))?.0;
-            for game in &mut current {if let Some(old)=before.iter().find(|g|library::text(g,"LibraryId")==library::text(game,"LibraryId")) {
-                for key in ["IsPinned","PlayStatus"] {library::set(game,key,old[key].clone());}
-            }}
-            library::save(profile,&current)?;fs::remove_file(profile.join("library-tools-undo.json")).map_err(err)?;
+            let mut restored=0;
+            for game in &mut current {
+                let id=library::text(game,"LibraryId");
+                if let Some(change)=changes.iter().find(|item|item["id"]==id) {
+                    if library::field(game,key)==Some(&change["after"]) {
+                        library::set(game,key,change["before"].clone());
+                        restored+=1;
+                    }
+                }
+            }
+            library::save(profile,&current)?;
+            fs::remove_file(file).map_err(err)?;
+            Ok(json!({"done":true,"restored":restored}))
+        },
+        "repair_path"=>{
+            let path=Path::new(str(p,"path"));
+            no_links(path)?;
+            if !path.is_absolute() || !path.is_file() || !path.extension().is_some_and(|e|e.eq_ignore_ascii_case("exe")){
+                return Err("Select an existing game executable".into());
+            }
+            update_game(profile,str(p,"id"),|game|{
+                if !library::text(game,"SteamAppId").is_empty() || library::text(game,"LaunchArguments").contains("--launch-product="){
+                    return Err("Run store discovery to repair this game".into());
+                }
+                library::set(game,"ExePath",json!(path));
+                library::set(game,"InstallDirectory",json!(path.parent()));
+                Ok(())
+            })?;
             Ok(json!({"done":true}))
         },
         "restore"=>{

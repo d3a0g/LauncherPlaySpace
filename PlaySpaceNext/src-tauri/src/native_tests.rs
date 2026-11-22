@@ -115,6 +115,31 @@ fn backups_verify_before_restore_and_keep_safety_snapshot() {
     assert_eq!(fs::read(folder.join("slot.sav")).unwrap(), b"original");
 }
 #[test]
+fn automatic_snapshots_skip_identical_data_and_keep_protected_versions() {
+    let (root, profile, game) = area();
+    let saves_folder = root.join("save-data");
+    fs::create_dir(&saves_folder).unwrap();
+    let file = saves_folder.join("slot.sav");
+    fs::write(&file,b"one").unwrap();
+    let id = &game["LibraryId"];
+    saves::handle(&profile,&json!({"id":id,"action":"configure","directory":saves_folder,"afterPlaying":true,"retention":1})).unwrap();
+    let game = library::load(&profile.join("games.json")).unwrap().0.remove(0);
+    let list = || saves::handle(&profile,&json!({"id":id,"action":"get"})).unwrap()["snapshots"].as_array().unwrap().clone();
+    saves::after_playing(&profile,&game).unwrap();
+    saves::after_playing(&profile,&game).unwrap();
+    let first = list();
+    assert_eq!(first.len(),1);
+    saves::handle(&profile,&json!({"id":id,"action":"protect","snapshot":first[0]["Id"],"protected":true})).unwrap();
+    for bytes in [b"two",b"new"] {
+        fs::write(&file,bytes).unwrap();
+        saves::after_playing(&profile,&game).unwrap();
+    }
+    let remaining=list();
+    assert_eq!(remaining.len(),2);
+    assert!(remaining.iter().any(|point|point["Id"]==first[0]["Id"] && point["Protected"]==true));
+}
+
+#[test]
 fn backup_configuration_rejects_profile_and_executables() {
     let (root, profile, g) = area();
     assert!(saves::handle(
@@ -261,6 +286,31 @@ fn duplicates_keep_metadata_and_collection_membership() {
             [str(&g, "LibraryId")][0],
         "Friends"
     );
+    workspace::handle(&profile,&json!({"area":"duplicates","action":"undo_merge"})).unwrap();
+    let restored = library::load(&profile.join("games.json")).unwrap().0;
+    assert_eq!(restored.len(),2);
+    assert!(restored.contains(&second));
+    assert_eq!(restored[0]["PlayedSeconds"],g["PlayedSeconds"]);
+}
+
+#[test]
+fn portable_build_resolves_exact_versions_and_requires_matching_review() {
+    let (root, profile, mut game) = area();
+    game["SteamAppId"] = json!("1966720");
+    library::save(&profile,&[game.clone()]).unwrap();
+    write(&profile.join("preferences.json"),&json!({"OfflineMode":true})).unwrap();
+    write(&profile.join("mod-catalog/lethal-company.json"),&json!([
+        {"owner":"Tester","name":"Sample","versions":[{"version_number":"1.0.0","dependencies":["BepInEx-BepInExPack-5.4.22"]}]},
+        {"owner":"BepInEx","name":"BepInExPack","versions":[{"version_number":"5.4.22","dependencies":[]}]}
+    ])).unwrap();
+    let manifest=root.join("build.json");
+    write(&manifest,&json!({"schema":1,"community":"lethal-company","packages":[{"id":"Tester-Sample","version":"1.0.0"}]})).unwrap();
+    let plan=mods::handle(&profile,&json!({"id":game["LibraryId"],"action":"build_plan","path":manifest})).unwrap();
+    assert_eq!(plan[0]["id"],"BepInEx-BepInExPack");
+    assert_eq!(plan[1]["version"],"1.0.0");
+    let error=mods::handle(&profile,&json!({"id":game["LibraryId"],"action":"build_install","path":manifest,"confirmed":true,"reviewed":[]})).unwrap_err();
+    assert!(error.contains("Review its plan"));
+    assert!(!root.join("game/.playspace-mods/installed.json").exists());
 }
 
 #[test]

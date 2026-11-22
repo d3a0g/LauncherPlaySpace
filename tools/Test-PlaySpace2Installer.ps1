@@ -1,8 +1,8 @@
 [CmdletBinding()]
-param()
+param([string]$Version='2.0.0')
 $ErrorActionPreference='Stop'
 $workspace=Split-Path -Parent $PSScriptRoot
-$release=Join-Path $workspace 'artifacts/releases/2.0.0'
+$release=Join-Path $workspace "artifacts/releases/$Version"
 $payload=Join-Path $release 'app'
 $area=Join-Path $workspace ('artifacts/playspace2-installer-test-'+[Guid]::NewGuid().ToString('N'))
 $install=Join-Path $area 'installed'
@@ -18,9 +18,9 @@ $profile=Join-Path $area 'profile'
 $marker=Join-Path $profile 'must-survive.txt';[IO.File]::WriteAllText($marker,'profile fixture must survive install and uninstall')
 $old=Join-Path $workspace 'artifacts/releases/1.0.6/app/LauncherPlaySpace.exe'
 if(-not(Test-Path -LiteralPath $old)){throw 'Published 1.0.6 EXE fixture is required.'}
-& $compiler /DSmokeTest ('/DPayloadDir='+$payload) ('/DBuildOutput='+$setupDir) ('/DWebViewBootstrap='+(Join-Path $workspace 'artifacts/release-publication-2.0.0/MicrosoftEdgeWebview2Setup.exe')) (Join-Path $workspace 'installer/PlaySpace2.iss') *> (Join-Path $area 'compile-native.log')
+& $compiler /DSmokeTest ('/DAppVersion='+$Version) ('/DPayloadDir='+$payload) ('/DBuildOutput='+$setupDir) ('/DWebViewBootstrap='+(Join-Path $workspace 'artifacts/release-publication-2.0.0/MicrosoftEdgeWebview2Setup.exe')) (Join-Path $workspace 'installer/PlaySpace2.iss') *> (Join-Path $area 'compile-native.log')
 if($LASTEXITCODE -ne 0){throw 'Native smoke installer compilation failed.'}
-$setup=Join-Path $setupDir 'LauncherPlaySpace-2.0.0-Setup.exe'
+$setup=Join-Path $setupDir "LauncherPlaySpace-$Version-Setup.exe"
 $exe=Join-Path $install 'LauncherPlaySpace.exe'
 $expected=(Get-FileHash -LiteralPath (Join-Path $payload 'LauncherPlaySpace.exe')).Hash
 function Install([string]$File,[switch]$Restart){
@@ -68,7 +68,7 @@ try{
     if((Get-ItemProperty -LiteralPath $registry).DisplayVersion -notlike '1.0.6*'){throw 'Legacy fixture registry version incorrect.'}
     Install $setup -Restart
     if((Get-FileHash -LiteralPath $exe).Hash -ne $expected -or -not(Test-Path -LiteralPath $unmanaged)){throw 'Legacy-to-native upgrade damaged payload or unrelated file.'}
-    if((Get-ItemProperty -LiteralPath $registry).DisplayVersion -ne '2.0.0'){throw 'Upgrade registration did not update.'}
+    if((Get-ItemProperty -LiteralPath $registry).DisplayVersion -ne $Version){throw 'Upgrade registration did not update.'}
     $started=$false
     for($attempt=0;$attempt -lt 60;$attempt++){
         $started=@(Get-CimInstance Win32_Process -Filter "Name='LauncherPlaySpace.exe'" | Where-Object ExecutablePath -EQ $exe).Count -gt 0
@@ -78,10 +78,24 @@ try{
     StopFixture
     Uninstall
     if((Test-Path -LiteralPath $exe) -or (Test-Path -LiteralPath $registry) -or -not(Test-Path -LiteralPath $unmanaged) -or -not(Test-Path -LiteralPath $marker)){throw 'Final uninstall did not preserve profile/unrelated data.'}
-    $report=@{passed=$true;freshInstall=$true;uninstall=$true;legacyVersion='1.0.6';nativeVersion='2.0.0';legacyInPlaceUpgrade=$true;nativeRestartFlag=$true;legacyProgress=$true;profilePreserved=$true;unrelatedFilePreserved=$true;webviewRuntime='already present; missing-runtime bootstrap not executed';realInstallationUntouched=$true}
+    $nativeUpgrade=$false
+    if($Version -ne '2.0.0'){
+        $nativeOldPayload=Join-Path $workspace 'artifacts/releases/2.0.0/app'
+        $nativeOldSetup=Join-Path $area 'native-old-setup'
+        [void][IO.Directory]::CreateDirectory($nativeOldSetup)
+        & $compiler /DSmokeTest /DAppVersion=2.0.0 ('/DPayloadDir='+$nativeOldPayload) ('/DBuildOutput='+$nativeOldSetup) ('/DWebViewBootstrap='+(Join-Path $workspace 'artifacts/release-publication-2.0.0/MicrosoftEdgeWebview2Setup.exe')) (Join-Path $workspace 'installer/PlaySpace2.iss') *> (Join-Path $area 'compile-native-old.log')
+        if($LASTEXITCODE -ne 0){throw 'Previous native smoke installer compilation failed.'}
+        Install (Join-Path $nativeOldSetup 'LauncherPlaySpace-2.0.0-Setup.exe')
+        if((Get-ItemProperty -LiteralPath $registry).DisplayVersion -ne '2.0.0'){throw 'Previous version registration mismatch.'}
+        Install $setup
+        if((Get-ItemProperty -LiteralPath $registry).DisplayVersion -ne $Version -or (Get-FileHash -LiteralPath $exe).Hash -ne $expected -or -not(Test-Path -LiteralPath $marker)){throw 'Native upgrade verification failed.'}
+        Uninstall
+        $nativeUpgrade=$true
+    }
+    $report=@{passed=$true;freshInstall=$true;uninstall=$true;legacyVersion='1.0.6';nativeVersion=$Version;legacyInPlaceUpgrade=$true;nativeInPlaceUpgrade=$nativeUpgrade;nativeRestartFlag=$true;legacyProgress=$true;profilePreserved=$true;unrelatedFilePreserved=$true;webviewRuntime='already present; missing-runtime bootstrap not executed';realInstallationUntouched=$true}
     [IO.File]::WriteAllText((Join-Path $area 'report.json'),($report|ConvertTo-Json),[Text.UTF8Encoding]::new($false))
     Copy-Item -LiteralPath (Join-Path $area 'report.json') -Destination (Join-Path $release 'installer-verification.json') -Force
-    'PASS: isolated fresh install/uninstall, registered 1.0.6 -> 2.0.0 upgrade, native restart and data preservation.'
+    "PASS: isolated fresh install/uninstall, registered 1.0.6 -> $Version upgrade, native restart and data preservation."
 }finally{
     StopFixture
     if((Test-Path -LiteralPath $registry) -and (Test-Path -LiteralPath (Join-Path $install 'unins000.exe'))){Uninstall}

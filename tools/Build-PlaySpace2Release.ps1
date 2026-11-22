@@ -3,7 +3,7 @@ param([switch]$SkipBuild,[string]$WebViewBootstrap='artifacts/release-publicatio
 $ErrorActionPreference='Stop'
 $workspace=Split-Path -Parent $PSScriptRoot
 $version=(Get-Content -LiteralPath (Join-Path $workspace 'PlaySpaceNext/package.json') -Raw|ConvertFrom-Json).version
-if($version -ne '2.0.0'){throw 'Review the versioned installer before releasing another version.'}
+if($version -notmatch '^2\.\d+\.\d+$'){throw 'Expected a stable PlaySpace 2 version.'}
 if(-not $SkipBuild){& (Join-Path $PSScriptRoot 'Start-PlaySpaceNext.ps1') -BuildOnly}
 $folder=Join-Path $workspace "artifacts/releases/$version"
 $app=Join-Path $folder 'app'
@@ -19,7 +19,7 @@ Copy-Item -LiteralPath (Join-Path $workspace 'PlaySpaceNext/src-tauri/update-pub
 if(-not(Test-Path -LiteralPath (Join-Path $workspace 'artifacts/playspace-next-native/app/licenses/DEPENDENCIES.json'))){& (Join-Path $PSScriptRoot 'Collect-PlaySpaceNextLicenses.ps1')}
 Copy-Item -LiteralPath (Join-Path $workspace 'artifacts/playspace-next-native/app/licenses') -Destination $app -Recurse -Force
 $compiler=Join-Path $workspace '.tools/InnoSetup/ISCC.exe'
-& $compiler ('/DPayloadDir='+$app) ('/DBuildOutput='+$folder) ('/DWebViewBootstrap='+$bootstrap) (Join-Path $workspace 'installer/PlaySpace2.iss') *> (Join-Path $folder 'installer-build.log')
+& $compiler ('/DAppVersion='+$version) ('/DPayloadDir='+$app) ('/DBuildOutput='+$folder) ('/DWebViewBootstrap='+$bootstrap) (Join-Path $workspace 'installer/PlaySpace2.iss') *> (Join-Path $folder 'installer-build.log')
 if($LASTEXITCODE -ne 0){throw 'Native installer compilation failed. Inspect installer-build.log.'}
 $installer=Join-Path $folder "LauncherPlaySpace-$version-Setup.exe"
 $archive=Join-Path $folder "LauncherPlaySpace-$version-win-x64.zip"

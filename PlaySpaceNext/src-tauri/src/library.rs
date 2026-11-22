@@ -140,7 +140,7 @@ fn view(game: &Value) -> Value {
     } else {
         "время не загружено".into()
     };
-    json!({"id":text(game,"LibraryId"),"name":text(game,"Name"),"exePath":path,"steamAppId":steam,"isPinned":field(game,"IsPinned").and_then(Value::as_bool).unwrap_or(false),"playtime":playtime,"playedSeconds":seconds,"lastLaunchUtc":field(game,"LastLaunchUtc"),"source":source,"achievementSummary":field(game,"AchievementSummary"),"playStatus":text(game,"PlayStatus"),"customArtwork":field(game,"CustomArtworkPath")})
+    json!({"id":text(game,"LibraryId"),"name":text(game,"Name"),"exePath":path,"steamAppId":steam,"isPinned":field(game,"IsPinned").and_then(Value::as_bool).unwrap_or(false),"playtime":playtime,"playedSeconds":seconds,"lastLaunchUtc":field(game,"LastLaunchUtc"),"source":source,"achievementSummary":field(game,"AchievementSummary"),"playStatus":text(game,"PlayStatus"),"hidden":field(game,"Hidden")==Some(&Value::Bool(true)),"customArtwork":field(game,"CustomArtworkPath")})
 }
 pub(crate) fn identity(game: &Value) -> String {
     let normalize = |s: String| s.replace('\\', "/").trim_start_matches("//?/").trim_end_matches('/').to_lowercase();

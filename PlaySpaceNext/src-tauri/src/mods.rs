@@ -695,7 +695,7 @@ pub(crate) fn apply(
     let _guard = lock(root)?;
     recover(root)?;
     let mut state = state(root)?;
-    let mut writes: BTreeMap<String, (String, PathBuf, String)> = BTreeMap::new();
+    let mut writes: BTreeMap<String, (String, PathBuf, String, String)> = BTreeMap::new();
     let mut changes = vec![];
     for (package, version, dependencies, files) in prepared {
         if package.is_empty()
@@ -713,9 +713,9 @@ pub(crate) fn apply(
             let target = safe(root, relative)?;
             let digest = hash(source)?;
             let lower = relative.to_lowercase();
-            if let Some((previous, _, old)) = writes.get(&lower) {
+            if let Some((previous, _, old, owner)) = writes.get(&lower) {
                 if old != &digest || previous != relative {
-                    return Err("Conflicting package files".into());
+                    return Err(format!("File conflict: {relative} ({owner} / {package})"));
                 }
             }
             if state["Files"]
@@ -740,7 +740,7 @@ pub(crate) fn apply(
             if !target.exists() && !writes.contains_key(&lower) {
                 changes.push(json!({"path":relative,"hash":digest}));
             }
-            writes.insert(lower, (relative.clone(), source.clone(), digest));
+            writes.insert(lower, (relative.clone(), source.clone(), digest, package.clone()));
         }
         state["Packages"][package] = json!({"Id":package,"Version":version,"Dependencies":dependencies,"Files":files.keys().collect::<Vec<_>>()});
     }
@@ -748,7 +748,7 @@ pub(crate) fn apply(
     let journal = safe(root, ".playspace-mods/native-pending.json")?;
     write(&journal, &json!({"id":token,"changes":changes}))?;
     let result = (|| {
-        for (relative, source, digest) in writes.values() {
+        for (relative, source, digest, _) in writes.values() {
             let target = safe(root, relative)?;
             if target.exists() {
                 continue;
@@ -1052,6 +1052,30 @@ fn profiles(root: &Path, g: &Value, p: &Value) -> Result<Value> {
     }
     result
 }
+fn build_plan(profile:&Path, root:&Path, adapter:&Value, kind:&str, p:&Value) -> Result<Vec<(Value,Value)>> {
+    if kind != "thunderstore" { return Err("Build sharing requires Thunderstore".into()); }
+    let path = Path::new(str(p,"path"));
+    if fs::metadata(path).map_err(err)?.len() > 256 * 1024 { return Err("Build manifest exceeds 256 KB".into()); }
+    let manifest = read(path,Value::Null)?;
+    if manifest["schema"] != 1 || manifest["community"] != adapter["Community"] {
+        return Err("This build belongs to a different game or format".into());
+    }
+    let packages = manifest["packages"].as_array().ok_or("Invalid build manifest")?;
+    if packages.is_empty() || packages.len() > 128 { return Err("Build must contain 1–128 packages".into()); }
+    let catalog = catalog(profile,adapter,false)?;
+    let mut installed = state(root)?;
+    let mut plan = Vec::new();
+    for package in packages {
+        let id = str(package,"id");
+        let version = str(package,"version");
+        if id.is_empty() || version.is_empty() { return Err("Missing package ID or version".into()); }
+        for (item,release) in resolve(id,version,&catalog,adapter,&installed)? {
+            installed["Packages"][package_id(&item)] = json!({"Version":release["version_number"]});
+            plan.push((item,release));
+        }
+    }
+    Ok(plan)
+}
 pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
     let all=crate::remote::catalog(profile,"modAdapters").unwrap_or_else(adapters);
     if str(p, "action") == "adapters" {
@@ -1126,13 +1150,32 @@ pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
         )?;
         return Ok(json!(plan.iter().map(|(package,version)|json!({"id":package_id(package),"version":version["version_number"],"bytes":version["file_size"],"dependencies":version["dependencies"],"loader":package_id(package)==str(&a,"Loader")})).collect::<Vec<_>>()));
     }
+    if action == "build_export" {
+        if kind != "thunderstore" { return Err("Build sharing requires Thunderstore".into()); }
+        let installed = state(&root)?;
+        let packages: Vec<_> = installed["Packages"].as_object().unwrap().values()
+            .filter(|package| str(package,"Version") != "local")
+            .map(|package| json!({"id":package["Id"],"version":package["Version"]})).collect();
+        if packages.is_empty() { return Err("No shareable Thunderstore packages installed".into()); }
+        let path = Path::new(str(p,"path"));
+        if path.extension().and_then(|e|e.to_str()) != Some("json") { return Err("Select a JSON file".into()); }
+        return write(path,&json!({"schema":1,"community":a["Community"],"packages":packages}))
+            .map(|_|json!({"exported":packages.len()}));
+    }
+    if action == "build_plan" {
+        let plan = build_plan(profile,&root,&a,kind,p)?;
+        return Ok(json!(plan.iter().map(|(package,version)|json!({
+            "id":package_id(package),"version":version["version_number"],
+            "dependencies":version["dependencies"],"loader":package_id(package)==str(&a,"Loader")
+        })).collect::<Vec<_>>()));
+    }
     if action == "uninstall" {
         crate::saves::closed(&g)?;
         let result = uninstall(&root, str(p, "package"))?;
         history(profile, &g, "Mods", "Managed mod removed");
         return Ok(result);
     }
-    if matches!(action, "install" | "import" | "inspect") {
+    if matches!(action, "install" | "import" | "inspect" | "build_install") {
         if action != "inspect" && p["confirmed"] != true {
             return Err("Review the installation plan first".into());
         }
@@ -1156,14 +1199,18 @@ pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
                 }
                 prepared.push((package, "local".into(), vec![], files));
             } else {
-                let catalog = catalog(profile, &a, false)?;
-                let plan = resolve(
-                    str(p, "package"),
-                    str(p, "version"),
-                    &catalog,
-                    &a,
-                    &state(&root)?,
-                )?;
+                let plan = if action == "build_install" {
+                    let plan = build_plan(profile,&root,&a,kind,p)?;
+                    let expected = json!(plan.iter().map(|(package,version)|json!({
+                        "id":package_id(package),"version":version["version_number"]
+                    })).collect::<Vec<_>>());
+                    if p["reviewed"] != expected { return Err("The build changed. Review its plan again".into()); }
+                    plan
+                } else {
+                    let catalog = catalog(profile, &a, false)?;
+                    resolve(str(p,"package"),str(p,"version"),&catalog,&a,&state(&root)?)?
+                };
+                if plan.is_empty() { return Ok(json!({"installed":0,"files":0})); }
                 if plan
                     .iter()
                     .any(|(package, _)| package_id(package) == str(&a, "Loader"))

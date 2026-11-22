@@ -15,7 +15,7 @@ use std::{
 };
 static SESSIONS: LazyLock<Mutex<HashMap<String, Value>>> =
     LazyLock::new(|| Mutex::new(HashMap::new()));
-fn args(input: &str) -> Result<Vec<String>> {
+pub(crate) fn args(input: &str) -> Result<Vec<String>> {
     let mut values = vec![];
     let mut value = String::new();
     let mut quoted = false;
@@ -64,7 +64,21 @@ pub fn sessions() -> Value {
 }
 pub fn launch(profile: &Path, p: &Value, app: &tauri::AppHandle) -> Result<Value> {
     let startup_guard=crate::library::lock(profile)?;
-    let g = game(profile, p)?;
+    let mut g = game(profile, p)?;
+    let profile_id = str(p,"launchProfile");
+    let mut mod_id = String::new();
+    let mut extra = Vec::new();
+    if !profile_id.is_empty() {
+        let saved = g["LaunchProfiles"].as_array().and_then(|list|list.iter().find(|v|v["id"]==profile_id))
+            .cloned().ok_or("Launch profile not found")?;
+        mod_id = str(&saved,"modProfile").into();
+        extra = args(str(&saved,"extraArguments"))?;
+        // Keep current Riot product and branch arguments mandatory.
+        if !text(&g,"LaunchArguments").contains("--launch-product=") {
+            set(&mut g,"LaunchArguments",saved["arguments"].clone());
+        }
+        set(&mut g,"Performance",saved["performance"].clone());
+    }
     let id = text(&g, "LibraryId");
     use sha2::{Digest, Sha256};
     let key = format!("{:X}", Sha256::digest(id.as_bytes()));
@@ -84,11 +98,24 @@ pub fn launch(profile: &Path, p: &Value, app: &tauri::AppHandle) -> Result<Value
     }
     crate::saves::closed(&g)?;
     crate::saves::before_launch(profile, &g)?;
+    let hide = prefs(profile)?["HideWhilePlaying"] == true;
+    let checkpoint = if profile_id.is_empty() { None } else { crate::graphics::checkpoint(&g)? };
+    let mut previous_mods = None;
+    let mut graphics_applied = false;
+    let root = crate::mods::game_root(&g).ok();
+    let start = (|| -> Result<_> {
+    if !mod_id.is_empty() {
+        if !crate::remote::enabled(profile,"mods"){return Err("Mods are temporarily unavailable".into());}
+        let saved = crate::mods::handle(profile,&json!({"id":id,"action":"profile_save","name":"Before profile launch"}))?;
+        previous_mods = Some(saved["id"].clone());
+        crate::mods::handle(profile,&json!({"id":id,"action":"profile_activate","profile":mod_id,"confirmed":true}))?;
+    }
     let mut arguments = crate::graphics::prepare(&g)?;
+    graphics_applied = true;
     arguments.extend(args(&text(&g, "LaunchArguments"))?);
+    arguments.extend(extra);
     let exe = text(&g, "ExePath");
     let steam = text(&g, "SteamAppId");
-    let root = crate::mods::game_root(&g).ok();
     if let Some(root) = &root {
         if let Ok(v) = read(&root.join(".playspace-mods/installed.json"), Value::Null) {
             if v["Packages"]
@@ -110,7 +137,7 @@ pub fn launch(profile: &Path, p: &Value, app: &tauri::AppHandle) -> Result<Value
         }
     }
     let direct = steam.is_empty();
-    let mut child = if !direct {
+    let child = if !direct {
         if let Some(steam_exe) = crate::discovery::steam()
             .map(|p| p.join("steam.exe"))
             .filter(|p| p.is_file())
@@ -123,6 +150,7 @@ pub fn launch(profile: &Path, p: &Value, app: &tauri::AppHandle) -> Result<Value
                 .creation_flags(0x08000000);
             Some(command.spawn().map_err(err)?)
         } else {
+            if !profile_id.is_empty() && !arguments.is_empty() { return Err("Install Steam to launch with profile arguments".into()); }
             crate::os::open_url(&format!("steam://rungameid/{steam}"))?;
             None
         }
@@ -142,9 +170,26 @@ pub fn launch(profile: &Path, p: &Value, app: &tauri::AppHandle) -> Result<Value
             .creation_flags(0x08000000);
         Some(command.spawn().map_err(err)?)
     };
+    Ok((child,direct))
+    })();
+    let (mut child,direct) = match start {
+        Ok(started)=>started,
+        Err(error)=>{
+            let mut errors = vec![error];
+            if let Some((path,bytes)) = checkpoint.filter(|_|graphics_applied) {
+                if let Err(rollback)=atomic(&path,&bytes){errors.push(format!("Graphics rollback: {rollback}"));}
+            }
+            if let Some(previous)=previous_mods {
+                if let Err(rollback)=crate::mods::handle(profile,&json!({"id":id,"action":"profile_activate","profile":previous,"confirmed":true})){
+                    errors.push(format!("Mod rollback: {rollback}"));
+                }
+            }
+            return Err(errors.join(" / "));
+        }
+    };
     let pid = child.as_ref().map(|c| c.id());
     let window = app.clone();
-    if prefs(profile)?["HideWhilePlaying"] == true {
+    if hide {
         use tauri::Manager;
         if let Some(w) = window.get_webview_window("main") {
             let _ = w.hide();

@@ -4,13 +4,13 @@
 
 ## Установщик
 
-Скачайте `LauncherPlaySpace-2.0.0-Setup.exe` из [официального релиза](https://github.com/d3a0g/playspace-releases/releases/tag/v2.0.0). Установка выполняется для текущего пользователя. Обычный каталог — `%LOCALAPPDATA%\Programs\LauncherPlaySpace`.
+Скачайте `LauncherPlaySpace-2.1.0-Setup.exe` из [официального релиза](https://github.com/d3a0g/playspace-releases/releases/latest). Установка выполняется для текущего пользователя. Обычный каталог — `%LOCALAPPDATA%\Programs\LauncherPlaySpace`.
 
 Установщик 2.0 сохраняет идентификатор установки 1.0.6 и заменяет исполняемый файл в прежней папке. Файлы игр, сохранения и профили не удаляются. Старый ярлык запускает новый нативный `LauncherPlaySpace.exe`. Для переноса библиотеки 1.x воспользуйтесь кнопкой импорта в 2.0; импорт копирует записи, а исходный файл сохраняется. Настройки и профили модов старой реализации автоматически не преобразуются.
 
 ## Переносной пакет
 
-Распакуйте `LauncherPlaySpace-2.0.0-win-x64.zip` в отдельную папку и запустите `LauncherPlaySpace.exe`. WebView2 должен быть установлен заранее. ZIP переносит само приложение; профиль по умолчанию остаётся в Windows AppData.
+Распакуйте `LauncherPlaySpace-2.1.0-win-x64.zip` в отдельную папку и запустите `LauncherPlaySpace.exe`. WebView2 должен быть установлен заранее. ZIP переносит само приложение; профиль по умолчанию остаётся в Windows AppData.
 
 ## Данные
 
@@ -23,7 +23,7 @@
 В релизе опубликован `SHA256SUMS.txt`. Например:
 
 ```powershell
-Get-FileHash .\LauncherPlaySpace-2.0.0-Setup.exe -Algorithm SHA256
+Get-FileHash .\LauncherPlaySpace-2.1.0-Setup.exe -Algorithm SHA256
 ```
 
 Подпись пакета обновления проверяется лаунчером отдельно от Windows Authenticode. У приложения пока нет подтверждённого сертификата издателя Windows; установщик не отключает SmartScreen или другие системные проверки.

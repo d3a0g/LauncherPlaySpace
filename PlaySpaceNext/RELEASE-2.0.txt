@@ -1,4 +1,4 @@
-PlaySpace 2.0.0 / Windows x64 / 17 ноября 2026
+PlaySpace 2.1.0 / Windows x64
 
 Запустите LauncherPlaySpace.exe. Требуется Microsoft Edge WebView2 Runtime.
 Установщик проверяет WebView2 и при необходимости устанавливает Runtime

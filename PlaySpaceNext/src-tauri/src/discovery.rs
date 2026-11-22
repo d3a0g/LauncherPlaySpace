@@ -175,6 +175,7 @@ pub fn scan(profile: &Path) -> Result<Value> {
                 if root
                     .replace('\\', "/")
                     .to_lowercase()
+                    .trim_end_matches('/')
                     .ends_with("/valorant/live")
                 {
                     let exe = client.as_str().unwrap_or("");
@@ -193,9 +194,12 @@ pub fn scan(profile: &Path) -> Result<Value> {
         if let Some(existing) = games.iter_mut().find(|g| library::same(g, &game)) {
             let old=library::text(existing,"ExePath");
             let next=library::text(&game,"ExePath");
-            if !Path::new(&old).is_file() && Path::new(&next).is_file() {
+            if (!Path::new(&old).is_file() || (library::text(&game,"LaunchArguments").contains("--launch-product=valorant") && !library::text(existing,"LaunchArguments").contains("--launch-product=valorant"))) && Path::new(&next).is_file() {
                 library::set(existing,"ExePath",json!(next));
                 library::set(existing,"InstallDirectory",game["InstallDirectory"].clone());
+                if library::text(&game,"LaunchArguments").contains("--launch-product=valorant") {
+                    library::set(existing,"LaunchArguments",game["LaunchArguments"].clone());
+                }
                 repaired+=1;
             }
         } else {

@@ -10,6 +10,27 @@ export function useLanguage():Language{useSyncExternalStore(fn=>{listeners.add(f
 export function currentLanguage(){return language;}
 document.documentElement.lang=language;
 const en:Record<string,string>={
+"Профили запуска":"Launch profiles",
+"Сохранить текущую графику и параметры запуска":"Save current graphics and launch arguments",
+"Дополнительные аргументы":"Extra arguments",
+"Текущие моды":"Current mods",
+"Сохранить профиль":"Save profile",
+"Давно не играл":"Not played recently",
+"Скрытые игры":"Hidden games",
+"Название умной коллекции":"Smart collection name",
+"Не запускалась больше дней":"Days since last launch",
+"Создать умную коллекцию":"Create smart collection",
+"Удалить умную коллекцию":"Delete smart collection",
+"Хранить автоматических копий":"Automatic backups to keep",
+"Снять защиту копии":"Unprotect backup",
+"Защитить копию":"Protect backup",
+"Экспорт сборки модов":"Export mod build",
+"Открыть сборку модов":"Open mod build",
+"Добавить в коллекцию":"Add to collection",
+"Вернуть обложки магазина":"Restore store covers",
+"Указать новый EXE":"Select a new executable",
+"Отменить объединение":"Undo merge",
+
 "Умная коллекция":"Smart collection",
 "Ещё не запускал":"Never played",
 "Планирую":"Planned",

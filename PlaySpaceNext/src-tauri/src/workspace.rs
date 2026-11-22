@@ -11,6 +11,42 @@ use std::{
 pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
     let area = str(p, "area");
     let action = str(p, "action");
+    if area == "launch-profiles" {
+        let game = game(profile,p)?;
+        if action == "get" {
+            return Ok(game["LaunchProfiles"].as_array().map(|v|json!(v)).unwrap_or(json!([])));
+        }
+        let name = str(p,"name").trim();
+        if action == "capture" && (name.is_empty() || name.chars().count()>48 || name.chars().any(char::is_control)) {
+            return Err("Enter a profile name (1–48 characters)".into());
+        }
+        let mod_id = str(p,"modProfile");
+        if !mod_id.is_empty() {
+            uuid::Uuid::parse_str(mod_id).map_err(err)?;
+            let list = crate::mods::handle(profile,&json!({"id":p["id"],"action":"profile_list"}))?;
+            if !list.as_array().is_some_and(|items|items.iter().any(|item|item["id"]==mod_id)) {
+                return Err("Mod profile not found".into());
+            }
+        }
+        update_game(profile,str(p,"id"),|game|{
+            let mut profiles = game["LaunchProfiles"].as_array().cloned().unwrap_or_default();
+            match action {
+                "capture" => {
+                    if profiles.len()>=24 { return Err("Launch profile limit reached".into()); }
+                    let extra = str(p,"extraArguments");
+                    if extra.len()>4096 { return Err("Launch arguments are too long".into()); }
+                    crate::runtime::args(extra)?;
+                    profiles.push(json!({"id":id(),"name":name,"modProfile":mod_id,
+                        "performance":game["Performance"],"arguments":text(game,"LaunchArguments"),"extraArguments":extra}));
+                }
+                "remove" => profiles.retain(|saved|saved["id"]!=p["launchProfile"]),
+                _ => return Err("Unknown launch profile action".into()),
+            }
+            set(game,"LaunchProfiles",json!(profiles));
+            Ok(())
+        })?;
+        return Ok(json!({"done":true}));
+    }
     if area == "settings" {
         let mut v = prefs(profile)?;
         if action == "save" {
@@ -120,6 +156,19 @@ pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
                         }
                     }
                 }
+                "bulk_add" => {
+                    if !names.iter().any(|n|n==name) { return Err("Collection not found".into()); }
+                    let selected=p["ids"].as_array().ok_or("Select games")?;
+                    let games=library::load(&profile.join("games.json"))?.0;
+                    let members=v["Members"].as_object_mut().ok_or("Invalid collections")?;
+                    for game in games {
+                        let id=text(&game,"LibraryId");
+                        if selected.iter().any(|item|item.as_str()==Some(&id)) {
+                            let list=members.entry(id).or_insert(json!([])).as_array_mut().ok_or("Invalid membership")?;
+                            if !list.iter().any(|item|item==name) {list.push(json!(name));}
+                        }
+                    }
+                }
                 "set" => {
                     if !names.iter().any(|n| n == name) {
                         return Err("Collection not found".into());
@@ -144,6 +193,34 @@ pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
         return Ok(v);
     }
     if area == "duplicates" {
+        let _lock = if action=="merge" || action=="undo_merge" {Some(library::lock(profile)?)} else {None};
+        let undo_file = profile.join("library-merge-undo.json");
+        if action=="undo_merge" {
+            let undo=read(&undo_file,Value::Null)?;
+            let records=undo["removed"].as_array().ok_or("There is no merge to undo")?;
+            let mut games=library::load(&profile.join("games.json"))?.0;
+            let keep=str(&undo,"keep");
+            let target=games.iter_mut().find(|g|text(g,"LibraryId")==keep).ok_or("The merged entry no longer exists")?;
+            for key in ["IsPinned","PlayedSeconds"] {
+                if library::field(target,key)==Some(&undo["after"][key]){
+                    set(target,key,undo["before"][key].clone());
+                }
+            }
+            for record in records {
+                if !games.iter().any(|g|text(g,"LibraryId")==text(record,"LibraryId")){
+                    games.push(record.clone());
+                }
+            }
+            let file=profile.join("collections.json");
+            let mut collections=read(&file,json!({"Names":[],"Members":{}}))?;
+            if collections["Members"][keep]==undo["membersAfter"] {
+                collections["Members"][keep]=undo["membersBefore"].clone();
+                write(&file,&collections)?;
+            }
+            library::save(profile,&games)?;
+            fs::remove_file(undo_file).map_err(err)?;
+            return Ok(json!({"restored":records.len()}));
+        }
         let games = library::load(&profile.join("games.json"))?.0;
         let mut groups: BTreeMap<String, Vec<Value>> = BTreeMap::new();
         for g in &games {
@@ -153,8 +230,6 @@ pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
             );
         }
         if action == "merge" {
-            let _lock = library::lock(profile)?;
-            let games = library::load(&profile.join("games.json"))?.0;
             let keep = str(p, "id");
             let group = groups
                 .values()
@@ -170,6 +245,7 @@ pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
                 .iter_mut()
                 .find(|g| text(g, "LibraryId") == keep)
                 .ok_or("Game not found")?;
+            let before=target.clone();
             if records.iter().any(|g| g["IsPinned"] == true) {
                 set(target, "IsPinned", json!(true));
             }
@@ -197,10 +273,14 @@ pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
                 .filter_map(Value::as_str)
                 .map(|s| ValueString(s.into()))
                 .collect();
-            members.insert(
-                keep.into(),
-                json!(union.into_iter().map(|v| v.0).collect::<Vec<_>>()),
-            );
+            let members_before=members.get(keep).cloned().unwrap_or(json!([]));
+            let members_after=json!(union.into_iter().map(|v|v.0).collect::<Vec<_>>());
+            write(&undo_file,&json!({
+                "keep":keep,"before":before,"after":target,
+                "removed":records.iter().filter(|g|text(g,"LibraryId")!=keep).collect::<Vec<_>>(),
+                "membersBefore":members_before,"membersAfter":members_after
+            }))?;
+            members.insert(keep.into(),members_after);
             write(&profile.join("collections.json"), &collections)?;
             atomic(
                 &profile.join(format!("library-before-merge-{}.json", id())),

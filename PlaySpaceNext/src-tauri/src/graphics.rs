@@ -361,6 +361,17 @@ fn apply(g: &Value, p: &Value) -> Result<()> {
     }
     atomic(&path, &updated)
 }
+pub fn checkpoint(g:&Value) -> Result<Option<(PathBuf,Vec<u8>)>> {
+    let settings = profile(g);
+    if settings["ApplyOnLaunch"] != true { return Ok(None); }
+    let Some(path) = config(g,&settings) else { return Ok(None); };
+    no_links(&path)?;
+    if fs::metadata(&path).map_err(err)?.len() > 8 * 1024 * 1024 {
+        return Err("Graphics configuration exceeds 8 MB".into());
+    }
+    let bytes = fs::read(&path).map_err(err)?;
+    Ok(Some((path,bytes)))
+}
 pub fn prepare(g: &Value) -> Result<Vec<String>> {
     let p = profile(g);
     if p["ApplyOnLaunch"] != true {
