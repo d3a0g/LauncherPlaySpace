@@ -190,12 +190,7 @@ pub fn scan(profile: &Path) -> Result<Value> {
     let mut count = 0;
     let mut repaired=0;
     for game in found {
-        if let Some(existing) = games.iter_mut().find(|g| {
-            (!library::text(g, "SteamAppId").is_empty()
-                && library::text(g, "SteamAppId") == library::text(&game, "SteamAppId"))
-                || library::text(g, "ExePath")
-                    .eq_ignore_ascii_case(&library::text(&game, "ExePath"))
-        }) {
+        if let Some(existing) = games.iter_mut().find(|g| library::same(g, &game)) {
             let old=library::text(existing,"ExePath");
             let next=library::text(&game,"ExePath");
             if !Path::new(&old).is_file() && Path::new(&next).is_file() {

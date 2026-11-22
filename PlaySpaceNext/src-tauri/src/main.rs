@@ -11,6 +11,7 @@ mod downloads;
 mod graphics;
 mod installation;
 mod library;
+mod library_tools;
 mod media;
 mod mods;
 #[cfg(test)]
@@ -50,6 +51,7 @@ fn allowed(operation: &str) -> bool {
             | "remote_config"
             | "health"
             | "workspace"
+            | "library_tools"
             | "saves"
             | "network"
             | "admin"
@@ -94,6 +96,7 @@ async fn request(
             return media::handle(&profile, &operation, &p);
         }
         match operation.as_str() {
+            "library_tools" => library_tools::handle(&profile, &p),
             "workspace" => workspace::handle(&profile, &p),
             "saves" => saves::handle(&profile, &p),
             "mods" => mods::handle(&profile, &p),

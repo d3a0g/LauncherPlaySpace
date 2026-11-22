@@ -140,12 +140,25 @@ fn view(game: &Value) -> Value {
     } else {
         "время не загружено".into()
     };
-    json!({"id":text(game,"LibraryId"),"name":text(game,"Name"),"exePath":path,"steamAppId":steam,"isPinned":field(game,"IsPinned").and_then(Value::as_bool).unwrap_or(false),"playtime":playtime,"playedSeconds":seconds,"lastLaunchUtc":field(game,"LastLaunchUtc"),"source":source,"achievementSummary":field(game,"AchievementSummary"),"customArtwork":field(game,"CustomArtworkPath")})
+    json!({"id":text(game,"LibraryId"),"name":text(game,"Name"),"exePath":path,"steamAppId":steam,"isPinned":field(game,"IsPinned").and_then(Value::as_bool).unwrap_or(false),"playtime":playtime,"playedSeconds":seconds,"lastLaunchUtc":field(game,"LastLaunchUtc"),"source":source,"achievementSummary":field(game,"AchievementSummary"),"playStatus":text(game,"PlayStatus"),"customArtwork":field(game,"CustomArtworkPath")})
 }
-fn same(a: &Value, b: &Value) -> bool {
-    let id = text(a, "SteamAppId");
-    (!id.is_empty() && id == text(b, "SteamAppId"))
-        || text(a, "ExePath").eq_ignore_ascii_case(&text(b, "ExePath"))
+pub(crate) fn identity(game: &Value) -> String {
+    let normalize = |s: String| s.replace('\\', "/").trim_start_matches("//?/").trim_end_matches('/').to_lowercase();
+    let steam = text(game, "SteamAppId");
+    if !steam.is_empty() { return format!("steam:{steam}"); }
+    for value in [text(game,"InstallDirectory"), text(game,"ExePath")] {
+        let value = normalize(value);
+        if let Some(at) = value.find("/valorant/live") {
+            let end = at + "/valorant/live".len();
+            if value.len() == end || value.as_bytes().get(end) == Some(&b'/') {
+                return format!("riot:{}", &value[..end]);
+            }
+        }
+    }
+    format!("exe:{}:{}",normalize(text(game,"ExePath")),text(game,"LaunchArguments").trim())
+}
+pub(crate) fn same(a: &Value, b: &Value) -> bool {
+    identity(a) == identity(b)
 }
 pub fn handle(
     profile: &Path,
@@ -192,6 +205,10 @@ pub fn handle(
         "remove_game" => {
             let id = payload["id"].as_str().ok_or("Не выбрана игра")?;
             let before = games.len();
+            let removed:Vec<_> = games.iter().filter(|g| text(g,"LibraryId") == id).cloned().collect();
+            if !removed.is_empty() {
+                crate::common::write(&profile.join(format!("removed-games/{}.json",uuid::Uuid::new_v4())), &json!(removed))?;
+            }
             games.retain(|g| text(g, "LibraryId") != id);
             json!({"removed":games.len()!=before})
         }
@@ -234,6 +251,15 @@ pub fn handle(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn valorant_identity_is_installation_based_and_does_not_merge_other_riot_games() {
+        let client=json!({"Name":"VALORANT","ExePath":"C:/Riot Games/Riot Client/RiotClientServices.exe","InstallDirectory":"D:/Riot Games/VALORANT/live","LaunchArguments":"--launch-product=valorant --launch-patchline=live"});
+        let direct=json!({"Name":"VALORANT","ExePath":"d:\\Riot Games\\VALORANT\\live\\ShooterGame\\Binaries\\Win64\\VALORANT-Win64-Shipping.exe"});
+        assert!(same(&client,&direct));
+        let other=json!({"Name":"League of Legends","ExePath":"C:/Riot Games/Riot Client/RiotClientServices.exe","LaunchArguments":"--launch-product=league_of_legends --launch-patchline=live"});
+        assert!(!same(&client,&other));
+        assert!(!same(&client,&json!({"ExePath":"E:/Riot Games/VALORANT/live/VALORANT.exe"})));
+    }
     fn area() -> PathBuf {
         let p = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
             .join("target/library-tests")

@@ -269,6 +269,9 @@ pub fn launch(profile: &Path, p: &Value, app: &tauri::AppHandle) -> Result<Value
                     "Session",
                     &format!("Played {:.0} seconds", saved + elapsed),
                 );
+                if let Err(error)=crate::saves::after_playing(&profile,&game) {
+                    history(&profile,&game,"Backup failed",&error);
+                }
                 break;
             } else if began.elapsed() > Duration::from_secs(300)
                 || direct

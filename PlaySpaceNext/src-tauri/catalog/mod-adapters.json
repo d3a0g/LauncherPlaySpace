@@ -696,6 +696,33 @@
       "RequiredFile": null,
       "WorkshopAppId": "1167630",
       "Hint": "ZIP: один мод с info.txt; карты, инструменты, транспорт и игровые модификации. Включение и запуск — в меню модов Teardown."
+    },
+    {
+      "SteamId": "34330",
+      "Name": "Total War: SHOGUN 2 / PACK",
+      "Layout": "pack",
+      "Folder": "data",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP с PACK-файлами. Только импорт без перезаписи оригиналов; активация и порядок загрузки — отдельно в менеджере игры или user.script.txt. Совместимость конкретных модов проверяется в игре."
+    },
+    {
+      "SteamId": "10500",
+      "Name": "Empire: Total War / PACK",
+      "Layout": "pack",
+      "Folder": "data",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP с PACK-файлами. Только импорт без перезаписи оригиналов; активация и порядок загрузки — отдельно в менеджере игры или user.script.txt. Совместимость конкретных модов проверяется в игре."
+    },
+    {
+      "SteamId": "34030",
+      "Name": "Napoleon: Total War / PACK",
+      "Layout": "pack",
+      "Folder": "data",
+      "UserBase": null,
+      "RequiredFile": null,
+      "Hint": "ZIP с PACK-файлами. Только импорт без перезаписи оригиналов; активация и порядок загрузки — отдельно в менеджере игры или user.script.txt. Совместимость конкретных модов проверяется в игре."
     }
   ],
   "paradox": [

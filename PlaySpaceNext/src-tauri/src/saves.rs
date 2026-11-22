@@ -214,6 +214,11 @@ pub fn before_launch(profile: &Path, g: &Value) -> Result<()> {
     }
     Ok(())
 }
+pub fn after_playing(profile: &Path, g: &Value) -> Result<()> {
+    let c=care(g);
+    if c["BackupAfterPlaying"] == true {create(profile,g,&c,"After playing")?;}
+    Ok(())
+}
 pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
     let mut g = game(profile, p)?;
     let mut c = care(&g);
@@ -222,6 +227,7 @@ pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
         c["SaveDirectory"] = p["directory"].clone();
         c["Notes"] = json!(str(p, "notes").chars().take(4000).collect::<String>());
         c["BackupBeforeLaunch"] = json!(p["automatic"] == true);
+        c["BackupAfterPlaying"] = json!(p["afterPlaying"] == true);
         source(profile, &c)?;
         update_game(profile, str(p, "id"), |g| {
             set(g, "Care", c.clone());

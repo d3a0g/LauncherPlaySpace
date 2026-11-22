@@ -192,6 +192,30 @@ let browser;const issues=[];
      for(const [,name] of samples){const card=page.getByRole('button',{name,exact:true});await card.waitFor({timeout:15000});await card.locator('.cover img').waitFor({timeout:20000});await card.scrollIntoViewIfNeeded();await card.locator('.cover img').evaluate(img=>img.decode());assert(await card.locator('.cover img').evaluate(img=>img.complete&&img.naturalWidth>=300),'Artwork did not load in actual React card: '+name);}
      await page.evaluate(()=>window.scrollTo(0,0));await page.screenshot({path:path.join(output,'artwork-fixed.png'),fullPage:true});
    }
+   // Exercise new library tools only against this isolated fixture profile.
+   const libraryToolsResult=await page.evaluate(async folder=>{
+     const call=(operation,payload)=>window.__TAURI_INTERNALS__.invoke('request',{operation,payload});
+     const boot=await call('bootstrap',{});const id=boot.games[0].id;const pinned=boot.games[0].isPinned;
+     await call('library_tools',{action:'bulk',ids:[id],field:'PlayStatus',value:'completed'});
+     const updated=await call('bootstrap',{});if(updated.games.find(g=>g.id===id).playStatus!=='completed')throw Error('Status not persisted');
+     await call('library_tools',{action:'undo'});
+     await call('remove_game',{id});const bin=await call('library_tools',{});
+     const archive=bin.archives.find(a=>a.games.some(g=>g.LibraryId===id));if(!archive)throw Error('No archive');
+     await call('library_tools',{action:'restore',archive:archive.id});
+     const restored=await call('bootstrap',{});if(restored.games.find(g=>g.id===id)?.isPinned!==pinned)throw Error('Restore lost metadata');
+     const candidates=await call('library_tools',{action:'scan_folder',path:folder});
+     if(!candidates.length)throw Error('Folder scan found no fixture executables');
+     return {passed:true,scanCandidates:candidates.length,bulkStatus:true,undo:true,archiveRestore:true};
+   },path.join(output,'game-fixtures'));
+   fs.writeFileSync(path.join(output,'library-tools-report.json'),JSON.stringify(libraryToolsResult,null,2));
+   await page.evaluate(()=>localStorage.setItem('playspace.language','ru'));await page.reload();
+   await page.getByRole('button',{name:'Инструменты',exact:true}).click();
+   await page.locator('.tool-card').filter({hasText:'Дубликаты'}).click();
+   await page.getByRole('heading',{name:'Управление библиотекой',exact:true}).waitFor();
+   await page.getByRole('group',{name:'Массовые действия',exact:true}).getByRole('button',{name:'Выбрать все',exact:true}).click();
+   assert(await page.getByRole('group',{name:'Массовые действия',exact:true}).locator('input:checked').count()>=4);
+   await page.screenshot({path:path.join(output,'library-management.png'),fullPage:true});
+
    assert.deepEqual(issues,[]);
    fs.writeFileSync(path.join(output,'desktop-report.json'),JSON.stringify({passed:true,automaticRemovalVerified,integratedWorkspaces:true,legacyBridgeRejected:true,liveArtworkVerified:process.env.PLAYSPACE_TEST_LIVE_ART==='1',nativeTauri:true,nativeLibraryStorage:true,nativeRuntime:health.engine==='rust',nativeCollections:true,englishAndRussian:true,libraryCount:4,toolsCount:18,sidebarSearchAndSelection:true,detailsView:true,resizableCovers:true,recommendationSearchAndGenre:true,originalLibraryUntouched:true,launchFixtureVerified,actualGamesLaunched:false,modsInstalled:false,errors:issues},null,2));
    console.log('PASS: native Tauri/WebView2, Rust IPC, covers, RU/EN, collections, search, pin persistence, views, tool navigation, command rejection, original data protection.');

@@ -10,6 +10,27 @@ export function useLanguage():Language{useSyncExternalStore(fn=>{listeners.add(f
 export function currentLanguage(){return language;}
 document.documentElement.lang=language;
 const en:Record<string,string>={
+"Умная коллекция":"Smart collection",
+"Ещё не запускал":"Never played",
+"Планирую":"Planned",
+"Прохожу":"Playing",
+"Пройдено":"Completed",
+"Отложено":"Paused",
+"Управление библиотекой":"Library management",
+"Поиск локальных игр":"Find local games",
+"Проверь EXE":"Review executable",
+"Добавить выбранные":"Add selected",
+"Массовые действия":"Bulk actions",
+"Выбрать все":"Select all",
+"Снять выделение":"Clear selection",
+"Открепить":"Unpin",
+"Статус прохождения":"Play status",
+"Отменить массовое изменение":"Undo bulk change",
+"Корзина библиотеки":"Library recycle bin",
+"Восстанавливаются записи; файлы игр не изменяются.":"Restores library records; game files remain unchanged.",
+"Автоматически после игры":"Automatically after playing",
+"After playing":"After playing",
+
  'Настройки проекта':'Project settings','Ссылки, объявления и каталоги обновляются отдельно от приложения.':'Links, announcements and catalogues update separately from the app.','Встроенные настройки':'Built-in settings','Проверенная копия на ПК':'Verified local copy','Проверенные настройки с GitHub':'Verified settings from GitHub','Редакция':'Revision','Действует до':'Valid until','Проверить настройки проекта':'Check project settings','Проверка…':'Checking…','Не удалось проверить настройки. Сохранённая конфигурация продолжает работать.':'Could not refresh settings. The saved configuration remains active.',
  // Steam Workshop browser (native mods).
  'Мастерская Steam':'Steam Workshop',

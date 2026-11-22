@@ -147,12 +147,7 @@ pub fn handle(profile: &Path, p: &Value) -> Result<Value> {
         let games = library::load(&profile.join("games.json"))?.0;
         let mut groups: BTreeMap<String, Vec<Value>> = BTreeMap::new();
         for g in &games {
-            let steam = text(g, "SteamAppId");
-            let key = if steam.is_empty() {
-                text(g, "ExePath").to_lowercase()
-            } else {
-                format!("steam:{steam}")
-            };
+            let key = library::identity(g);
             groups.entry(key).or_default().push(
                 json!({"id":text(g,"LibraryId"),"name":text(g,"Name"),"path":text(g,"ExePath")}),
             );

@@ -1,0 +1,20 @@
+import {useEffect,useState} from 'react';
+import {open} from '@tauri-apps/plugin-dialog';
+import {request} from './api';
+import {t} from './i18n';
+import type {Game} from './types';
+export function LibraryTools({games,onChanged}:{games:Game[];onChanged:()=>Promise<void>}){
+ const [selected,setSelected]=useState<string[]>([]),[candidates,setCandidates]=useState<any[]>([]),[checked,setChecked]=useState<string[]>([]),[archives,setArchives]=useState<any[]>([]),[busy,setBusy]=useState(false),[error,setError]=useState('');
+ async function refresh(){const data=await request<any>('library_tools',{});setArchives(data.archives??[]);}
+ useEffect(()=>{void refresh().catch(e=>setError(String(e)));},[]);
+ async function run(fn:()=>Promise<unknown>){if(busy)return;setBusy(true);setError('');try{await fn();await refresh();await onChanged();}catch(e){setError(String(e));}finally{setBusy(false);}}
+ function bulk(field:string,value:unknown){void run(()=>request('library_tools',{action:'bulk',ids:selected,field,value}));}
+ return <section className="native-section"><h3>{t('Управление библиотекой')}</h3>{error&&<p role="alert">{error}</p>}
+ <fieldset disabled={busy}><legend>{t('Поиск локальных игр')}</legend><button className="button" onClick={()=>void run(async()=>{const path=await open({directory:true,multiple:false});if(typeof path==='string'){setCandidates(await request<any[]>('library_tools',{action:'scan_folder',path}));setChecked([]);}})}>{t('Выбрать папку')}</button>
+ {candidates.map(c=><label className="native-toggle" key={c.path}><input type="checkbox" checked={checked.includes(c.path)} onChange={e=>setChecked(ids=>e.target.checked?[...ids,c.path]:ids.filter(x=>x!==c.path))}/><span>{c.name} · {c.confidence==='game'?t('Игра'):t('Проверь EXE')}<small className="file-path">{c.path}</small></span></label>)}
+ {!!checked.length&&<button className="button" onClick={()=>void run(async()=>{for(const path of checked)await request('save_game',{path});setCandidates([]);setChecked([]);})}>{t('Добавить выбранные')}</button>}</fieldset>
+ <fieldset disabled={busy}><legend>{t('Массовые действия')}</legend><div className="native-actions"><button className="button" onClick={()=>setSelected(games.map(g=>g.id))}>{t('Выбрать все')}</button><button className="button" onClick={()=>setSelected([])}>{t('Снять выделение')}</button><button disabled={!selected.length} className="button" onClick={()=>bulk('IsPinned',true)}>{t('Закрепить')}</button><button disabled={!selected.length} className="button" onClick={()=>bulk('IsPinned',false)}>{t('Открепить')}</button>
+ <select aria-label={t('Статус прохождения')} defaultValue="" disabled={!selected.length} onChange={e=>{if(e.target.value)bulk('PlayStatus',e.target.value);e.target.value='';}}><option value="">{t('Статус прохождения')}</option><option value="planned">{t('Планирую')}</option><option value="playing">{t('Прохожу')}</option><option value="completed">{t('Пройдено')}</option><option value="paused">{t('Отложено')}</option></select><button className="button" onClick={()=>void run(()=>request('library_tools',{action:'undo'}))}>{t('Отменить массовое изменение')}</button></div>
+ {games.map(g=><label className="native-toggle" key={g.id}><input type="checkbox" checked={selected.includes(g.id)} onChange={()=>setSelected(ids=>ids.includes(g.id)?ids.filter(x=>x!==g.id):[...ids,g.id])}/>{g.name}</label>)}</fieldset>
+ <fieldset disabled={busy}><legend>{t('Корзина библиотеки')}</legend><p>{t('Восстанавливаются записи; файлы игр не изменяются.')}</p>{archives.map(a=><div className="native-row" key={a.id}><span>{Array.isArray(a.games)?a.games.map((g:any)=>g.Name).join(', '):a.id}</span><button className="button" onClick={()=>void run(()=>request('library_tools',{action:'restore',archive:a.id}))}>{t('Восстановить')}</button></div>)}</fieldset></section>;
+}
